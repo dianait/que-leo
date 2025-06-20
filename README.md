@@ -1,54 +1,104 @@
-# React + TypeScript + Vite
+# ¿Qué leo? 📚
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Una aplicación para ayudarte a decidir qué leer de tu lista de artículos guardados.
 
-Currently, two official plugins are available:
+## ¿Por qué existe este proyecto?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Todos tenemos esa lista interminable de artículos técnicos que guardamos con la intención de "leer después"... pero que nunca leemos. Esta aplicación resuelve ese problema sugiriéndote qué leer de tu colección.
 
-## Expanding the ESLint configuration
+## Características actuales
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- ✅ Lista de artículos guardados
+- ✅ Visualización de título, URL y fecha
+- 🔄 Sugerencia de artículo aleatorio (en desarrollo)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Características futuras
+
+- 📝 Resúmenes de artículos
+- 🏷️ Sistema de tags
+- ✅ Marcar como leído
+- 🔍 Búsqueda y filtros
+- 📊 Estadísticas de lectura
+
+## Arquitectura
+
+Este proyecto está construido siguiendo los principios de **Arquitectura Hexagonal** (también conocida como Ports & Adapters), aplicando principios **SOLID** para crear un código mantenible y testeable.
+
+### Estructura del proyecto
+
+```
+src/
+├── domain/           # Entidades y reglas de negocio
+│   └── Article.ts
+├── application/      # Casos de uso
+│   └── GetRandomArticle.ts
+├── infrastructure/   # Adaptadores externos (UI, persistencia, etc.)
+│   └── components/
+└── architecture/     # Configuración de la arquitectura
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Capas de la arquitectura
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Domain**: Contiene las entidades de negocio y reglas puras, sin dependencias externas
+- **Application**: Casos de uso que orquestan la lógica de negocio
+- **Infrastructure**: Adaptadores que conectan con el mundo exterior (React UI, APIs, bases de datos)
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## Stack tecnológico
+
+- **React 18** - Librería de UI
+- **TypeScript** - Tipado estático
+- **Vite** - Build tool y dev server
+- **SWC** - Compilador rápido para TypeScript
+
+## Instalación y ejecución
+
+### Prerrequisitos
+
+- Node.js (versión 18 o superior)
+- npm o yarn
+
+### Pasos
+
+1. Clona el repositorio
+```bash
+git clone [URL_DEL_REPOSITORIO]
+cd article-reader
 ```
+
+2. Instala las dependencias
+```bash
+npm install
+```
+
+3. Ejecuta el proyecto en modo desarrollo
+```bash
+npm run dev
+```
+
+4. Abre tu navegador en `http://localhost:5173`
+
+## Scripts disponibles
+
+- `npm run dev` - Ejecuta el servidor de desarrollo
+- `npm run build` - Construye la aplicación para producción
+- `npm run preview` - Previsualiza la build de producción
+- `npm run lint` - Ejecuta el linter
+
+## Estado del proyecto
+
+🚧 **En desarrollo activo** - Este proyecto se está desarrollando como práctica de Arquitectura Hexagonal y principios SOLID.
+
+### MVP actual
+- [x] Entidad Article definida
+- [x] Caso de uso GetRandomArticle
+- [x] UI básica para mostrar lista de artículos
+- [ ] Botón para obtener artículo aleatorio
+- [ ] Persistencia en LocalStorage
+
+### Contribuir
+Este es un proyecto de aprendizaje personal, pero si tienes sugerencias o mejoras, ¡son bienvenidas!
+
+### Licencia
+MIT License - Siéntete libre de usar este código para tus propios proyectos de aprendizaje.
+
+Nota: Este proyecto forma parte de mi aprendizaje de Arquitectura Hexagonal y principios SOLID. El objetivo es crear software mantenible y bien estructurado, no solo que funcione.
