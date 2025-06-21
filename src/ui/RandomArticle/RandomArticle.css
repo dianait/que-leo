@@ -23,23 +23,16 @@
   width: 100%;
   max-width: 520px;
   min-height: 180px;
-  margin: 0 auto;
+  margin: 0 auto 2rem;
   padding: 1.5rem;
-  border: 1.5px solid #e3e8f0;
-  border-radius: 18px;
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.10);
-  background: rgba(255,255,255,0.98);
-  transition: box-shadow 0.2s, border 0.2s;
+  border: 1px solid #e3e8f0;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 2rem;
-}
-
-/* Animación para la tarjeta cuando aparece */
-.card-animated {
-  animation: fadeInUp 0.5s ease-out;
 }
 
 /* Estilos para el título del artículo */
@@ -70,14 +63,13 @@
 
 /* Estilos comunes para los enlaces */
 .article-link {
-  color: #667eea;
+  color: #5a6fd8;
   text-decoration: none;
   font-weight: 600;
   font-size: 1.08rem;
-  background: rgba(102,126,234,0.08);
+  background: rgba(90,111,216,0.08);
   padding: 0.5rem 1.2rem;
-  border-radius: 10px;
-  transition: background 0.2s, transform 0.2s;
+  border-radius: 5px;
   cursor: pointer;
   text-align: center;
   display: inline-block;
@@ -85,8 +77,8 @@
 }
 
 .article-link:hover {
-  background: rgba(102,126,234,0.15);
-  transform: translateY(-2px);
+  background: rgba(90,111,216,0.15);
+  text-decoration: underline;
 }
 
 /* Estilos para la fecha de guardado */
@@ -122,17 +114,7 @@
   opacity: 0.7;
 }
 
-/* Animación fadeInUp */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Sin animaciones */
 
 /* Media queries para responsive */
 @media (max-width: 600px) {
