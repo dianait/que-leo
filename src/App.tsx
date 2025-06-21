@@ -1,10 +1,14 @@
 import { ListOfArticles } from "./ui/ListOfArticles";
+import { RandomArticle } from "./ui/RandomArticle";
 
 function App() {
   return (
     <>
-      <h1>¿Qué leo?</h1>
-      <p>Una aplicación para ayudarte a decidir qué leer.</p>
+      <header className="app-header">
+        <h1>📚 ¿Qué leo?</h1>
+        <p>Menos decisiones, más lectura.</p>
+      </header>
+      <RandomArticle />
       <ListOfArticles />
     </>
   );

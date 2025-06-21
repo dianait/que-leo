@@ -1,368 +1,362 @@
 [
   {
     "id": "article-1",
-    "title": "El malestar de la ciudades",
-    "url": "https://www.amazon.es/malestar-ciudades-Jorge-Dioni-López-ebook/dp/B0C3VXV678/ref=tmm_kin_swatch_0?_encoding=UTF8&qid=1703932290&sr=8-1",
-    "dateAdded": "2023-12-29T23:00:00.000Z"
+    "title": "Parse don't validate",
+    "url": "https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-2",
-    "title": "Parse don't validate",
-    "url": "https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/",
-    "dateAdded": "2025-06-21T05:55:01.586Z"
+    "title": "Parsing",
+    "url": "https://www.pointfree.co/collections/parsing",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-3",
-    "title": "Parsing",
-    "url": "https://www.pointfree.co/collections/parsing",
-    "dateAdded": "2025-06-21T05:55:01.586Z"
-  },
-  {
-    "id": "article-4",
     "title": "How to Avoid Repeating SwiftUI View Updates.",
     "url": "https://medium.com/@shashidj206/how-to-avoid-repeating-swiftui-view-updates-ec1fce0349a9",
     "dateAdded": "2024-02-27T23:00:00.000Z"
   },
   {
-    "id": "article-5",
+    "id": "article-4",
     "title": "Goodnotes everywhere",
     "url": "https://web.dev/case-studies/goodnotes?utm_campaign=Not%2BOnly%2BSwift&utm_medium=web&utm_source=Not_Only_Swift_56",
     "dateAdded": "2024-02-28T23:00:00.000Z"
   },
   {
-    "id": "article-6",
-    "title": "iOS Screen Recording Permission Bug",
-    "url": "https://christianselig.com/2024/03/ios-screen-recording-permission-bug/",
+    "id": "article-5",
+    "title": "Dominando las bases: Estructuras vs. clases",
+    "url": "https://oscarmoreno.com//posts/estructuras-clases/",
     "dateAdded": "2024-03-25T23:00:00.000Z"
   },
   {
+    "id": "article-6",
+    "title": "Discover best-in-class mobile design inspiration",
+    "url": "https://handheld.design/?s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
+  },
+  {
     "id": "article-7",
-    "title": "Learning to Code for Tech/SWE",
-    "url": "https://gist.github.com/ronreiter/77b1722e86e8399e96438cb8b6303f3d",
-    "dateAdded": "2025-06-21T05:55:01.586Z"
+    "title": "Compose un Android Max app",
+    "url": "https://goo.gle/4c0Tz8C",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-8",
-    "title": "A Practical Guide to Accessibility",
-    "url": "https://medium.com/swlh/a-practical-guide-to-accessibility-ios-dev-9773b7c120c6",
-    "dateAdded": "2025-06-21T05:55:01.586Z"
+    "title": "📚 COMPOSE EXPERT COURSE",
+    "url": "https://devexpert.io/compose-expert",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-9",
-    "title": "🏗️ Architecture patterns",
-    "url": "https://github.com/ochococo/OOD-Principles-In-Swift",
-    "dateAdded": "2025-06-21T05:55:01.586Z"
+    "title": "From Enzyme to React Testing Library at Slack",
+    "url": "https://slack.engineering/balancing-old-tricks-with-new-feats-ai-powered-conversion-from-enzyme-to-react-testing-library-at-slack/?s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-10",
-    "title": "Sobre Flutter",
-    "url": "https://brm.io/matter-of-perspective/#c",
-    "dateAdded": "2025-06-21T05:55:01.586Z"
+    "title": "Do not try to be the smartest in the room; try to be the kindest.",
+    "url": "https://www.jorgegalindo.me/en/blog/posts/do-not-be-the-smartest-in-the-room-try-to-be-the-kindest?s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-11",
-    "title": "Tips and tricks for iOS accessibility",
-    "url": "https://github.com/dadederk/a11y-guidelines/blob/master/others/voiceover-ios.md",
-    "dateAdded": "2024-05-19T22:00:00.000Z"
+    "title": "UN NUEVO HOGAR: ESTADOS UNIDOS COMO UNA TIERRA DE OPORTUNIDAD QUEER",
+    "url": "https://www.queermajority.com/translation/un-nuevo-hogar?twclid=23h4ekpbcwpx3h9eq75is06ang&s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-12",
-    "title": "Git para todos los públicos",
-    "url": "https://openwebinars.net/academia/aprende/git-todos-publicos/",
-    "dateAdded": "2024-06-04T22:00:00.000Z"
+    "title": "16 little UI design rules that make a Big impact",
+    "url": "https://www.adhamdannaway.com/blog/ui-design/16-ui-design-rules?s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-13",
-    "title": "The Ultimate Guide to iOS App Development with SwiftUI",
-    "url": "https://www.kodeco.com/books/swiftui-by-tutorials",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Catch up on accessibility in SwiftUI",
+    "url": "https://developer.apple.com/videos/play/wwdc2024/10073/?s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-14",
-    "title": "Test-Driven Development Tutorial for iOS: Getting Started",
-    "url": "https://www.kodeco.com/5522-test-driven-development-tutorial-for-ios-getting-started",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Stacked Diffs (and why you should know about them)",
+    "url": "https://newsletter.pragmaticengineer.com/p/stacked-diffs",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-15",
-    "title": "Understanding Swift Performance",
-    "url": "https://developer.apple.com/videos/play/wwdc2016/416/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Swift testing",
+    "url": "https://leocoout.medium.com/welcome-swift-testing-goodbye-xctest-7501b7a5b304",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-16",
-    "title": "iOS Accessibility in SwiftUI Tutorial",
-    "url": "https://www.kodeco.com/6827616-ios-accessibility-in-swiftui-tutorial",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Dungeon Crawl",
+    "url": "https://github.com/mogamiGit/Dungeon-Crawl",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-17",
-    "title": "What is GitHub Actions?",
-    "url": "https://medium.com/@ahmedrazakhan12/what-is-github-actions-630062c4e2a6",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Unlocking Innovation: Zomato's journey to seamless iOS code sharing & distribution with Swift Package Manager",
+    "url": "https://blog.zomato.com/zomatos-journey-to-seamless-ios-code-sharing-and-distribution",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-18",
-    "title": "Building Accessible iOS Apps",
-    "url": "https://developer.apple.com/accessibility/ios/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "My premises about software development",
+    "url": "https://www.eferro.net/2022/12/my-premises-about-software-development.html?spref=tw&m=1&s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-19",
-    "title": "Understanding App Store Connect",
-    "url": "https://developer.apple.com/app-store-connect/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Como dar y recibir feedback sin morir en el intento",
+    "url": "https://www.uifrommars.com/como-dar-recibir-feedback/",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-20",
-    "title": "Learning Swift Programming",
-    "url": "https://docs.swift.org/swift-book/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "should I learn UIKit in 2024",
+    "url": "https://www.aleksasimic.com/post/uikit-vs-swiftui-should-i-learn-uikit-in-2024",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-21",
-    "title": "iOS Memory Deep Dive",
-    "url": "https://developer.apple.com/videos/play/wwdc2018/416/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "UIKit vs SwiftUI",
+    "url": "https://www.aleksasimic.com/post/uikit-vs-swiftui-should-i-learn-uikit-in-2024",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-22",
-    "title": "Mastering iOS Navigation",
-    "url": "https://swiftwithmajid.com/2021/01/27/navigation-in-swiftui/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Blog de marcos",
+    "url": "https://mdlcs.dev/?s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-23",
-    "title": "iOS App Architecture Best Practices",
-    "url": "https://www.objc.io/books/app-architecture/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Navigating Equatable in Swift for Effective Unit Testing?",
+    "url": "https://abdulahd1996.medium.com/unit-test-with-equatable-90ffb86ea5b1",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-24",
-    "title": "SwiftUI Data Flow",
-    "url": "https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "The curious case of Apple's third-party SDK list for privacy manifests · Jesse Squires",
+    "url": "https://www.jessesquires.com/blog/2024/04/29/sdk-privacy-manifests/",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-25",
-    "title": "Understanding iOS Memory Management",
-    "url": "https://medium.com/@aliakhtar_16369/understanding-ios-memory-management-5b63e4d6bb66",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "I've worked in IT for over 10 years. Here are 5 things I wish I knew when I started",
+    "url": "https://dev.to/vorniches/ive-worked-in-it-for-over-10-years-here-are-5-things-i-wish-i-knew-when-i-started-43pe?ref=dailydev",
+    "dateAdded": "2024-06-19T22:00:00.000Z"
   },
   {
     "id": "article-26",
-    "title": "iOS Performance Optimization",
-    "url": "https://developer.apple.com/library/archive/documentation/Performance/Conceptual/ManagingMemory/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Android modern apo",
+    "url": "https://github.com/google/iosched",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-27",
-    "title": "SwiftUI Advanced Concepts",
-    "url": "https://swiftui-lab.com/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Reducing the Size of Cash App for iOS",
+    "url": "https://code.cash.app/reducing-the-size-of-cash-app-for-ios",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-28",
-    "title": "iOS Testing Strategies",
-    "url": "https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Google Endorses Kotlin Multiplatform",
+    "url": "https://www.kodeco.com/45282442-google-endorses-kotlin-multiplatform?s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-29",
-    "title": "Understanding Combine Framework",
-    "url": "https://developer.apple.com/documentation/combine",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "La Developer Experience los equipos de desarrollo",
+    "url": "https://blog.kairosds.com/la-developer-experience-los-equipos-de-desarrollo/?s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-30",
-    "title": "iOS App Store Optimization",
-    "url": "https://developer.apple.com/app-store/product-page/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Magic 40K",
+    "url": "https://github.com/JonathanCopeland/Magic-40k",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-31",
-    "title": "SwiftUI Animation Techniques",
-    "url": "https://swiftui-lab.com/swiftui-animations-part1/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Dynamic membee lookup",
+    "url": "https://www.linkedin.com/posts/meciddjabrayilov_one-of-my-favorite-features-of-the-swift-activity-7210917598476050433-mDC_?utm_source=share&utm_medium=member_android",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-32",
-    "title": "iOS Security Best Practices",
-    "url": "https://developer.apple.com/library/archive/documentation/Security/Conceptual/SecureCodingGuide/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Introducción al Lean Software Development",
+    "url": "https://www.eferro.net/2024/04/introduccion-al-lean-software.html?utm_campaign=ping-26-es&utm_medium=email&utm_source=acumbamail&m=1&s=09#serie",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-33",
-    "title": "Understanding iOS Networking",
-    "url": "https://developer.apple.com/documentation/foundation/url_loading_system",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "dianait | User Collection | BoardGameGeek",
+    "url": "https://boardgamegeek.com/collection/user/dianait",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-34",
-    "title": "iOS Development Workflows",
-    "url": "https://medium.com/@johnsundell/workflows-for-ios-development-9d82b5b7fa45",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Recommended WWDC24 Sessions",
+    "url": "https://swiftrocks.com/recommended-wwdc24-sessions",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-35",
-    "title": "Core Data Best Practices",
-    "url": "https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "MVVM vs TCA",
+    "url": "https://www.aleksasimic.com/post/mvvm-vs-tca",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-36",
-    "title": "iOS Localization Guide",
-    "url": "https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPInternational/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Reducing the Size of Cash App for iOS",
+    "url": "https://code.cash.app/reducing-the-size-of-cash-app-for-ios?s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-37",
-    "title": "Understanding iOS Graphics",
-    "url": "https://developer.apple.com/library/archive/documentation/2DDrawing/Conceptual/DrawingPrintingiOS/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Conciencia y muerte exploradas",
+    "url": "https://chatgpt.com/share/86fea39a-b753-4fea-9f2a-33161a994572?s=09",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-38",
-    "title": "iOS Debugging Techniques",
-    "url": "https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/debugging_with_xcode/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Implementing GraphQL in an iOS application",
+    "url": "https://buff.ly/3QKnnxM",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-39",
-    "title": "SwiftUI Layout System",
-    "url": "https://developer.apple.com/documentation/swiftui/building-layouts-with-stack-views",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Food Delivery App Mobile System Design",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-40",
-    "title": "iOS Push Notifications",
-    "url": "https://developer.apple.com/documentation/usernotifications",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Cómo crear property wrappers para reutilizar código · Óscar Moreno | Desarrollador Apple",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-41",
-    "title": "Understanding Auto Layout",
-    "url": "https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/AutolayoutPG/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Cómo mantener un desarrollo con TDD rápido y eficaz para cumplir los requisitos funcionales | Lean Mind",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-42",
-    "title": "iOS Background Processing",
-    "url": "https://developer.apple.com/documentation/backgroundtasks",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Watchers · yamadashy/repopack",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-43",
-    "title": "SwiftUI State Management",
-    "url": "https://developer.apple.com/documentation/swiftui/state-and-data-flow",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "ggalmazor.com",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-44",
-    "title": "iOS App Extensions",
-    "url": "https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "3 Ways to Optimize Performance in SwiftUI Apps | by Thiago Centurion | Sep, 2024 | Medium",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-45",
-    "title": "Understanding iOS Multithreading",
-    "url": "https://developer.apple.com/library/archive/documentation/General/Conceptual/ConcurrencyProgrammingGuide/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Do test targets in a Package.swift need to include transitive dependencies? - Using Swift - Swift Forums",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-46",
-    "title": "iOS Web Services Integration",
-    "url": "https://developer.apple.com/documentation/foundation/url_loading_system/fetching_website_data_into_memory",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "MV pattern in SwiftUI | Aleksa Simić",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-47",
-    "title": "SwiftUI Custom Views",
-    "url": "https://developer.apple.com/tutorials/swiftui/creating-and-combining-views",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Understanding Difference",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-48",
-    "title": "iOS App Distribution",
-    "url": "https://developer.apple.com/distribution/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Qué significan los distintos niveles de acceso en Swift · Óscar Moreno | Desarrollador Apple",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-49",
-    "title": "Understanding iOS Keychain",
-    "url": "https://developer.apple.com/documentation/security/keychain_services",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Marking Swift Properties Available by iOS Version | Swiftjective-C",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-50",
-    "title": "iOS Camera and Photos",
-    "url": "https://developer.apple.com/documentation/avfoundation/cameras_and_media_capture",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Mocks, stubs and dummies",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-51",
-    "title": "SwiftUI Accessibility Features",
-    "url": "https://developer.apple.com/documentation/swiftui/accessibility",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Fixing a Bug in Google Chrome as a First-Time Contributor - Casey Primozic's Homepage",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-52",
-    "title": "iOS Touch and Gesture Recognition",
-    "url": "https://developer.apple.com/documentation/uikit/touches_presses_and_gestures",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "7 TED talks that change how you see the world",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-53",
-    "title": "Understanding iOS File System",
-    "url": "https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Kitchen Soap – On Being A Senior Engineer",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-54",
-    "title": "iOS Location Services",
-    "url": "https://developer.apple.com/documentation/corelocation",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Memory management in Swift | Sngular",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-55",
-    "title": "SwiftUI Navigation Patterns",
-    "url": "https://developer.apple.com/documentation/swiftui/navigation",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "SwiftUI: The UnsafeObservedObject Quiz | by Michael Long | Better Programming",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-56",
-    "title": "iOS Audio and Video Playback",
-    "url": "https://developer.apple.com/documentation/avfoundation/media_playback_and_selection",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "eferro's random stuff: Good talks/podcasts (Aug 2024 I)",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-57",
-    "title": "Understanding iOS Concurrency",
-    "url": "https://developer.apple.com/documentation/swift/swift_standard_library/concurrency",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "eferro's random stuff: Lean Software Development: Amplificar el Aprendizaje",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-58",
-    "title": "iOS Widget Development",
-    "url": "https://developer.apple.com/documentation/widgetkit",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "My approach to coding interviews: Optimize for iteration — surma.dev",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-59",
-    "title": "SwiftUI Preview Capabilities",
-    "url": "https://developer.apple.com/documentation/swiftui/previews-in-xcode",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "Las redes son nuestras | consonni",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-60",
-    "title": "iOS User Interface Guidelines",
-    "url": "https://developer.apple.com/design/human-interface-guidelines/ios/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
-  },
-  {
-    "id": "article-61",
-    "title": "Understanding iOS Memory Footprint",
-    "url": "https://developer.apple.com/videos/play/wwdc2018/416/",
-    "dateAdded": "2024-06-10T22:00:00.000Z"
+    "title": "https://www.linkedin.com/events/7275090940459962368/comments/",
+    "url": "#",
+    "dateAdded": "2025-06-21T09:27:52.196Z"
   }
 ]
