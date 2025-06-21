@@ -1,7 +1,27 @@
-import { mockArticles } from "../../application/GetRandomArticile";
+import { GetAllArticles } from "../../application/GetAllArticles";
+import { JsonArticleRepository } from "../JSONArticleRepository";
+import { Article } from "../../domain/Article";
+import { useState, useEffect } from "react";
 
 export function ListOfArticles() {
-  const articles = mockArticles;
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadArticles = async () => {
+      const repository = new JsonArticleRepository();
+      const useCase = new GetAllArticles(repository);
+      const result = await useCase.execute();
+      setArticles(result);
+      setLoading(false);
+    };
+
+    loadArticles();
+  }, []);
+
+  if (loading) {
+    return <div>Cargando artículos...</div>;
+  }
 
   return (
     <div>
