@@ -85,6 +85,7 @@ npm run build
 🚧 **En desarrollo activo** - Este proyecto se está desarrollando como práctica de Arquitectura Hexagonal y principios SOLID.
 
 ### MVP actual
+
 - [x] Entidad Article definida
 - [x] Caso de uso GetRandomArticle
 - [x] UI básica para mostrar lista de artículos
@@ -92,8 +93,9 @@ npm run build
 - [ ] Persistencia en LocalStorage
 
 ### Contribuir
+
 Este es un proyecto de aprendizaje personal, pero si tienes sugerencias o mejoras, ¡son bienvenidas!
 
 ### Licencia
-MIT License - Siéntete libre de usar este código para tus propios proyectos de aprendizaje.
 
+MIT License - Siéntete libre de usar este código para tus propios proyectos de aprendizaje.

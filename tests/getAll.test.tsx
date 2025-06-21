@@ -10,10 +10,12 @@ test("muestra la lista de artículos en el sidebar", async () => {
   // Ahora el sidebar se muestra automáticamente al cargar
   await waitFor(() => {
     // Verificar que el título del sidebar con el contador está presente
-    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/articles/i);
-    
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
+      /articles/i
+    );
+
     // Verificar que la lista de artículos se cargó
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole("listitem");
     expect(listItems.length).toBeGreaterThan(0);
   });
 });
