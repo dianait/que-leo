@@ -41,17 +41,16 @@ export function ListOfArticles() {
 
   return (
     <>
-      {/* Botón hamburguesa */}
       <button
         className="sidebar-toggle"
         aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
         onClick={() => setSidebarOpen((open) => !open)}
         style={{
-          left: 0,
+          left: "24px",
           top: "2.2rem",
-          zIndex: 1200,
+          zIndex: 2,
           background: "#fff",
-          border: "2px solid #667eea",
+          border: "1px solid #667eea",
           borderRadius: "50%",
           width: 48,
           height: 48,
@@ -67,9 +66,11 @@ export function ListOfArticles() {
         <span className="hamburger-icon">☰</span>
       </button>
 
-      {/* Overlay solo en móvil */}
       {sidebarOpen && isMobile && (
-        <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
+        <div
+          className="sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
       )}
 
       <aside
@@ -92,11 +93,7 @@ export function ListOfArticles() {
           <ul className="sidebar-list">
             {articles.map((article) => (
               <li key={article.id} className="sidebar-list-item">
-                <a
-                  href={article.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={article.url} target="_blank" rel="noopener noreferrer">
                   {article.title}
                 </a>
                 <div className="sidebar-date">
