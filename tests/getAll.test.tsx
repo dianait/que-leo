@@ -1,19 +1,20 @@
 import "@testing-library/jest-dom";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { GetAllArticles } from "../src/application/GetAllArticles";
 import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { ListOfArticles } from "../src/ui/ListOfArticles";
 
-test("muestra la lista después de clickear el botón", async () => {
+test("muestra la lista de artículos en el sidebar", async () => {
   render(<ListOfArticles />);
 
-  const button = screen.getByRole("button", {
-    name: /ver todos los artículos/i,
-  });
-  fireEvent.click(button);
-
+  // Ahora el sidebar se muestra automáticamente al cargar
   await waitFor(() => {
-    expect(screen.getByText(/Lista de Artículos \(61\)/i)).toBeInTheDocument();
+    // Verificar que el título del sidebar con el contador está presente
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/articles/i);
+    
+    // Verificar que la lista de artículos se cargó
+    const listItems = screen.getAllByRole('listitem');
+    expect(listItems.length).toBeGreaterThan(0);
   });
 });
 

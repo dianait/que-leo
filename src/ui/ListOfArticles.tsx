@@ -3,8 +3,6 @@ import { GetAllArticles } from "../application/GetAllArticles";
 import { JsonArticleRepository } from "../infrastructure/repositories/JSONArticleRepository";
 import { Article } from "../domain/Article";
 
-import "../index.css";
-
 export function ListOfArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
