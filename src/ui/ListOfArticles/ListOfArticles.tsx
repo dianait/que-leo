@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { GetAllArticles } from "../../application/GetAllArticles";
 import { JsonArticleRepository } from "../../infrastructure/repositories/JSONArticleRepository";
 import { Article } from "../../domain/Article";
+import "./ListOfArticles.css"
 
 export function ListOfArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
