@@ -1,5 +1,5 @@
-import { Article } from "../domain/Article";
-import type { ArticleRepository } from "../domain/ArticleRepository";
+import { Article } from "../../domain/Article";
+import type { ArticleRepository } from "../../domain/ArticleRepository";
 
 interface ArticleJSON {
   id: string;
@@ -10,7 +10,7 @@ interface ArticleJSON {
 
 export class JsonArticleRepository implements ArticleRepository {
   async getAllArticles(): Promise<Article[]> {
-    const data = await import("./data/articles.json");
+    const data = await import("../data/articles.json");
     const rawArticles = data.default ?? data;
     return rawArticles.map(
       (item: ArticleJSON) =>

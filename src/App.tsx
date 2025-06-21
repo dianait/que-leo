@@ -1,4 +1,4 @@
-import { ListOfArticles } from "./infrastructure/components/ListOfArticles";
+import { ListOfArticles } from "./ui/ListOfArticles";
 
 function App() {
   return (

@@ -1,6 +1,6 @@
-import { GetAllArticles } from "../../application/GetAllArticles";
-import { JsonArticleRepository } from "../JSONArticleRepository";
-import { Article } from "../../domain/Article";
+import { GetAllArticles } from "../application/GetAllArticles";
+import { JsonArticleRepository } from "../infrastructure/repositories/JSONArticleRepository";
+import { Article } from "../domain/Article";
 import { useState, useEffect } from "react";
 
 export function ListOfArticles() {
