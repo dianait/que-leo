@@ -23,7 +23,8 @@ La arquitectura hexagonal define cuatro capas principales:
 
 4. **UI (interfaz de usuario)**: Contiene los componentes visuales.
    - Ubicación: `/src/ui/`
-   - Puede importar de cualquier otra capa.
+   - Excluida de las reglas de arquitectura hexagonal
+   - Organizada libremente según las necesidades de la interfaz de usuario
 
 ## Validación con ESLint
 
@@ -31,17 +32,11 @@ El proyecto incluye el plugin `eslint-plugin-hexagonal-architecture` para valida
 
 ### Estado actual
 
-Actualmente, la regla está **desactivada** por defecto para evitar errores inmediatos debido a la estructura actual del proyecto.
+La regla está **activada** y configurada para validar las dependencias entre las capas `domain`, `application` e `infrastructure`. La carpeta `ui` está excluida de la validación.
 
-### Cómo habilitar la validación
+### Configuración actual
 
-Para habilitar la validación de arquitectura hexagonal, edita el archivo `eslint.config.js` y modifica esta línea:
-
-```javascript
-'hexagonal-architecture/enforce': 'off',
-```
-
-Por esta configuración:
+La configuración actual en `eslint.config.js` es la siguiente:
 
 ```javascript
 'hexagonal-architecture/enforce': ['error', {
@@ -49,18 +44,26 @@ Por esta configuración:
   layers: [
     { name: 'domain', isRoot: true },
     { name: 'application', dependsOn: ['domain'] },
-    { name: 'infrastructure', dependsOn: ['domain', 'application'] },
-    { name: 'ui', dependsOn: ['domain', 'application', 'infrastructure'] }
+    { name: 'infrastructure', dependsOn: ['domain', 'application'] }
   ],
   ignorePatterns: [
     'src/App.tsx',
     'src/main.tsx',
     'src/vite-env.d.ts',
+    'src/ui/**',
     '**/*.test.tsx',
     '**/tests/**'
   ]
 }],
 ```
+
+Esta configuración significa que:
+
+- La carpeta `domain` puede ser importada por cualquier otra capa
+- La carpeta `application` solo puede importar desde `domain`
+- La carpeta `infrastructure` puede importar desde `domain` y `application`
+- La carpeta `ui` está completamente excluida de las reglas de arquitectura
+- Los archivos de pruebas y configuración también están excluidos
 
 ### Resolver violaciones de arquitectura
 
@@ -94,3 +97,27 @@ import type { ArticleRepository } from "../domain/ArticleRepository";
 
 - [Plugin de ESLint para Arquitectura Hexagonal](https://www.npmjs.com/package/eslint-plugin-hexagonal-architecture)
 - [Más sobre Arquitectura Hexagonal](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software))
+
+## Integración con el proceso de desarrollo
+
+### Validación automática al hacer commits
+
+Las reglas de arquitectura hexagonal se validan automáticamente al realizar commits gracias a la integración con Husky y lint-staged. Cada vez que intentas hacer un commit:
+
+1. ESLint se ejecuta en los archivos modificados
+2. Las reglas de arquitectura hexagonal se verifican
+3. Si hay violaciones, el commit se bloquea hasta que se resuelvan
+4. Los tests relacionados con los archivos modificados también se ejecutan
+
+Esta integración asegura que la arquitectura se mantenga correcta a lo largo del tiempo.
+
+### Archivos excluidos de las reglas
+
+Los siguientes archivos están excluidos de las reglas de arquitectura hexagonal:
+
+1. **Archivos de configuración**: Todos los archivos `.config.*`
+2. **Archivos de prueba**: Todos los archivos `.test.tsx` y la carpeta `tests/`
+3. **Carpeta UI**: Toda la carpeta `src/ui/` y sus subdirectorios
+4. **Archivos específicos**: `src/App.tsx`, `src/main.tsx` y `src/vite-env.d.ts`
+
+Estos archivos se pueden organizar libremente sin restricciones de arquitectura.
