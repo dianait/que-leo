@@ -1,14 +1,19 @@
 import "@testing-library/jest-dom";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { GetAllArticles } from "../src/application/GetAllArticles";
 import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { ListOfArticles } from "../src/ui/ListOfArticles";
 
-test("muestra la lista de artículos desde el JSON", async () => {
+test("muestra la lista después de clickear el botón", async () => {
   render(<ListOfArticles />);
+
+  const button = screen.getByRole("button", {
+    name: /ver todos los artículos/i,
+  });
+  fireEvent.click(button);
+
   await waitFor(() => {
-    expect(screen.getByRole("list").children.length).toBeGreaterThan(0);
-    expect(screen.getByText(/Lista de Artículos/i)).toBeInTheDocument();
+    expect(screen.getByText(/Lista de Artículos \(61\)/i)).toBeInTheDocument();
   });
 });
 
