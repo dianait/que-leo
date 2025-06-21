@@ -5,6 +5,7 @@ import { Article } from "../../domain/Article";
 import "./RandomArticle.css";
 
 export function RandomArticle() {
+  // Estados para manejar el artículo y el estado de carga
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(false);
 
