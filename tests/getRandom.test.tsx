@@ -1,10 +1,10 @@
 /// <reference types="@testing-library/jest-dom" />
 
-import { GetRandomArticle } from "../../src/application/GetRandomArticle";
-import { RandomArticle } from "../../src/ui/RandomArticle/RandomArticle";
-import { Article } from "../../src/domain/Article";
-import { ArticleRepository } from "../../src/domain/ArticleRepository";
-import { JsonArticleRepository } from "../../src/infrastructure/repositories/JSONArticleRepository";
+import { GetRandomArticle } from "../src/application/GetRandomArticle";
+import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
+import { Article } from "../src/domain/Article";
+import { ArticleRepository } from "../src/domain/ArticleRepository";
+import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { fireEvent, render, waitFor, screen } from "@testing-library/react";
 
 test("getRandomArticle devuelve un artículo aleatorio", async () => {
@@ -52,7 +52,7 @@ test("botón muestra loading y luego artículo real", async () => {
     () => {
       // Verificar que ya no aparece el texto de loading
       expect(screen.queryByText(/buscando/i)).not.toBeInTheDocument();
-      
+
       // Verificar que se muestra un título de artículo (cualquier encabezado h4)
       expect(screen.getByRole("heading", { level: 4 })).toBeInTheDocument();
     },
