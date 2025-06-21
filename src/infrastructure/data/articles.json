@@ -42,12 +42,6 @@
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
-    "id": "article-8",
-    "title": "📚 COMPOSE EXPERT COURSE",
-    "url": "https://devexpert.io/compose-expert",
-    "dateAdded": "2025-06-21T09:27:52.196Z"
-  },
-  {
     "id": "article-9",
     "title": "From Enzyme to React Testing Library at Slack",
     "url": "https://slack.engineering/balancing-old-tricks-with-new-feats-ai-powered-conversion-from-enzyme-to-react-testing-library-at-slack/?s=09",
@@ -57,12 +51,6 @@
     "id": "article-10",
     "title": "Do not try to be the smartest in the room; try to be the kindest.",
     "url": "https://www.jorgegalindo.me/en/blog/posts/do-not-be-the-smartest-in-the-room-try-to-be-the-kindest?s=09",
-    "dateAdded": "2025-06-21T09:27:52.196Z"
-  },
-  {
-    "id": "article-11",
-    "title": "UN NUEVO HOGAR: ESTADOS UNIDOS COMO UNA TIERRA DE OPORTUNIDAD QUEER",
-    "url": "https://www.queermajority.com/translation/un-nuevo-hogar?twclid=23h4ekpbcwpx3h9eq75is06ang&s=09",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
@@ -87,12 +75,6 @@
     "id": "article-15",
     "title": "Swift testing",
     "url": "https://leocoout.medium.com/welcome-swift-testing-goodbye-xctest-7501b7a5b304",
-    "dateAdded": "2025-06-21T09:27:52.196Z"
-  },
-  {
-    "id": "article-16",
-    "title": "Dungeon Crawl",
-    "url": "https://github.com/mogamiGit/Dungeon-Crawl",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
@@ -139,7 +121,7 @@
   },
   {
     "id": "article-24",
-    "title": "The curious case of Apple's third-party SDK list for privacy manifests · Jesse Squires",
+    "title": "The curious case of Apple's third-party SDK list for privacy manifests",
     "url": "https://www.jessesquires.com/blog/2024/04/29/sdk-privacy-manifests/",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
@@ -148,12 +130,6 @@
     "title": "I've worked in IT for over 10 years. Here are 5 things I wish I knew when I started",
     "url": "https://dev.to/vorniches/ive-worked-in-it-for-over-10-years-here-are-5-things-i-wish-i-knew-when-i-started-43pe?ref=dailydev",
     "dateAdded": "2024-06-19T22:00:00.000Z"
-  },
-  {
-    "id": "article-26",
-    "title": "Android modern apo",
-    "url": "https://github.com/google/iosched",
-    "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-27",
@@ -171,12 +147,6 @@
     "id": "article-29",
     "title": "La Developer Experience los equipos de desarrollo",
     "url": "https://blog.kairosds.com/la-developer-experience-los-equipos-de-desarrollo/?s=09",
-    "dateAdded": "2025-06-21T09:27:52.196Z"
-  },
-  {
-    "id": "article-30",
-    "title": "Magic 40K",
-    "url": "https://github.com/JonathanCopeland/Magic-40k",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
@@ -198,27 +168,9 @@
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
-    "id": "article-34",
-    "title": "Recommended WWDC24 Sessions",
-    "url": "https://swiftrocks.com/recommended-wwdc24-sessions",
-    "dateAdded": "2025-06-21T09:27:52.196Z"
-  },
-  {
     "id": "article-35",
     "title": "MVVM vs TCA",
     "url": "https://www.aleksasimic.com/post/mvvm-vs-tca",
-    "dateAdded": "2025-06-21T09:27:52.196Z"
-  },
-  {
-    "id": "article-36",
-    "title": "Reducing the Size of Cash App for iOS",
-    "url": "https://code.cash.app/reducing-the-size-of-cash-app-for-ios?s=09",
-    "dateAdded": "2025-06-21T09:27:52.196Z"
-  },
-  {
-    "id": "article-37",
-    "title": "Conciencia y muerte exploradas",
-    "url": "https://chatgpt.com/share/86fea39a-b753-4fea-9f2a-33161a994572?s=09",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
@@ -235,19 +187,13 @@
   },
   {
     "id": "article-40",
-    "title": "Cómo crear property wrappers para reutilizar código · Óscar Moreno | Desarrollador Apple",
+    "title": "Cómo crear property wrappers para reutilizar código",
     "url": "#",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-41",
-    "title": "Cómo mantener un desarrollo con TDD rápido y eficaz para cumplir los requisitos funcionales | Lean Mind",
-    "url": "#",
-    "dateAdded": "2025-06-21T09:27:52.196Z"
-  },
-  {
-    "id": "article-42",
-    "title": "Watchers · yamadashy/repopack",
+    "title": "Cómo mantener un desarrollo con TDD rápido y eficaz para cumplir los requisitos funcionales",
     "url": "#",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
@@ -271,7 +217,7 @@
   },
   {
     "id": "article-46",
-    "title": "MV pattern in SwiftUI | Aleksa Simić",
+    "title": "MV pattern in SwiftUI",
     "url": "#",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
@@ -282,14 +228,8 @@
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
-    "id": "article-48",
-    "title": "Qué significan los distintos niveles de acceso en Swift · Óscar Moreno | Desarrollador Apple",
-    "url": "#",
-    "dateAdded": "2025-06-21T09:27:52.196Z"
-  },
-  {
     "id": "article-49",
-    "title": "Marking Swift Properties Available by iOS Version | Swiftjective-C",
+    "title": "Marking Swift Properties Available by iOS Version",
     "url": "#",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
@@ -301,7 +241,7 @@
   },
   {
     "id": "article-51",
-    "title": "Fixing a Bug in Google Chrome as a First-Time Contributor - Casey Primozic's Homepage",
+    "title": "Fixing a Bug in Google Chrome as a First-Time Contributor",
     "url": "#",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
@@ -313,19 +253,19 @@
   },
   {
     "id": "article-53",
-    "title": "Kitchen Soap – On Being A Senior Engineer",
+    "title": "Kitchen Soap. On Being A Senior Engineer",
     "url": "#",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-54",
-    "title": "Memory management in Swift | Sngular",
+    "title": "Memory management in Swift",
     "url": "#",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-55",
-    "title": "SwiftUI: The UnsafeObservedObject Quiz | by Michael Long | Better Programming",
+    "title": "SwiftUI: The UnsafeObservedObject Quiz",
     "url": "#",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
@@ -343,19 +283,13 @@
   },
   {
     "id": "article-58",
-    "title": "My approach to coding interviews: Optimize for iteration — surma.dev",
+    "title": "My approach to coding interviews: Optimize for iteration",
     "url": "#",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   },
   {
     "id": "article-59",
-    "title": "Las redes son nuestras | consonni",
-    "url": "#",
-    "dateAdded": "2025-06-21T09:27:52.196Z"
-  },
-  {
-    "id": "article-60",
-    "title": "https://www.linkedin.com/events/7275090940459962368/comments/",
+    "title": "Las redes son nuestras",
     "url": "#",
     "dateAdded": "2025-06-21T09:27:52.196Z"
   }
