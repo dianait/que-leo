@@ -28,7 +28,14 @@ La aplicación cuenta con:
 
 ## Arquitectura
 
-Este proyecto está construido siguiendo los principios de **Arquitectura Hexagonal** (también conocida como Ports & Adapters), aplicando principios **SOLID** para crear un código mantenible y testeable.
+Este proyecto está organizado siguiendo los principios de la Arquitectura Hexagonal (también conocida como Puertos y Adaptadores), con las siguientes capas:
+
+- **Domain**: Entidades y reglas de negocio centrales
+- **Application**: Casos de uso de la aplicación
+- **Infrastructure**: Implementaciones técnicas y adaptadores
+- **UI**: Componentes de interfaz de usuario
+
+Para más detalles sobre la implementación y validación de la arquitectura hexagonal, consulta la [documentación de arquitectura](./docs/HEXAGONAL_ARCHITECTURE.md).
 
 ### Estructura del proyecto
 

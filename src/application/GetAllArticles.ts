@@ -1,10 +1,10 @@
 import { Article } from "../domain/Article";
-import { JsonArticleRepository } from "../infrastructure/repositories/JSONArticleRepository";
+import type { ArticleRepository } from "../domain/ArticleRepository";
 
 export class GetAllArticles {
-  private repository: JsonArticleRepository;
+  private repository: ArticleRepository;
 
-  constructor(repository: JsonArticleRepository) {
+  constructor(repository: ArticleRepository) {
     this.repository = repository;
   }
 
