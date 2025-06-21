@@ -1,16 +1,32 @@
 # ¿Qué leo? 📚
 
-Una aplicación para ayudarte a decidir qué leer de tu lista de artículos guardados.
+Una aplicación moderna para gestionar y descubrir qué leer de tu lista de artículos guardados.
 
-## ¿Por qué existe este proyecto?
+## Captura de pantalla
 
-Todos tenemos esa lista interminable de artículos técnicos que guardamos con la intención de "leer después"... pero que nunca leemos. Esta aplicación resuelve ese problema sugiriéndote qué leer de tu colección.
+![¿Qué leo? App](./screenshots/app.png)
+
+## Descripción
+
+Todos tenemos esa lista interminable de artículos técnicos que guardamos con la intención de "leer después"... pero que nunca leemos. Esta aplicación resuelve ese problema sugiriéndote qué leer de tu colección, con una interfaz limpia y fácil de usar inspirada en modernos editores de código.
+
+## Interfaz
+
+La aplicación cuenta con:
+
+- 🧩 **Diseño moderno** con una interfaz inspirada en VS Code
+- 🔀 **Sidebar desplegable** con la lista completa de artículos
+- 🎲 **Sugerencias aleatorias** para descubrir contenido olvidado
+- 📱 **Diseño responsive** que funciona en todos los dispositivos
+- 🔗 **Acceso rápido** a los enlaces o búsqueda en Google
 
 ## Características actuales
 
-- ✅ Lista de artículos guardados
+- ✅ Lista de artículos en sidebar desplegable
 - ✅ Visualización de título, URL y fecha
-- 🔄 Sugerencia de artículo aleatorio (en desarrollo)
+- ✅ Sugerencia de artículo aleatorio
+- ✅ Interfaz responsive para móvil y escritorio
+- ✅ Búsqueda automática en Google para artículos sin URL
 
 ## Características futuras
 
@@ -19,6 +35,7 @@ Todos tenemos esa lista interminable de artículos técnicos que guardamos con l
 - ✅ Marcar como leído
 - 🔍 Búsqueda y filtros
 - 📊 Estadísticas de lectura
+- 🌙 Modo oscuro
 
 ## Arquitectura
 
@@ -31,58 +48,48 @@ src/
 ├── domain/           # Entidades y reglas de negocio
 │   └── Article.ts
 ├── application/      # Casos de uso
+│   ├── GetAllArticles.ts
 │   └── GetRandomArticle.ts
 ├── infrastructure/   # Adaptadores externos (UI, persistencia, etc.)
-│   └── components/
-└── architecture/     # Configuración de la arquitectura
+│   └── repositories/
+│       └── JSONArticleRepository.ts
+├── ui/               # Componentes de la interfaz
+│   ├── ListOfArticles.tsx
+│   └── RandomArticle.tsx
+└── data/             # Datos de ejemplo
+    └── articles.json
 ```
 
 ### Capas de la arquitectura
 
 - **Domain**: Contiene las entidades de negocio y reglas puras, sin dependencias externas
 - **Application**: Casos de uso que orquestan la lógica de negocio
-- **Infrastructure**: Adaptadores que conectan con el mundo exterior (React UI, APIs, bases de datos)
+- **Infrastructure**: Adaptadores que conectan con el mundo exterior (repositorios, APIs, bases de datos)
+- **UI**: Componentes React que forman la interfaz de usuario
 
 ## Stack tecnológico
 
 - **React 18** - Librería de UI
 - **TypeScript** - Tipado estático
 - **Vite** - Build tool y dev server
-- **SWC** - Compilador rápido para TypeScript
+- **Jest** - Testing framework
+- **Testing Library** - Utilidades para testing de componentes
 
-## Instalación y ejecución
+## Ejecución del proyecto
 
-### Prerrequisitos
-
-- Node.js (versión 18 o superior)
-- npm o yarn
-
-### Pasos
-
-1. Clona el repositorio
 ```bash
-git clone https://github.com/dianait/article-reader
-cd article-reader
-```
-
-2. Instala las dependencias
-```bash
+# Instalación
 npm install
-```
 
-3. Ejecuta el proyecto en modo desarrollo
-```bash
+# Desarrollo
 npm run dev
+
+# Tests
+npm test
+
+# Build
+npm run build
 ```
-
-4. Abre tu navegador en `http://localhost:5173`
-
-## Scripts disponibles
-
-- `npm run dev` - Ejecuta el servidor de desarrollo
-- `npm run build` - Construye la aplicación para producción
-- `npm run preview` - Previsualiza la build de producción
-- `npm run lint` - Ejecuta el linter
 
 ## Estado del proyecto
 
