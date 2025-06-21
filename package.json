@@ -8,7 +8,13 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest --config jest.config.cjs"
+    "test": "jest --config jest.config.cjs",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "npm test -- --findRelatedTests --passWithNoTests"
+    ]
   },
   "dependencies": {
     "react": "^19.1.0",
@@ -27,8 +33,10 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
     "jest": "^30.0.2",
     "jest-environment-jsdom": "^30.0.2",
+    "lint-staged": "^16.1.2",
     "ts-jest": "^29.4.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
