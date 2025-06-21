@@ -2,8 +2,6 @@
 
 Una aplicación moderna para gestionar y descubrir qué leer de tu lista de artículos guardados.
 
-## Captura de pantalla
-
 ![¿Qué leo? App](./screenshots/app.png)
 
 ## Descripción
@@ -99,7 +97,7 @@ npm run build
 - [x] Entidad Article definida
 - [x] Caso de uso GetRandomArticle
 - [x] UI básica para mostrar lista de artículos
-- [ ] Botón para obtener artículo aleatorio
+- [x] Botón para obtener artículo aleatorio
 - [ ] Persistencia en LocalStorage
 
 ### Contribuir
@@ -108,4 +106,3 @@ Este es un proyecto de aprendizaje personal, pero si tienes sugerencias o mejora
 ### Licencia
 MIT License - Siéntete libre de usar este código para tus propios proyectos de aprendizaje.
 
-Nota: Este proyecto forma parte de mi aprendizaje de Arquitectura Hexagonal y principios SOLID. El objetivo es crear software mantenible y bien estructurado, no solo que funcione.
