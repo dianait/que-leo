@@ -3,6 +3,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 260px;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+
 }
 
 /* Estilos para el contenedor del artículo */
@@ -10,13 +15,15 @@
   min-height: 340px;
   width: 100%;
   max-width: 520px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Estilos para la tarjeta de artículo */
 .content-card.random-article-card {
-  width: 520px;
+  width: 100%;
   max-width: 520px;
-  min-width: 320px;
   min-height: 330px;
   margin: 0 auto;
   padding: 2rem 2.5rem 1.5rem 2.5rem;
@@ -31,11 +38,6 @@
   align-items: center;
 }
 
-/* Animación para la tarjeta cuando aparece */
-.card-animated {
-  animation: fadeInUp 0.5s ease-out;
-}
-
 /* Estilos para el título del artículo */
 .article-title {
   color: #2d3748;
@@ -43,36 +45,52 @@
   font-size: 1.35rem;
   margin-bottom: 16px;
   line-height: 1.4;
+  text-align: center;
+  width: 100%;
 }
 
 /* Contenedor de enlaces */
 .article-links-container {
   margin-bottom: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Mensaje de URL no disponible */
 .url-not-available {
-  padding: 16px;
+  padding: 12px;
+  text-align: center;
 }
 
 /* Estilos comunes para los enlaces */
 .article-link {
-  color: #667eea;
+  color: #5a6fd8;
   text-decoration: none;
   font-weight: 600;
   font-size: 1.08rem;
-  background: rgba(102,126,234,0.08);
+  background: rgba(90,111,216,0.08);
   padding: 0.5rem 1.2rem;
-  border-radius: 10px;
-  transition: background 0.2s;
+  border-radius: 5px;
   cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.article-link:hover {
+  background: rgba(90,111,216,0.15);
+  text-decoration: underline;
 }
 
 /* Estilos para la fecha de guardado */
 .article-date {
   color: #888;
   font-size: 0.98rem;
-  margin-top: 8px;
+  margin-top: 16px;
+  text-align: center;
+  width: 100%;
 }
 
 /* Estilos para el botón */
@@ -81,14 +99,85 @@
   margin-top: 24px;
 }
 
-/* Animación fadeInUp */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+/* Estado de carga */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #667eea;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Estilos para el botón mientras está cargando */
+.random-article-button:disabled {
+  background-color: #a2aedc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Sin animaciones */
+
+/* Media queries para responsive */
+@media (max-width: 600px) {
+  .content-card.random-article-card {
+    padding: 1.2rem;
+    min-height: 160px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .article-title {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+  
+  .random-article-button {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 16px;
+  }
+  
+  .article-link {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    width: 85%;
+  }
+  
+  .url-not-available {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+  
+  .article-date {
+    font-size: 0.9rem;
+  }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 375px) {
+  .content-card.random-article-card {
+    padding: 1rem;
+  }
+  
+  .article-title {
+    font-size: 1.1rem;
+  }
+  
+  .article-link {
+    font-size: 0.9rem;
+    padding: 0.45rem 0.9rem;
+  }
+}
+
+/* Para asegurar un buen comportamiento en tablets */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .content-card.random-article-card {
+    width: 90%;
+    max-width: 480px;
+  }
+  
+  .random-article-button {
+    width: auto;
+    min-width: 180px;
   }
 }

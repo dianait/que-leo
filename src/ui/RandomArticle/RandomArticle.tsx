@@ -54,7 +54,7 @@ export function RandomArticle() {
               <div className="article-links-container">
                 {article.url === "#" ? (
                   <>
-                    <div className="url-not-available"> 🚫 No URL disponible.</div>
+                    <div className="url-not-available">🚫 No URL disponible.</div>
                     <a
                       href={
                         "https://google.com/search?q=" +
@@ -80,6 +80,8 @@ export function RandomArticle() {
                 Guardado el: {article.dateAdded.toLocaleDateString()}
               </p>
             </>
+          ) : loading ? (
+            <div className="loading-state">🔄 Cargando artículo...</div>
           ) : null}
         </div>
       </div>
