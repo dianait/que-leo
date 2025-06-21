@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
-import { GetAllArticles } from "../src/application/GetAllArticles";
-import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
-import { ListOfArticles } from "../src/ui/ListOfArticles";
+import { GetAllArticles } from "../../src/application/GetAllArticles";
+import { JsonArticleRepository } from "../../src/infrastructure/repositories/JSONArticleRepository";
+import { ListOfArticles } from "../../src/ui/ListOfArticles";
 
 test("muestra la lista de artículos en el sidebar", async () => {
   render(<ListOfArticles />);

@@ -1,5 +1,5 @@
-import { ListOfArticles } from "./ui/ListOfArticles";
-import { RandomArticle } from "./ui/RandomArticle";
+import { ListOfArticles } from "./ui/ListOfArticles/ListOfArticles";
+import { RandomArticle } from "./ui/RandomArticle/RandomArticle";
 
 function App() {
   return (

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { GetRandomArticle } from "../application/GetRandomArticle";
-import { JsonArticleRepository } from "../infrastructure/repositories/JSONArticleRepository";
-import { Article } from "../domain/Article";
+import { GetRandomArticle } from "../../application/GetRandomArticle";
+import { JsonArticleRepository } from "../../infrastructure/repositories/JSONArticleRepository";
+import { Article } from "../../domain/Article";
 
 export function RandomArticle() {
   const [article, setArticle] = useState<Article | null>(null);
@@ -80,22 +80,12 @@ export function RandomArticle() {
         >
           {article ? (
             <>
-              <h3
-                style={{
-                  color: "#667eea",
-                  fontWeight: 600,
-                  fontSize: "1.1rem",
-                  marginBottom: 8,
-                }}
-              >
-                📖 Sugerencia para ti:
-              </h3>
               <h4
                 style={{
                   color: "#2d3748",
                   fontWeight: 700,
                   fontSize: "1.35rem",
-                  marginBottom: 12,
+                  marginBottom: 16,
                   lineHeight: 1.4,
                 }}
               >
