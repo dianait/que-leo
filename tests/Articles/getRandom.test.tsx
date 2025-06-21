@@ -47,10 +47,14 @@ test("botón muestra loading y luego artículo real", async () => {
   // Verificar estado loading
   expect(screen.getByText(/buscando/i)).toBeInTheDocument();
 
-  // Esperar que aparezca un artículo
+  // Esperar que aparezca un artículo (verificar que ya no está en estado de carga)
   await waitFor(
     () => {
-      expect(screen.getByText(/sugerencia para ti/i)).toBeInTheDocument();
+      // Verificar que ya no aparece el texto de loading
+      expect(screen.queryByText(/buscando/i)).not.toBeInTheDocument();
+      
+      // Verificar que se muestra un título de artículo (cualquier encabezado h4)
+      expect(screen.getByRole("heading", { level: 4 })).toBeInTheDocument();
     },
     { timeout: 3000 }
   );

@@ -91,10 +91,10 @@ export function RandomArticle() {
               >
                 {article.title}
               </h4>
-              <p style={{ marginBottom: 10 }}>
+              <div style={{ marginBottom: 10 }}>
                 {article.url === "#" ? (
                   <>
-                    <p style={{ padding: 16 }}> 🚫 No URL disponible.</p>
+                    <div style={{ padding: 16 }}> 🚫 No URL disponible.</div>
                     <a
                       href={
                         "https://google.com/search?q=" +
@@ -134,7 +134,7 @@ export function RandomArticle() {
                     🔗 Leer artículo
                   </a>
                 )}
-              </p>
+              </div>
               <p style={{ color: "#888", fontSize: "0.98rem", marginTop: 8 }}>
                 Guardado el: {article.dateAdded.toLocaleDateString()}
               </p>
