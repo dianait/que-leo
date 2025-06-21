@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
-import { GetAllArticles } from "../../../src/application/GetAllArticles";
-import { JsonArticleRepository } from "../../../src/infrastructure/repositories/JSONArticleRepository";
-import { ListOfArticles } from "../../../src/ui/ListOfArticles";
+import { GetAllArticles } from "../src/application/GetAllArticles";
+import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
+import { ListOfArticles } from "../src/ui/ListOfArticles";
 
 test("muestra la lista de artículos desde el JSON", async () => {
   render(<ListOfArticles />);
@@ -20,6 +20,9 @@ test("getAllArticles devuelve artículos desde el JSON", async () => {
   expect(articles.length).toBeGreaterThan(0);
   expect(articles[0]).toHaveProperty("id");
   expect(articles[0]).toHaveProperty("title");
+  expect(typeof articles[0].title).toBe("string");
   expect(articles[0]).toHaveProperty("url");
+  expect(typeof articles[0].url).toBe("string");
   expect(articles[0]).toHaveProperty("dateAdded");
+  expect(articles[0].dateAdded).toBeInstanceOf(Date);
 });
