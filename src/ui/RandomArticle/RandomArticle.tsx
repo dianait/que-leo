@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { GetRandomArticle } from "../../application/GetRandomArticle";
 import { JsonArticleRepository } from "../../infrastructure/repositories/JSONArticleRepository";
 import { Article } from "../../domain/Article";
+import "./RandomArticle.css";
 
 export function RandomArticle() {
   const [article, setArticle] = useState<Article | null>(null);
@@ -39,78 +40,26 @@ export function RandomArticle() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        minHeight: 260,
-      }}
-    >
-      <div
-        style={{
-          minHeight: 180,
-          width: "100%",
-          maxWidth: 520,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+    <div className="random-article-container">
+      <div className="article-container">
         <div
-          className="content-card random-article-card"
-          style={{
-            width: 520, // Fijo
-            maxWidth: 520,
-            minWidth: 320,
-            minHeight: 180,
-            margin: "0 auto",
-            padding: "2rem 2.5rem 1.5rem 2.5rem",
-            border: "1.5px solid #e3e8f0",
-            borderRadius: "18px",
-            boxShadow: "0 8px 32px rgba(102, 126, 234, 0.10)",
-            background: "rgba(255,255,255,0.98)",
-            transition: "box-shadow 0.2s, border 0.2s",
-            animation: article ? "fadeInUp 0.5s ease-out" : undefined,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          className={`content-card random-article-card ${article ? 'card-animated' : ''}`}
         >
           {article ? (
             <>
-              <h4
-                style={{
-                  color: "#2d3748",
-                  fontWeight: 700,
-                  fontSize: "1.35rem",
-                  marginBottom: 16,
-                  lineHeight: 1.4,
-                }}
-              >
+              <h4 className="article-title">
                 {article.title}
               </h4>
-              <div style={{ marginBottom: 10 }}>
+              <div className="article-links-container">
                 {article.url === "#" ? (
                   <>
-                    <div style={{ padding: 16 }}> 🚫 No URL disponible.</div>
+                    <div className="url-not-available"> 🚫 No URL disponible.</div>
                     <a
                       href={
                         "https://google.com/search?q=" +
                         encodeURIComponent(article.title)
                       }
-                      style={{
-                        color: "#667eea",
-                        textDecoration: "none",
-                        fontWeight: 600,
-                        fontSize: "1.08rem",
-                        background: "rgba(102,126,234,0.08)",
-                        padding: "0.5rem 1.2rem",
-                        borderRadius: 10,
-                        transition: "background 0.2s",
-                        cursor: "pointer",
-                      }}
+                      className="article-link"
                     >
                       🔎 Buscar en Google
                     </a>
@@ -120,22 +69,13 @@ export function RandomArticle() {
                     href={article.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{
-                      color: "#667eea",
-                      textDecoration: "none",
-                      fontWeight: 600,
-                      fontSize: "1.08rem",
-                      background: "rgba(102,126,234,0.08)",
-                      padding: "0.5rem 1.2rem",
-                      borderRadius: 10,
-                      transition: "background 0.2s",
-                    }}
+                    className="article-link"
                   >
                     🔗 Leer artículo
                   </a>
                 )}
               </div>
-              <p style={{ color: "#888", fontSize: "0.98rem", marginTop: 8 }}>
+              <p className="article-date">
                 Guardado el: {article.dateAdded.toLocaleDateString()}
               </p>
             </>
@@ -145,8 +85,7 @@ export function RandomArticle() {
       <button
         onClick={handleGetRandomArticle}
         disabled={loading}
-        className="modern-button button-primary"
-        style={{ minWidth: 220, marginTop: 24 }}
+        className="modern-button button-primary random-article-button"
       >
         {loading ? "🔄 Buscando..." : "Dame otro 🎲"}
       </button>
