@@ -1,5 +1,5 @@
 import React from "react";
-import { ListOfArticles } from "../../../src/ui/ListOfArticles";
+import { ListOfArticles } from "../../../src/ui/ListOfArticles/ListOfArticles";
 import { render, screen, waitFor } from "@testing-library/react";
 
 test("muestra la lista de artículos desde el JSON (componente real)", async () => {
