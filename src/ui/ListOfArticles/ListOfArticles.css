@@ -15,6 +15,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  line-height: 0;
+  padding-bottom: 2px; /* Ajuste adicional para centrar el ícono */
 }
 
 .sidebar-toggle.hidden {
@@ -24,6 +26,13 @@
 .sidebar-toggle:hover {
   background: #f8faff;
   border-color: #4a58cc;
+}
+
+.hamburger-icon {
+  margin-top: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sidebar-overlay {
