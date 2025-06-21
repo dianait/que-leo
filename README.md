@@ -12,19 +12,10 @@ Todos tenemos esa lista interminable de artículos técnicos que guardamos con l
 
 La aplicación cuenta con:
 
-- 🧩 **Diseño moderno** con una interfaz inspirada en VS Code
 - 🔀 **Sidebar desplegable** con la lista completa de artículos
 - 🎲 **Sugerencias aleatorias** para descubrir contenido olvidado
 - 📱 **Diseño responsive** que funciona en todos los dispositivos
 - 🔗 **Acceso rápido** a los enlaces o búsqueda en Google
-
-## Características actuales
-
-- ✅ Lista de artículos en sidebar desplegable
-- ✅ Visualización de título, URL y fecha
-- ✅ Sugerencia de artículo aleatorio
-- ✅ Interfaz responsive para móvil y escritorio
-- ✅ Búsqueda automática en Google para artículos sin URL
 
 ## Características futuras
 
