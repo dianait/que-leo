@@ -31,6 +31,6 @@ test("getAllArticles devuelve artículos desde el JSON", async () => {
   expect(typeof articles[0].title).toBe("string");
   expect(articles[0]).toHaveProperty("url");
   expect(typeof articles[0].url).toBe("string");
-  expect(articles[0]).toHaveProperty("dateAdded");
-  expect(articles[0].dateAdded).toBeInstanceOf(Date);
+  expect(articles[0]).toHaveProperty("created_at");
+  expect(articles[0].created_at).toBeInstanceOf(Date);
 });

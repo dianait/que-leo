@@ -35,7 +35,7 @@ test("getRandomArticle devuelve un artículo válido del JSON", async () => {
   expect(article).toHaveProperty("id");
   expect(article).toHaveProperty("title");
   expect(article).toHaveProperty("url");
-  expect(article.dateAdded).toBeInstanceOf(Date);
+  expect(article.created_at).toBeInstanceOf(Date);
 });
 
 test("botón muestra loading y luego artículo real", async () => {

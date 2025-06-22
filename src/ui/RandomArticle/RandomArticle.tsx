@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { GetRandomArticle } from "../../application/GetRandomArticle";
 import { JsonArticleRepository } from "../../infrastructure/repositories/JSONArticleRepository";
 import { Article } from "../../domain/Article";
-import "./RandomArticle.css";
 
 export function RandomArticle() {
   // Estados para manejar el artículo seleccionado y el estado de carga
@@ -44,17 +43,19 @@ export function RandomArticle() {
     <div className="random-article-container">
       <div className="article-container">
         <div
-          className={`content-card random-article-card ${article ? 'card-animated' : ''}`}
+          className={`content-card random-article-card ${
+            article ? "card-animated" : ""
+          }`}
         >
           {article ? (
             <>
-              <h4 className="article-title">
-                {article.title}
-              </h4>
+              <h4 className="article-title">{article.title}</h4>
               <div className="article-links-container">
                 {article.url === "#" ? (
                   <>
-                    <div className="url-not-available">🚫 No URL disponible.</div>
+                    <div className="url-not-available">
+                      🚫 No URL disponible.
+                    </div>
                     <a
                       href={
                         "https://google.com/search?q=" +
@@ -77,7 +78,7 @@ export function RandomArticle() {
                 )}
               </div>
               <p className="article-date">
-                Guardado el: {article.dateAdded.toLocaleDateString()}
+                Guardado el: {article.created_at.toLocaleDateString()}
               </p>
             </>
           ) : loading ? (
