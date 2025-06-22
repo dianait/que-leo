@@ -143,10 +143,6 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.sidebar-list-item:hover {
-  background: rgba(90, 111, 216, 0.05);
-}
-
 .sidebar-list-item a {
   color: #5a6fd8;
   text-decoration: none;
@@ -154,11 +150,6 @@
   display: block;
   margin-bottom: 4px;
   word-break: break-word;
-}
-
-.sidebar-list-item a:hover {
-  color: #4a58cc;
-  text-decoration: underline;
 }
 
 .sidebar-date {
