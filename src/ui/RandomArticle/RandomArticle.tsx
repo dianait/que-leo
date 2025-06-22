@@ -81,9 +81,14 @@ export function RandomArticle() {
           ) : loading ? (
             <div className="loading-state">🔄 Buscando en tus artículos...</div>
           ) : (
-            <div className="no-articles-state">
-              <p>¡No tienes artículos!</p>
-              <p>Añade uno para empezar.</p>
+            <div className="empty-state">
+              <div className="empty-state-icon">📚</div>
+              <h3>¡Tu biblioteca está vacía!</h3>
+              <p>No tienes artículos guardados todavía.</p>
+              <p className="empty-state-cta">
+                Haz clic en el botón <strong>+ New</strong> del sidebar para
+                añadir tu primer artículo y empezar a leer.
+              </p>
             </div>
           )}
         </div>

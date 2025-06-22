@@ -108,44 +108,65 @@ export function ListOfArticles() {
         {loading ? (
           <div className="sidebar-loading">Cargando...</div>
         ) : articles.length > 0 ? (
-          <ul className="sidebar-list">
-            {articles.map((article) => (
-              <li
-                key={article.id}
-                className={`sidebar-list-item ${
-                  article.isRead ? "is-read" : ""
-                }`}
-              >
-                <a href={article.url} target="_blank" rel="noopener noreferrer">
-                  {article.title}
-                </a>
-                <div className="item-meta">
-                  <span className="sidebar-date">
-                    {article.isRead && article.readAt
-                      ? `Leído: ${new Date(
-                          article.readAt
-                        ).toLocaleDateString()}`
-                      : new Date(article.dateAdded).toLocaleDateString()}
-                  </span>
-                  <button
-                    className="read-toggle-btn"
-                    onClick={() => handleToggleRead(article)}
-                    title={
-                      article.isRead
-                        ? "Marcar como no leído"
-                        : "Marcar como leído"
-                    }
+          articles.every((article) => article.isRead) ? (
+            <div className="all-read-message">
+              <div className="empty-state-icon">🎉</div>
+              <h3>¡Todo leído!</h3>
+              <p>Has repasado todos tus artículos pendientes. ¡Buen trabajo!</p>
+              <p className="empty-state-cta">
+                Añade más artículos con el botón <strong>+ New</strong> para
+                seguir leyendo.
+              </p>
+            </div>
+          ) : (
+            <ul className="sidebar-list">
+              {articles.map((article) => (
+                <li
+                  key={article.id}
+                  className={`sidebar-list-item ${
+                    article.isRead ? "is-read" : ""
+                  }`}
+                >
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    {article.isRead ? "Leído" : "Marcar como leído"}
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+                    {article.title}
+                  </a>
+                  <div className="item-meta">
+                    <span className="sidebar-date">
+                      {article.isRead && article.readAt
+                        ? `Leído: ${new Date(
+                            article.readAt
+                          ).toLocaleDateString()}`
+                        : new Date(article.dateAdded).toLocaleDateString()}
+                    </span>
+                    <button
+                      className="read-toggle-btn"
+                      onClick={() => handleToggleRead(article)}
+                      title={
+                        article.isRead
+                          ? "Marcar como no leído"
+                          : "Marcar como leído"
+                      }
+                    >
+                      {article.isRead ? "Leído" : "Marcar como leído"}
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )
         ) : (
-          <div className="all-read-message">
-            <h3>¡Todo leído! 🎉</h3>
-            <p>Has repasado todos tus artículos pendientes. ¡Buen trabajo!</p>
+          <div className="empty-state-sidebar">
+            <div className="empty-state-icon">📖</div>
+            <h3>¡Comienza tu colección!</h3>
+            <p>No tienes artículos guardados todavía.</p>
+            <p className="empty-state-cta">
+              Usa el botón <strong>+ New</strong> de arriba para añadir tu
+              primer artículo.
+            </p>
           </div>
         )}
       </aside>
