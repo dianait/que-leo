@@ -1,4 +1,6 @@
 import { useState, useEffect, useContext } from "react";
+import { formatDistanceToNow, isBefore, subYears } from "date-fns";
+import { es } from "date-fns/locale";
 import "./RandomArticle.css";
 import { Article } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
@@ -81,16 +83,29 @@ export function RandomArticle() {
                   </a>
                 )}
               </div>
-              <p className="article-date">
-                {article.isRead && article.readAt ? (
-                  <>
-                    <span className="read-tag-inline">📖 Leído</span>
-                    {` ${article.readAt.toLocaleDateString()}`}
-                  </>
-                ) : (
-                  `Guardado el: ${article.dateAdded.toLocaleDateString()}`
+              <div className="article-meta-container">
+                <p className="article-date">
+                  {article.isRead && article.readAt ? (
+                    <>
+                      <span className="read-tag-inline">📖 Leído</span>
+                      {` ${formatDistanceToNow(article.readAt, {
+                        addSuffix: true,
+                        locale: es,
+                      })}`}
+                    </>
+                  ) : (
+                    `Guardado ${formatDistanceToNow(article.dateAdded, {
+                      addSuffix: true,
+                      locale: es,
+                    })}`
+                  )}
+                </p>
+                {isBefore(article.dateAdded, subYears(new Date(), 1)) && (
+                  <p className="article-warning">
+                    ⚠️ Este artículo podría estar desactualizado.
+                  </p>
                 )}
-              </p>
+              </div>
             </>
           ) : loading ? (
             <div className="loading-state">🔄 Buscando en tus artículos...</div>

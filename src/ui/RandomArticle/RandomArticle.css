@@ -21,7 +21,7 @@
   max-width: 100%;
   box-sizing: border-box;
   margin-bottom: 2rem;
-  padding: 1.5rem;
+  padding: 1rem;
   border: 1px solid #e3e8f0;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -85,6 +85,25 @@
   margin-top: 16px;
   text-align: center;
   width: 100%;
+}
+
+/* Estilos para el contenedor de metadatos del artículo */
+.article-meta-container {
+  margin-top: 16px;
+  text-align: center;
+  width: 100%;
+}
+
+/* Estilos para el mensaje de advertencia */
+.article-warning {
+  color: #d97706; /* Un tono ámbar */
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 8px;
+  background: rgba(245, 158, 11, 0.1);
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: inline-block;
 }
 
 /* Estilos para el botón */
