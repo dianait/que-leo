@@ -6,6 +6,7 @@ import { useAuth } from "../../domain/AuthContext";
 import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
 import { AddArticle } from "../AddArticle/AddArticle";
+import { ArticleItemSkeleton } from "./ArticleItemSkeleton";
 
 export function ListOfArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -24,8 +25,12 @@ export function ListOfArticles() {
   }, []);
 
   useEffect(() => {
-    if (!repository || !user || !sidebarOpen) {
-      if (!user || !sidebarOpen) setArticles([]);
+    if (!repository || !user) {
+      return;
+    }
+
+    if (articles.length > 0) {
+      setLoading(false);
       return;
     }
 
@@ -42,7 +47,7 @@ export function ListOfArticles() {
       }
     };
     fetchArticles();
-  }, [user, sidebarOpen, repository]);
+  }, [user, repository]);
 
   const handleToggleRead = async (articleToToggle: Article) => {
     if (!repository) return;
@@ -106,7 +111,11 @@ export function ListOfArticles() {
           </div>
         </div>
         {loading ? (
-          <div className="sidebar-loading">Cargando...</div>
+          <ul className="sidebar-list">
+            {[...Array(5)].map((_, index) => (
+              <ArticleItemSkeleton key={index} />
+            ))}
+          </ul>
         ) : articles.length > 0 ? (
           articles.every((article) => article.isRead) ? (
             <div className="all-read-message">

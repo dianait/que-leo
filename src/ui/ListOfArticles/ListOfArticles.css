@@ -58,7 +58,7 @@
   transform: translateX(-100%);
   display: flex;
   flex-direction: column;
-  padding: 0;
+  padding: 0 20px;
 }
 
 .sidebar.open {
@@ -69,7 +69,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.2rem 1.5rem;
+  padding: 0;
   border-bottom: 1px solid #eee;
 }
 
@@ -114,13 +114,12 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  overflow-y: auto;
-  max-height: calc(100vh - 60px);
-  flex: 1;
 }
 
 .sidebar-list-item {
-  padding: 0.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
@@ -154,6 +153,9 @@
 
 .sidebar-list-item.is-read {
   background-color: #f8f9fa;
+  margin: 0 -20px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .item-meta {
