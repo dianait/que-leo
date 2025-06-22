@@ -109,9 +109,17 @@
 
 /* Estilos para el botón mientras está cargando */
 .random-article-button:disabled {
-  background-color: #a2aedc;
+  opacity: 0.6;
   cursor: not-allowed;
-  opacity: 0.7;
+  background: #ccc;
+  color: #666;
+}
+
+.random-article-button:disabled:hover {
+  background: #ccc;
+  color: #666;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Sin animaciones */

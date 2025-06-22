@@ -95,10 +95,14 @@ export function RandomArticle() {
       </div>
       <button
         onClick={handleGetRandomArticle}
-        disabled={loading}
+        disabled={loading || !article}
         className="modern-button button-primary random-article-button"
       >
-        {loading ? "🔄 Buscando..." : "Dame otro 🎲"}
+        {loading
+          ? "🔄 Buscando..."
+          : !article
+          ? "No hay artículos"
+          : "Dame otro 🎲"}
       </button>
     </div>
   );
