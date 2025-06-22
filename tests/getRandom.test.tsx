@@ -2,11 +2,14 @@
 import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import { User } from "@supabase/supabase-js";
+import React from "react";
 
 import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
 import { AuthContext } from "../src/domain/AuthContext";
+import { Article } from "../src/domain/Article";
+import { GetRandomArticleForUser } from "../src/application/GetRandomArticleForUser";
 
 // Mock del repositorio de Supabase para que los componentes no fallen al importarse
 jest.mock(
@@ -36,7 +39,14 @@ jest.mock(
 const jsonRepository = new JsonArticleRepository();
 const mockUser = { id: "123-test-user" } as User;
 
-test("RandomArticle muestra un artículo del repositorio JSON para un usuario logueado", async () => {
+test("GetRandomArticleForUser devuelve un artículo válido", async () => {
+  const useCase = new GetRandomArticleForUser(jsonRepository);
+  const article = await useCase.execute(mockUser.id);
+
+  expect(article).toBeInstanceOf(Article);
+});
+
+test("RandomArticle muestra un artículo usando el caso de uso", async () => {
   render(
     <AuthContext.Provider
       value={{

@@ -3,6 +3,7 @@ import "./ListOfArticles.css";
 import { Article } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
+import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 
 export function ListOfArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -28,7 +29,8 @@ export function ListOfArticles() {
       setLoading(true);
       const fetchArticles = async () => {
         try {
-          const result = await repository.getArticlesByUser(user.id);
+          const useCase = new GetArticlesByUser(repository);
+          const result = await useCase.execute(user.id);
           setArticles(result);
         } catch (error) {
           console.error("Error al cargar artículos del usuario:", error);

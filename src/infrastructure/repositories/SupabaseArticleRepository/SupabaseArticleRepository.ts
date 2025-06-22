@@ -99,11 +99,15 @@ export class SupabaseArticleRepository implements ArticleRepository {
     }
   }
 
-  async addArticle(title: string, url: string): Promise<Article> {
+  async addArticle(
+    title: string,
+    url: string,
+    userId: string
+  ): Promise<Article> {
     try {
       const { data, error } = await this.supabase
         .from("articles")
-        .insert([{ title, url }])
+        .insert([{ title, url, user_id: userId }])
         .select()
         .single();
 

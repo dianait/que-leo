@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
+import { AddArticle as AddArticleUseCase } from "../../application/AddArticle";
 import "./AddArticle.css";
 
 export const AddArticle: React.FC = () => {
@@ -16,14 +17,15 @@ export const AddArticle: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user || !repository) return;
 
     setLoading(true);
     setError("");
     setSuccess("");
 
     try {
-      await repository.addArticle(title, url);
+      const useCase = new AddArticleUseCase(repository);
+      await useCase.execute(title, url, user.id);
       setSuccess("¡Artículo añadido con éxito!");
       setTitle("");
       setUrl("");

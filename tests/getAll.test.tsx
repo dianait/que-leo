@@ -1,13 +1,16 @@
 import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
-import { GetAllArticles } from "../src/application/GetAllArticles";
-import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
-import { ListOfArticles } from "../src/ui/ListOfArticles/ListOfArticles";
+import { User } from "@supabase/supabase-js";
+import React from "react";
+
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
 import { AuthContext } from "../src/domain/AuthContext";
-import { User } from "@supabase/supabase-js";
+import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
+import { ListOfArticles } from "../src/ui/ListOfArticles/ListOfArticles";
+import { GetArticlesByUser } from "../src/application/GetArticlesByUser";
+import { Article } from "../src/domain/Article";
 
-// Mock del repositorio de Supabase para que los componentes no fallen
+// Mock del repositorio de Supabase para que los componentes no fallen al importarse
 jest.mock(
   "../src/infrastructure/repositories/SupabaseArticleRepository",
   () => ({
@@ -35,20 +38,16 @@ jest.mock(
 const jsonRepository = new JsonArticleRepository();
 const mockUser = { id: "123-test-user" } as User;
 
-test("GetAllArticles devuelve artículos usando el repositorio JSON", async () => {
-  const useCase = new GetAllArticles(jsonRepository);
-  const articles = await useCase.execute();
+test("GetArticlesByUser devuelve artículos del repositorio", async () => {
+  const useCase = new GetArticlesByUser(jsonRepository);
+  const articles = await useCase.execute(mockUser.id);
 
   expect(Array.isArray(articles)).toBe(true);
   expect(articles.length).toBeGreaterThan(0);
-  expect(articles[0]).toHaveProperty("id");
-  expect(articles[0]).toHaveProperty("title");
-  expect(articles[0]).toHaveProperty("url");
-  expect(articles[0]).toHaveProperty("dateAdded");
-  expect(articles[0].dateAdded).toBeInstanceOf(Date);
+  expect(articles[0]).toBeInstanceOf(Article);
 });
 
-test("ListOfArticles muestra artículos del repositorio JSON para un usuario logueado", async () => {
+test("ListOfArticles muestra artículos usando el caso de uso", async () => {
   render(
     <AuthContext.Provider
       value={{

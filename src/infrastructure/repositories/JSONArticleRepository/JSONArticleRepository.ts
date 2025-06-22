@@ -26,10 +26,14 @@ export class JsonArticleRepository implements ArticleRepository {
     return this.getAllArticles();
   }
 
-   
-  async addArticle(title: string, url: string): Promise<Article> {
+  async addArticle(
+    title: string,
+    url: string,
+    userId: string
+  ): Promise<Article> {
     // Para el repositorio JSON, simulamos la adición
     // En un entorno real, esto no funcionaría con un archivo JSON estático
+    void userId; // Silenciar el error de parámetro no usado
     const newId = Date.now().toString();
     const newArticle = new Article(newId, title, url, new Date());
 
