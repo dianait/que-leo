@@ -1,18 +1,32 @@
 export class Article {
-  id: string;
-  title: string;
-  url: string;
-  dateAdded: Date;
-
   constructor(
-    id: string | number,
-    title: string,
-    url: string,
-    dateAdded: Date
-  ) {
-    this.id = String(id);
-    this.title = title;
-    this.url = url;
-    this.dateAdded = dateAdded;
+    public readonly id: number | string,
+    public readonly title: string,
+    public readonly url: string,
+    public readonly dateAdded: Date,
+    public readonly isRead: boolean = false,
+    public readonly readAt?: Date
+  ) {}
+
+  markAsRead(): Article {
+    return new Article(
+      this.id,
+      this.title,
+      this.url,
+      this.dateAdded,
+      true,
+      new Date()
+    );
+  }
+
+  markAsUnread(): Article {
+    return new Article(
+      this.id,
+      this.title,
+      this.url,
+      this.dateAdded,
+      false,
+      undefined
+    );
   }
 }

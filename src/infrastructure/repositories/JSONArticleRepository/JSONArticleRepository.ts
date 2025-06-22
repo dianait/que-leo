@@ -45,6 +45,14 @@ export class JsonArticleRepository implements ArticleRepository {
     return newArticle;
   }
 
+  async markAsRead(articleId: number, isRead: boolean): Promise<void> {
+    void articleId;
+    void isRead;
+    console.warn(
+      "JsonArticleRepository: La operación markAsRead no se persiste en el archivo JSON"
+    );
+  }
+
   async deleteArticle(articleId: number, userId: string): Promise<void> {
     // Para el repositorio JSON, simulamos la eliminación
     // En un entorno real, esto no funcionaría con un archivo JSON estático

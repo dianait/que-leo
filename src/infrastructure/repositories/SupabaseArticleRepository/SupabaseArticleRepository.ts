@@ -9,6 +9,8 @@ interface ArticleRow {
   url: string;
   dateAdded: string;
   user_id?: string;
+  is_read: boolean;
+  read_at?: string;
 }
 
 interface SupabaseRepoOptions {
@@ -61,7 +63,14 @@ export class SupabaseArticleRepository implements ArticleRepository {
 
       return (data as ArticleRow[]).map(
         (row) =>
-          new Article(row.id, row.title, row.url, new Date(row.dateAdded))
+          new Article(
+            row.id,
+            row.title,
+            row.url,
+            new Date(row.dateAdded),
+            row.is_read,
+            row.read_at ? new Date(row.read_at) : undefined
+          )
       );
     } catch (error) {
       console.error(
@@ -88,7 +97,14 @@ export class SupabaseArticleRepository implements ArticleRepository {
 
       return (data as ArticleRow[]).map(
         (row) =>
-          new Article(row.id, row.title, row.url, new Date(row.dateAdded))
+          new Article(
+            row.id,
+            row.title,
+            row.url,
+            new Date(row.dateAdded),
+            row.is_read,
+            row.read_at ? new Date(row.read_at) : undefined
+          )
       );
     } catch (error) {
       console.error(
@@ -116,7 +132,14 @@ export class SupabaseArticleRepository implements ArticleRepository {
       }
 
       const row = data as ArticleRow;
-      return new Article(row.id, row.title, row.url, new Date(row.dateAdded));
+      return new Article(
+        row.id,
+        row.title,
+        row.url,
+        new Date(row.dateAdded),
+        row.is_read,
+        row.read_at ? new Date(row.read_at) : undefined
+      );
     } catch (error) {
       console.error("Error en SupabaseArticleRepository.addArticle:", error);
       throw error;
@@ -136,6 +159,28 @@ export class SupabaseArticleRepository implements ArticleRepository {
       }
     } catch (error) {
       console.error("Error en SupabaseArticleRepository.deleteArticle:", error);
+      throw error;
+    }
+  }
+
+  async markAsRead(articleId: number, isRead: boolean): Promise<void> {
+    try {
+      const updateData = isRead
+        ? { is_read: isRead, read_at: new Date().toISOString() }
+        : { is_read: isRead, read_at: null };
+
+      const { error } = await this.supabase
+        .from("articles")
+        .update(updateData)
+        .eq("id", articleId);
+
+      if (error) {
+        throw new Error(
+          `Error al marcar artículo como leído: ${error.message}`
+        );
+      }
+    } catch (error) {
+      console.error("Error en SupabaseArticleRepository.markAsRead:", error);
       throw error;
     }
   }
