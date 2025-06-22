@@ -6,6 +6,7 @@
   box-sizing: border-box;
   width: 100%;
   margin-top: 48px;
+  padding: 0 24px;
 }
 
 /* Estilos para el contenedor del artículo */
@@ -110,7 +111,9 @@
 
 /* Estilos para el botón */
 .random-article-button {
-  min-width: 220px;
+  width: 100%;
+  max-width: 520px;
+  min-width: auto;
   margin-top: 24px;
 }
 
