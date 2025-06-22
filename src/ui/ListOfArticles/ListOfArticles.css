@@ -112,7 +112,7 @@
 
 .sidebar-list {
   list-style: none;
-  padding: 0 1.5rem;
+  padding: 0;
   margin: 0;
   overflow-y: auto;
   max-height: calc(100vh - 60px);
@@ -120,13 +120,12 @@
 }
 
 .sidebar-list-item {
-  padding: 0.75rem 0;
+  padding: 0.75rem 1.5rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .sidebar-list-item:hover {
   background: rgba(90, 111, 216, 0.05);
-  border-radius: 4px;
 }
 
 .sidebar-list-item a {
@@ -190,8 +189,8 @@
   .sidebar-header {
     padding: 1rem 1rem 0.7rem 1rem;
   }
-  .sidebar-list {
-    padding: 0 1rem;
+  .sidebar-list-item {
+    padding: 0.75rem 1rem;
   }
   .sidebar-toggle {
     top: 1.2rem;
