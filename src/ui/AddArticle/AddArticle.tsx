@@ -23,9 +23,14 @@ export const AddArticle: React.FC = () => {
     setError("");
     setSuccess("");
 
+    let finalUrl = url;
+    if (!/^https?:\/\//i.test(finalUrl)) {
+      finalUrl = `https://${finalUrl}`;
+    }
+
     try {
       const useCase = new AddArticleUseCase(repository);
-      await useCase.execute(title, url, user.id);
+      await useCase.execute(title, finalUrl, user.id);
       setSuccess("¡Artículo añadido con éxito!");
       setTitle("");
       setUrl("");
