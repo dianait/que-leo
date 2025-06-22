@@ -1,27 +1,56 @@
 /// <reference types="@testing-library/jest-dom" />
 import "@testing-library/jest-dom";
+import { render, screen, waitFor } from "@testing-library/react";
+import { User } from "@supabase/supabase-js";
 
-import { GetRandomArticle } from "../src/application/GetRandomArticle";
-import { Article } from "../src/domain/Article";
 import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
-import { render, screen, waitFor } from "@testing-library/react";
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
+import { AuthContext } from "../src/domain/AuthContext";
+
+// Mock del repositorio de Supabase para que los componentes no fallen al importarse
+jest.mock(
+  "../src/infrastructure/repositories/SupabaseArticleRepository",
+  () => ({
+    SupabaseArticleRepository: {
+      getInstance: jest.fn().mockReturnValue({
+        getAllArticles: jest.fn().mockResolvedValue([]),
+        getArticlesByUser: jest.fn().mockResolvedValue([]),
+        addArticle: jest.fn().mockResolvedValue(null),
+        deleteArticle: jest.fn().mockResolvedValue(null),
+        supabase: {
+          auth: {
+            onAuthStateChange: jest.fn(() => ({
+              data: { subscription: { unsubscribe: jest.fn() } },
+            })),
+            getSession: jest
+              .fn()
+              .mockResolvedValue({ data: { session: null } }),
+          },
+        },
+      }),
+    },
+  })
+);
 
 const jsonRepository = new JsonArticleRepository();
+const mockUser = { id: "123-test-user" } as User;
 
-test("GetRandomArticle devuelve un artículo válido del JSON", async () => {
-  const useCase = new GetRandomArticle(jsonRepository);
-  const article = await useCase.execute();
-
-  expect(article).toBeInstanceOf(Article);
-});
-
-test("RandomArticle muestra un artículo del repositorio JSON", async () => {
+test("RandomArticle muestra un artículo del repositorio JSON para un usuario logueado", async () => {
   render(
-    <ArticleRepositoryContext.Provider value={jsonRepository}>
-      <RandomArticle />
-    </ArticleRepositoryContext.Provider>
+    <AuthContext.Provider
+      value={{
+        user: mockUser,
+        session: null,
+        signInWithGitHub: async () => {},
+        signOut: async () => {},
+        loading: false,
+      }}
+    >
+      <ArticleRepositoryContext.Provider value={jsonRepository}>
+        <RandomArticle />
+      </ArticleRepositoryContext.Provider>
+    </AuthContext.Provider>
   );
 
   await waitFor(() => {

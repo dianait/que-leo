@@ -1,20 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import "./ListOfArticles.css";
-import { GetAllArticles } from "../../application/GetAllArticles";
 import { Article } from "../../domain/Article";
-import { useArticleRepository } from "../../domain/ArticleRepositoryContext";
+import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
+import { useAuth } from "../../domain/AuthContext";
 
 export function ListOfArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
-  // Sidebar abierto por defecto
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
-  const repository = useArticleRepository();
+  const repository = useContext(ArticleRepositoryContext);
+  const { user } = useAuth();
 
   useEffect(() => {
-    // Detectar si es móvil
     const checkMobile = () => setIsMobile(window.innerWidth <= 900);
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -22,22 +21,30 @@ export function ListOfArticles() {
   }, []);
 
   useEffect(() => {
-    if (sidebarOpen && articles.length === 0) {
+    // Si el repositorio no está disponible, no hacemos nada.
+    if (!repository) return;
+
+    if (user && sidebarOpen) {
       setLoading(true);
       const fetchArticles = async () => {
         try {
-          const useCase = new GetAllArticles(repository);
-          const result = await useCase.execute();
+          const result = await repository.getArticlesByUser(user.id);
           setArticles(result);
         } catch (error) {
-          console.error("Error al cargar artículos:", error);
+          console.error("Error al cargar artículos del usuario:", error);
         } finally {
           setLoading(false);
         }
       };
       fetchArticles();
+    } else {
+      setArticles([]);
     }
-  }, [sidebarOpen, articles.length]);
+  }, [user, sidebarOpen, repository]);
+
+  const handleArticleAdded = (newArticle: Article) => {
+    setArticles((prevArticles) => [newArticle, ...prevArticles]);
+  };
 
   return (
     <>
@@ -61,7 +68,7 @@ export function ListOfArticles() {
         style={{ minWidth: 340, maxWidth: 420 }}
       >
         <div className="sidebar-header">
-          <h2>Articles ({articles.length})</h2>
+          <h2>Mis Artículos ({articles.length})</h2>
           <button
             className="close-btn"
             onClick={() => setSidebarOpen(false)}
@@ -71,7 +78,7 @@ export function ListOfArticles() {
           </button>
         </div>
         {loading ? (
-          <div className="sidebar-loading">Loading...</div>
+          <div className="sidebar-loading">Cargando...</div>
         ) : (
           <ul className="sidebar-list">
             {articles.map((article) => (

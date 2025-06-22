@@ -4,6 +4,8 @@ import { GetAllArticles } from "../src/application/GetAllArticles";
 import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { ListOfArticles } from "../src/ui/ListOfArticles/ListOfArticles";
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
+import { AuthContext } from "../src/domain/AuthContext";
+import { User } from "@supabase/supabase-js";
 
 // Mock del repositorio de Supabase para que los componentes no fallen
 jest.mock(
@@ -11,13 +13,27 @@ jest.mock(
   () => ({
     SupabaseArticleRepository: {
       getInstance: jest.fn().mockReturnValue({
-        getAllArticles: jest.fn().mockResolvedValue([]), // Devuelve vacío, no nos importa para este test
+        getAllArticles: jest.fn().mockResolvedValue([]),
+        getArticlesByUser: jest.fn().mockResolvedValue([]),
+        addArticle: jest.fn().mockResolvedValue(null),
+        deleteArticle: jest.fn().mockResolvedValue(null),
+        supabase: {
+          auth: {
+            onAuthStateChange: jest.fn(() => ({
+              data: { subscription: { unsubscribe: jest.fn() } },
+            })),
+            getSession: jest
+              .fn()
+              .mockResolvedValue({ data: { session: null } }),
+          },
+        },
       }),
     },
   })
 );
 
 const jsonRepository = new JsonArticleRepository();
+const mockUser = { id: "123-test-user" } as User;
 
 test("GetAllArticles devuelve artículos usando el repositorio JSON", async () => {
   const useCase = new GetAllArticles(jsonRepository);
@@ -32,15 +48,26 @@ test("GetAllArticles devuelve artículos usando el repositorio JSON", async () =
   expect(articles[0].dateAdded).toBeInstanceOf(Date);
 });
 
-test("ListOfArticles muestra artículos del repositorio JSON", async () => {
+test("ListOfArticles muestra artículos del repositorio JSON para un usuario logueado", async () => {
   render(
-    <ArticleRepositoryContext.Provider value={jsonRepository}>
-      <ListOfArticles />
-    </ArticleRepositoryContext.Provider>
+    <AuthContext.Provider
+      value={{
+        user: mockUser,
+        session: null,
+        signInWithGitHub: async () => {},
+        signOut: async () => {},
+        loading: false,
+      }}
+    >
+      <ArticleRepositoryContext.Provider value={jsonRepository}>
+        <ListOfArticles />
+      </ArticleRepositoryContext.Provider>
+    </AuthContext.Provider>
   );
 
   await waitFor(() => {
     const listItems = screen.getAllByRole("listitem");
     expect(listItems.length).toBeGreaterThan(0);
+    expect(screen.getByText(/Mis Artículos/)).toBeInTheDocument();
   });
 });

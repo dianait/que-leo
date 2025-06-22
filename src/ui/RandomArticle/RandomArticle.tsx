@@ -1,41 +1,44 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import "./RandomArticle.css";
 import { GetRandomArticle } from "../../application/GetRandomArticle";
 import { Article } from "../../domain/Article";
-import { useArticleRepository } from "../../domain/ArticleRepositoryContext";
+import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
+import { useAuth } from "../../domain/AuthContext";
 
 export function RandomArticle() {
   // Estados para manejar el artículo seleccionado y el estado de carga
   const [article, setArticle] = useState<Article | null>(null);
+  const [userArticles, setUserArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
-  const repository = useArticleRepository();
+
+  const repository = useContext(ArticleRepositoryContext);
+  const { user } = useAuth();
 
   useEffect(() => {
-    const fetchRandom = async () => {
+    if (!repository || !user) return;
+
+    const fetchUserArticles = async () => {
       setLoading(true);
       try {
-        const useCase = new GetRandomArticle(repository);
-        const randomArticle = await useCase.execute();
-        setArticle(randomArticle);
+        const articles = await repository.getArticlesByUser(user.id);
+        setUserArticles(articles);
+        if (articles.length > 0) {
+          const randomIndex = Math.floor(Math.random() * articles.length);
+          setArticle(articles[randomIndex]);
+        }
       } catch (error) {
-        console.error("Error al obtener artículo:", error);
+        console.error("Error al obtener artículos del usuario:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchRandom();
-  }, []);
+    fetchUserArticles();
+  }, [user, repository]);
 
-  const handleGetRandomArticle = async () => {
-    setLoading(true);
-    try {
-      const useCase = new GetRandomArticle(repository);
-      const randomArticle = await useCase.execute();
-      setArticle(randomArticle);
-    } catch (error) {
-      console.error("Error al obtener artículo:", error);
-    } finally {
-      setLoading(false);
+  const handleGetRandomArticle = () => {
+    if (userArticles.length > 0) {
+      const randomIndex = Math.floor(Math.random() * userArticles.length);
+      setArticle(userArticles[randomIndex]);
     }
   };
 
@@ -82,8 +85,13 @@ export function RandomArticle() {
               </p>
             </>
           ) : loading ? (
-            <div className="loading-state">🔄 Cargando artículo...</div>
-          ) : null}
+            <div className="loading-state">🔄 Cargando tus artículos...</div>
+          ) : (
+            <div className="no-articles-state">
+              <p>¡No tienes artículos!</p>
+              <p>Añade uno para empezar.</p>
+            </div>
+          )}
         </div>
       </div>
       <button

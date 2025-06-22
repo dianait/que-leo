@@ -36,12 +36,12 @@ body {
 .app-header h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2d3748;
+  color: white;
   margin-bottom: 0.5rem;
 }
 
 .app-header p {
-  color: #4a5568;
+  color: white;
   font-size: 1.3rem;
   font-weight: 600;
   font-style: italic;
