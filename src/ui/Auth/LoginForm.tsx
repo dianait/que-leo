@@ -21,10 +21,14 @@ export const LoginForm: React.FC = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Bienvenido a "¿Qué leo?"</h2>
-        <p className="auth-subtitle">
-          Inicia sesión para guardar y gestionar tus artículos.
-        </p>
+        <div className="auth-header">
+          <h1>📚</h1>
+          <h2>Menos decisiones, más lectura.</h2>
+          <p>
+            Tu biblioteca personal de artículos. Inicia sesión para descubrir tu
+            próxima gran lectura.
+          </p>
+        </div>
 
         {error && <div className="error-message">{error}</div>}
 
@@ -33,11 +37,17 @@ export const LoginForm: React.FC = () => {
           className="auth-button github-button"
           disabled={loading}
         >
-          {loading ? "Redirigiendo..." : "🐙 Entrar con GitHub"}
+          <img
+            src="/github.svg"
+            alt="GitHub Logo"
+            className="github-logo"
+          />
+          <span>{loading ? "Redirigiendo..." : "Continuar con GitHub"}</span>
         </button>
 
         <p className="auth-footer">
-          Tu próximo gran artículo está a solo un clic de distancia.
+          Al continuar, aceptas que guardemos tu email y nombre de usuario de
+          GitHub.
         </p>
       </div>
     </div>
