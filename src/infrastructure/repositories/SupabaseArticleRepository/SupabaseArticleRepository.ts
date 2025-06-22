@@ -8,6 +8,7 @@ interface ArticleRow {
   title: string;
   url: string;
   dateAdded: string;
+  user_id?: string;
 }
 
 interface SupabaseRepoOptions {
@@ -17,7 +18,7 @@ interface SupabaseRepoOptions {
 }
 
 export class SupabaseArticleRepository implements ArticleRepository {
-  private supabase: SupabaseClient;
+  public supabase: SupabaseClient;
   private static instance: SupabaseArticleRepository | null = null;
 
   private constructor(options: SupabaseRepoOptions = {}) {
@@ -67,6 +68,70 @@ export class SupabaseArticleRepository implements ArticleRepository {
         "Error en SupabaseArticleRepository.getAllArticles:",
         error
       );
+      throw error;
+    }
+  }
+
+  async getArticlesByUser(userId: string): Promise<Article[]> {
+    try {
+      const { data, error } = await this.supabase
+        .from("articles")
+        .select("*")
+        .eq("user_id", userId)
+        .order("dateAdded", { ascending: false });
+
+      if (error) {
+        throw new Error(
+          `Error al obtener artículos del usuario: ${error.message}`
+        );
+      }
+
+      return (data as ArticleRow[]).map(
+        (row) =>
+          new Article(row.id, row.title, row.url, new Date(row.dateAdded))
+      );
+    } catch (error) {
+      console.error(
+        "Error en SupabaseArticleRepository.getArticlesByUser:",
+        error
+      );
+      throw error;
+    }
+  }
+
+  async addArticle(title: string, url: string): Promise<Article> {
+    try {
+      const { data, error } = await this.supabase
+        .from("articles")
+        .insert([{ title, url }])
+        .select()
+        .single();
+
+      if (error) {
+        throw new Error(`Error al añadir artículo: ${error.message}`);
+      }
+
+      const row = data as ArticleRow;
+      return new Article(row.id, row.title, row.url, new Date(row.dateAdded));
+    } catch (error) {
+      console.error("Error en SupabaseArticleRepository.addArticle:", error);
+      throw error;
+    }
+  }
+
+  async deleteArticle(articleId: number, userId: string): Promise<void> {
+    try {
+      const { error } = await this.supabase
+        .from("articles")
+        .delete()
+        .eq("id", articleId)
+        .eq("user_id", userId);
+
+      if (error) {
+        throw new Error(`Error al eliminar artículo: ${error.message}`);
+      }
+    } catch (error) {
+      console.error("Error en SupabaseArticleRepository.deleteArticle:", error);
       throw error;
     }
   }
