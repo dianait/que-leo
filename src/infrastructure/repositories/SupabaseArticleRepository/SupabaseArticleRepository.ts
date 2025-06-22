@@ -52,6 +52,20 @@ export class SupabaseArticleRepository implements ArticleRepository {
 
   async getAllArticles(): Promise<Article[]> {
     try {
+      // Mock temporal para probar artículo leído
+      const mockArticles = [
+        new Article(
+          1,
+          "Cómo mejorar tu productividad con técnicas de lectura rápida",
+          "https://ejemplo.com/articulo1",
+          new Date("2024-12-10"),
+          true, // isRead
+          new Date("2024-12-15") // readAt
+        ),
+      ];
+
+      return mockArticles;
+
       const { data, error } = await this.supabase
         .from("articles")
         .select("*")
@@ -83,6 +97,20 @@ export class SupabaseArticleRepository implements ArticleRepository {
 
   async getArticlesByUser(userId: string): Promise<Article[]> {
     try {
+      // Mock temporal para probar artículo leído
+      const mockArticles = [
+        new Article(
+          1,
+          "Cómo mejorar tu productividad con técnicas de lectura rápida",
+          "https://ejemplo.com/articulo1",
+          new Date("2024-12-10"),
+          true, // isRead
+          new Date("2024-12-15") // readAt
+        ),
+      ];
+
+      return mockArticles;
+
       const { data, error } = await this.supabase
         .from("articles")
         .select("*")

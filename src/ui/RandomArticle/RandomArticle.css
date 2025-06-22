@@ -37,13 +37,12 @@
 
 /* Estilos para el título del artículo */
 .article-title {
-  color: #2d3748;
-  font-weight: 700;
-  font-size: 1.35rem;
-  margin-bottom: 16px;
-  line-height: 1.4;
-  text-align: center;
-  width: 100%;
+  margin: 0;
+  color: #333;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.3;
+  flex: 1;
 }
 
 /* Contenedor de enlaces */
@@ -220,4 +219,46 @@
   border-left: 4px solid #5a6fd8;
   font-size: 0.9rem !important;
   color: #555 !important;
+}
+
+.article-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.read-tag {
+  background: #28a745;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.remember-text {
+  text-align: center;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  color: #5a6fd8;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.remember-text span {
+  display: block;
+}
+
+.read-tag-inline {
+  background: #28a745;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 6px;
 }

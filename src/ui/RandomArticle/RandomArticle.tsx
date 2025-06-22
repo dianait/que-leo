@@ -46,7 +46,14 @@ export function RandomArticle() {
         >
           {article ? (
             <>
-              <h4 className="article-title">{article.title}</h4>
+              {article.isRead && (
+                <div className="remember-text">
+                  <span>🎪 ¿Quieres dar otra vuelta a este artículo?</span>
+                </div>
+              )}
+              <div className="article-header">
+                <h4 className="article-title">{article.title}</h4>
+              </div>
               <div className="article-links-container">
                 {article.url === "#" ? (
                   <>
@@ -75,7 +82,14 @@ export function RandomArticle() {
                 )}
               </div>
               <p className="article-date">
-                Guardado el: {article.dateAdded.toLocaleDateString()}
+                {article.isRead && article.readAt ? (
+                  <>
+                    <span className="read-tag-inline">📖 Leído</span>
+                    {` ${article.readAt.toLocaleDateString()}`}
+                  </>
+                ) : (
+                  `Guardado el: ${article.dateAdded.toLocaleDateString()}`
+                )}
               </p>
             </>
           ) : loading ? (
