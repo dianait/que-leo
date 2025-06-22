@@ -24,7 +24,9 @@ export const Header: React.FC = () => {
         {user && (
           <div className="header-right">
             <div className="user-info">
-              <span className="user-email">{user.email}</span>
+              <span className="user-email">
+                {user.user_metadata.user_name || user.email}
+              </span>
               <button
                 onClick={handleSignOut}
                 className="logout-button"
