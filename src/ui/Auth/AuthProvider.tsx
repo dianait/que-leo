@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { User, Session, SupabaseClient } from "@supabase/supabase-js";
+import type { User, Session } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { AuthContext } from "../../domain/AuthContext";
 import { SupabaseAuthRepository } from "../../infrastructure/auth/SupabaseAuthRepository";
 import { SignInWithGitHub } from "../../application/SignInWithGitHub";
@@ -38,7 +39,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
