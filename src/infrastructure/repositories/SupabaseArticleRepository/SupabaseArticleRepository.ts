@@ -1,0 +1,73 @@
+import { SupabaseClient } from "@supabase/supabase-js";
+import { Article } from "../../../domain/Article";
+import type { ArticleRepository } from "../../../domain/ArticleRepository";
+import { createSupabaseClient } from "./supabaseConfig";
+
+interface ArticleRow {
+  id: number;
+  title: string;
+  url: string;
+  dateAdded: string;
+}
+
+interface SupabaseRepoOptions {
+  supabaseUrl?: string;
+  supabaseKey?: string;
+  client?: SupabaseClient;
+}
+
+export class SupabaseArticleRepository implements ArticleRepository {
+  private supabase: SupabaseClient;
+  private static instance: SupabaseArticleRepository | null = null;
+
+  private constructor(options: SupabaseRepoOptions = {}) {
+    if (options.client) {
+      this.supabase = options.client;
+    } else {
+      this.supabase = createSupabaseClient(
+        options.supabaseUrl,
+        options.supabaseKey
+      );
+    }
+  }
+
+  public static getInstance(
+    options: SupabaseRepoOptions = {}
+  ): SupabaseArticleRepository {
+    if (!SupabaseArticleRepository.instance) {
+      SupabaseArticleRepository.instance = new SupabaseArticleRepository(
+        options
+      );
+    }
+    return SupabaseArticleRepository.instance;
+  }
+
+  // Método para resetear la instancia (útil para tests)
+  public static resetInstance(): void {
+    SupabaseArticleRepository.instance = null;
+  }
+
+  async getAllArticles(): Promise<Article[]> {
+    try {
+      const { data, error } = await this.supabase
+        .from("articles")
+        .select("*")
+        .order("dateAdded", { ascending: false });
+
+      if (error) {
+        throw new Error(`Error al obtener artículos: ${error.message}`);
+      }
+
+      return (data as ArticleRow[]).map(
+        (row) =>
+          new Article(row.id, row.title, row.url, new Date(row.dateAdded))
+      );
+    } catch (error) {
+      console.error(
+        "Error en SupabaseArticleRepository.getAllArticles:",
+        error
+      );
+      throw error;
+    }
+  }
+}
