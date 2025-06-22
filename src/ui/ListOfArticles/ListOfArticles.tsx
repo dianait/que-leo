@@ -77,6 +77,11 @@ export function ListOfArticles() {
     }
   };
 
+  const handleArticleClick = (url: string, event: React.MouseEvent) => {
+    event.preventDefault();
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <>
       <aside
@@ -130,6 +135,7 @@ export function ListOfArticles() {
                     href={article.url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => handleArticleClick(article.url, e)}
                   >
                     {article.title}
                   </a>

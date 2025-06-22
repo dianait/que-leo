@@ -38,6 +38,18 @@ export function RandomArticle() {
     fetchAndSetRandomArticle();
   };
 
+  const handleArticleClick = (url: string, event: React.MouseEvent) => {
+    event.preventDefault();
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const handleGoogleSearch = (title: string, event: React.MouseEvent) => {
+    event.preventDefault();
+    const searchUrl =
+      "https://google.com/search?q=" + encodeURIComponent(title);
+    window.open(searchUrl, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="random-article-container">
       <div className="article-container">
@@ -68,6 +80,7 @@ export function RandomArticle() {
                         encodeURIComponent(article.title)
                       }
                       className="article-link"
+                      onClick={(e) => handleGoogleSearch(article.title, e)}
                     >
                       🔎 Buscar en Google
                     </a>
@@ -78,6 +91,7 @@ export function RandomArticle() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="article-link"
+                    onClick={(e) => handleArticleClick(article.url, e)}
                   >
                     🔗 Leer artículo
                   </a>
