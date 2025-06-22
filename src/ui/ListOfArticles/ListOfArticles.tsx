@@ -137,7 +137,7 @@ export function ListOfArticles() {
                     rel="noopener noreferrer"
                     onClick={(e) => handleArticleClick(article.url, e)}
                   >
-                    {article.title}
+                    🔗 {article.title}
                   </a>
                   <div className="item-meta">
                     <span className="sidebar-date">
