@@ -143,7 +143,9 @@ export function ListOfArticles() {
                         : new Date(article.dateAdded).toLocaleDateString()}
                     </span>
                     <button
-                      className="read-toggle-btn"
+                      className={`app-button ${
+                        article.isRead ? "success" : ""
+                      }`}
                       onClick={() => handleToggleRead(article)}
                       title={
                         article.isRead

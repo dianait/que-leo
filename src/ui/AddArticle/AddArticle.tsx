@@ -47,7 +47,7 @@ export const AddArticle: React.FC = () => {
     <div className="add-article-container">
       <button
         onClick={toggleForm}
-        className="add-article-toggle"
+        className="app-button"
         title="Añadir artículo"
       >
         {isFormVisible ? "×" : "+ New"}

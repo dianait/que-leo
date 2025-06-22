@@ -159,3 +159,35 @@ body {
     padding: 0 15px;
   }
 }
+
+/* Clase común para botones de la aplicación */
+.app-button {
+  background: none;
+  border: 1px solid #5a6fd8;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  color: #5a6fd8;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-button:hover {
+  background-color: #5a6fd8;
+  color: white;
+}
+
+.app-button.success {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.app-button.success:hover {
+  background-color: #28a745;
+  color: white;
+}
