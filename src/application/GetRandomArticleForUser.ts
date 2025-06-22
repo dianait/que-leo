@@ -1,4 +1,4 @@
-import { Article } from "../domain/Article";
+import type { Article } from "../domain/Article";
 import type { ArticleRepository } from "../domain/ArticleRepository";
 
 export class GetRandomArticleForUser {

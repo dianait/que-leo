@@ -1,5 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Article } from "../../../domain/Article";
+import type { Article } from "../../../domain/Article";
 import type { ArticleRepository } from "../../../domain/ArticleRepository";
 import { createSupabaseClient } from "./supabaseConfig";
 
@@ -61,17 +61,14 @@ export class SupabaseArticleRepository implements ArticleRepository {
         throw new Error(`Error al obtener artículos: ${error.message}`);
       }
 
-      return (data as ArticleRow[]).map(
-        (row) =>
-          new Article(
-            row.id,
-            row.title,
-            row.url,
-            new Date(row.dateAdded),
-            row.is_read,
-            row.read_at ? new Date(row.read_at) : undefined
-          )
-      );
+      return (data as ArticleRow[]).map((row) => ({
+        id: row.id,
+        title: row.title,
+        url: row.url,
+        dateAdded: new Date(row.dateAdded),
+        isRead: row.is_read,
+        readAt: row.read_at ? new Date(row.read_at) : undefined,
+      }));
     } catch (error) {
       console.error(
         "Error en SupabaseArticleRepository.getAllArticles:",
@@ -95,17 +92,14 @@ export class SupabaseArticleRepository implements ArticleRepository {
         );
       }
 
-      return (data as ArticleRow[]).map(
-        (row) =>
-          new Article(
-            row.id,
-            row.title,
-            row.url,
-            new Date(row.dateAdded),
-            row.is_read,
-            row.read_at ? new Date(row.read_at) : undefined
-          )
-      );
+      return (data as ArticleRow[]).map((row) => ({
+        id: row.id,
+        title: row.title,
+        url: row.url,
+        dateAdded: new Date(row.dateAdded),
+        isRead: row.is_read,
+        readAt: row.read_at ? new Date(row.read_at) : undefined,
+      }));
     } catch (error) {
       console.error(
         "Error en SupabaseArticleRepository.getArticlesByUser:",
@@ -132,14 +126,14 @@ export class SupabaseArticleRepository implements ArticleRepository {
       }
 
       const row = data as ArticleRow;
-      return new Article(
-        row.id,
-        row.title,
-        row.url,
-        new Date(row.dateAdded),
-        row.is_read,
-        row.read_at ? new Date(row.read_at) : undefined
-      );
+      return {
+        id: row.id,
+        title: row.title,
+        url: row.url,
+        dateAdded: new Date(row.dateAdded),
+        isRead: row.is_read,
+        readAt: row.read_at ? new Date(row.read_at) : undefined,
+      };
     } catch (error) {
       console.error("Error en SupabaseArticleRepository.addArticle:", error);
       throw error;

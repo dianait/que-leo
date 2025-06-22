@@ -1,4 +1,4 @@
-import { Article } from "../../../domain/Article";
+import type { Article } from "../../../domain/Article";
 import type { ArticleRepository } from "../../../domain/ArticleRepository";
 import articlesData from "../../data/articles.json";
 
@@ -13,10 +13,13 @@ export class JsonArticleRepository implements ArticleRepository {
   async getAllArticles(): Promise<Article[]> {
     // Aseguramos que los datos se cargan correctamente
     const rawArticles = articlesData ?? [];
-    return rawArticles.map(
-      (item: ArticleJSON) =>
-        new Article(item.id, item.title, item.url, new Date(item.dateAdded))
-    );
+    return rawArticles.map((item: ArticleJSON) => ({
+      id: item.id,
+      title: item.title,
+      url: item.url,
+      dateAdded: new Date(item.dateAdded),
+      isRead: false,
+    }));
   }
 
   async getArticlesByUser(userId: string): Promise<Article[]> {
@@ -35,7 +38,13 @@ export class JsonArticleRepository implements ArticleRepository {
     // En un entorno real, esto no funcionaría con un archivo JSON estático
     void userId; // Silenciar el error de parámetro no usado
     const newId = Date.now().toString();
-    const newArticle = new Article(newId, title, url, new Date());
+    const newArticle: Article = {
+      id: newId,
+      title,
+      url,
+      dateAdded: new Date(),
+      isRead: false,
+    };
 
     // Nota: En un entorno real, esto no persistiría los cambios
     console.warn(

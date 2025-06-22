@@ -4,11 +4,11 @@ import { User } from "@supabase/supabase-js";
 import React from "react";
 
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
-import { AuthContext } from "../src/domain/AuthContext";
+import { AuthContext, useAuth } from "../src/domain/AuthContext";
 import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { ListOfArticles } from "../src/ui/ListOfArticles/ListOfArticles";
 import { GetArticlesByUser } from "../src/application/GetArticlesByUser";
-import { Article } from "../src/domain/Article";
+import type { Article } from "../src/domain/Article";
 
 // Mock del repositorio de Supabase para que los componentes no fallen al importarse
 jest.mock(
@@ -32,7 +32,11 @@ describe("Obtención de artículos", () => {
 
     expect(Array.isArray(articles)).toBe(true);
     expect(articles.length).toBeGreaterThan(0);
-    expect(articles[0]).toBeInstanceOf(Article);
+    expect(articles[0]).toHaveProperty("id");
+    expect(articles[0]).toHaveProperty("title");
+    expect(articles[0]).toHaveProperty("url");
+    expect(articles[0]).toHaveProperty("dateAdded");
+    expect(articles[0]).toHaveProperty("isRead");
   });
 
   test("ListOfArticles muestra artículos usando el caso de uso", async () => {

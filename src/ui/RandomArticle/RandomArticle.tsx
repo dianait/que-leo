@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { formatDistanceToNow, isBefore, subYears } from "date-fns";
 import { es } from "date-fns/locale";
 import "./RandomArticle.css";
-import { Article } from "../../domain/Article";
+import type { Article } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
 import { GetRandomArticleForUser } from "../../application/GetRandomArticleForUser";

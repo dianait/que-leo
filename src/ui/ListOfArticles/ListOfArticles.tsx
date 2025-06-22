@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import "./ListOfArticles.css";
-import { Article } from "../../domain/Article";
+import type { Article } from "../../domain/Article";
+import { markArticleAsRead, markArticleAsUnread } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
 import { GetArticlesByUser } from "../../application/GetArticlesByUser";
@@ -53,8 +54,8 @@ export function ListOfArticles() {
     if (!repository) return;
 
     const newArticleState = articleToToggle.isRead
-      ? articleToToggle.markAsUnread()
-      : articleToToggle.markAsRead();
+      ? markArticleAsUnread(articleToToggle)
+      : markArticleAsRead(articleToToggle);
 
     setArticles((currentArticles) =>
       currentArticles.map((article) =>
