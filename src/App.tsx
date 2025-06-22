@@ -4,7 +4,8 @@ import { AddArticle } from "./ui/AddArticle/AddArticle";
 import { Header } from "./ui/Header/Header";
 import { LoginForm } from "./ui/Auth/LoginForm";
 import { ArticleRepositoryContext } from "./domain/ArticleRepositoryContext";
-import { AuthProvider, useAuth } from "./domain/AuthContext";
+import { useAuth } from "./domain/AuthContext";
+import { AuthProvider } from "./ui/Auth/AuthProvider";
 import { SupabaseArticleRepository } from "./infrastructure/repositories/SupabaseArticleRepository";
 
 const repository = SupabaseArticleRepository.getInstance();

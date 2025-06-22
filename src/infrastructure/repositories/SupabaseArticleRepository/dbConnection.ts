@@ -1,9 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-// En el navegador, usar las variables de entorno de Vite (VITE_)
-// En el servidor/Node.js, usar las variables de entorno normales
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || (typeof process !== 'undefined' ? process.env.SUPABASE_URL : '');
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || (typeof process !== 'undefined' ? process.env.SUPABASE_ANON_KEY : '');
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Crear cliente de Supabase
 const supabase = createClient(
