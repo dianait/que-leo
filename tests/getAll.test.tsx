@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import { GetAllArticles } from "../src/application/GetAllArticles";
-import { JsonArticleRepository } from "./__mocks__/repositories/JSONArticleRepository";
+import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { ListOfArticles } from "../src/ui/ListOfArticles/ListOfArticles";
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
 

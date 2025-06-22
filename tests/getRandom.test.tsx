@@ -1,8 +1,9 @@
 /// <reference types="@testing-library/jest-dom" />
+import "@testing-library/jest-dom";
 
 import { GetRandomArticle } from "../src/application/GetRandomArticle";
 import { Article } from "../src/domain/Article";
-import { JsonArticleRepository } from "./__mocks__/repositories/JSONArticleRepository";
+import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
 import { render, screen, waitFor } from "@testing-library/react";
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";

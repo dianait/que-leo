@@ -1,6 +1,6 @@
-import { Article } from "../../src/domain/Article";
-import type { ArticleRepository } from "../../src/domain/ArticleRepository";
-import articlesData from "../../src/infrastructure/data/articles.json";
+import { Article } from "../../../domain/Article";
+import type { ArticleRepository } from "../../../domain/ArticleRepository";
+import articlesData from "../../data/articles.json";
 
 interface ArticleJSON {
   id: string;
