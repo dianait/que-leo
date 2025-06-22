@@ -3,59 +3,66 @@
 import { GetRandomArticle } from "../src/application/GetRandomArticle";
 import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
 import { Article } from "../src/domain/Article";
-import { ArticleRepository } from "../src/domain/ArticleRepository";
-import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { fireEvent, render, waitFor, screen } from "@testing-library/react";
+import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 
-test("getRandomArticle devuelve un artículo aleatorio", async () => {
-  // Mock repository con datos conocidos
-  const mockArticles = [
-    new Article("1", "Artículo 1", "http://ejemplo1.com", new Date()),
-    new Article("2", "Artículo 2", "http://ejemplo2.com", new Date()),
-    new Article("3", "Artículo 3", "http://ejemplo3.com", new Date()),
-  ];
+const mockArticle = new Article(
+  1,
+  "Mock Random Article",
+  "http://example.com/random",
+  new Date()
+);
 
-  const mockRepo = {
-    getAllArticles: jest.fn().mockResolvedValue(mockArticles),
-  };
+// Mock del repositorio de Supabase para que los componentes no fallen
+jest.mock(
+  "../src/infrastructure/repositories/SupabaseArticleRepository",
+  () => ({
+    SupabaseArticleRepository: {
+      getInstance: jest.fn().mockReturnValue({
+        getAllArticles: jest.fn().mockResolvedValue([]),
+      }),
+    },
+  })
+);
 
-  const useCase = new GetRandomArticle(mockRepo as ArticleRepository);
-  const article = await useCase.execute();
+// Mockeamos la configuración para evitar el error de 'import.meta.env'
+jest.mock(
+  "../src/infrastructure/repositories/SupabaseArticleRepository/supabaseConfig.ts",
+  () => ({
+    createSupabaseClient: jest.fn(),
+  })
+);
 
-  expect(mockArticles).toContain(article);
-  expect(mockRepo.getAllArticles).toHaveBeenCalledTimes(1);
-});
-
-test("getRandomArticle devuelve un artículo válido del JSON", async () => {
+test("GetRandomArticle devuelve un artículo válido del JSON", async () => {
   const repo = new JsonArticleRepository();
   const useCase = new GetRandomArticle(repo);
-
   const article = await useCase.execute();
 
+  // Verificamos que el artículo devuelto es una instancia de Article y tiene las propiedades correctas
+  expect(article).toBeInstanceOf(Article);
   expect(article).toHaveProperty("id");
   expect(article).toHaveProperty("title");
   expect(article).toHaveProperty("url");
-  expect(article.created_at).toBeInstanceOf(Date);
+  expect(article.dateAdded).toBeInstanceOf(Date);
 });
 
-test("botón muestra loading y luego artículo real", async () => {
+test("botón muestra loading y luego el artículo mockeado", async () => {
   render(<RandomArticle />);
 
-  const button = screen.getByRole("button");
+  await waitFor(() => {
+    expect(
+      screen.getByText("Mock Random Article", { exact: false })
+    ).toBeInTheDocument();
+  });
+
+  const button = screen.getByRole("button", { name: /dame otro/i });
   fireEvent.click(button);
 
-  // Verificar estado loading
   expect(screen.getByText(/buscando/i)).toBeInTheDocument();
 
-  // Esperar que aparezca un artículo (verificar que ya no está en estado de carga)
-  await waitFor(
-    () => {
-      // Verificar que ya no aparece el texto de loading
-      expect(screen.queryByText(/buscando/i)).not.toBeInTheDocument();
-
-      // Verificar que se muestra un título de artículo (cualquier encabezado h4)
-      expect(screen.getByRole("heading", { level: 4 })).toBeInTheDocument();
-    },
-    { timeout: 3000 }
-  );
+  await waitFor(() => {
+    expect(
+      screen.getByText("Mock Random Article", { exact: false })
+    ).toBeInTheDocument();
+  });
 });

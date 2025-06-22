@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
+import "./ListOfArticles.css";
 import { GetAllArticles } from "../../application/GetAllArticles";
-import { JsonArticleRepository } from "../../infrastructure/repositories/JSONArticleRepository";
 import { Article } from "../../domain/Article";
+import { useArticleRepository } from "../../domain/ArticleRepositoryContext";
 
 export function ListOfArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -9,6 +10,8 @@ export function ListOfArticles() {
   // Sidebar abierto por defecto
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+
+  const repository = useArticleRepository();
 
   useEffect(() => {
     // Detectar si es móvil
@@ -23,7 +26,6 @@ export function ListOfArticles() {
       setLoading(true);
       const fetchArticles = async () => {
         try {
-          const repository = new JsonArticleRepository();
           const useCase = new GetAllArticles(repository);
           const result = await useCase.execute();
           setArticles(result);
@@ -78,7 +80,7 @@ export function ListOfArticles() {
                   {article.title}
                 </a>
                 <div className="sidebar-date">
-                  {article.created_at.toLocaleDateString()}
+                  {article.dateAdded.toLocaleDateString()}
                 </div>
               </li>
             ))}

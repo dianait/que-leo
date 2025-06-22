@@ -2,12 +2,17 @@ export class Article {
   id: string;
   title: string;
   url: string;
-  created_at: Date;
+  dateAdded: Date;
 
-  constructor(id: string, title: string, url: string, created_at: Date) {
-    this.id = id;
+  constructor(
+    id: string | number,
+    title: string,
+    url: string,
+    dateAdded: Date
+  ) {
+    this.id = String(id);
     this.title = title;
     this.url = url;
-    this.created_at = created_at;
+    this.dateAdded = dateAdded;
   }
 }

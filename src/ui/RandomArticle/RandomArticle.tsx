@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
+import "./RandomArticle.css";
 import { GetRandomArticle } from "../../application/GetRandomArticle";
-import { JsonArticleRepository } from "../../infrastructure/repositories/JSONArticleRepository";
 import { Article } from "../../domain/Article";
+import { useArticleRepository } from "../../domain/ArticleRepositoryContext";
 
 export function RandomArticle() {
   // Estados para manejar el artículo seleccionado y el estado de carga
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(false);
+  const repository = useArticleRepository();
 
   useEffect(() => {
     const fetchRandom = async () => {
       setLoading(true);
       try {
-        const repository = new JsonArticleRepository();
         const useCase = new GetRandomArticle(repository);
         const randomArticle = await useCase.execute();
         setArticle(randomArticle);
@@ -28,7 +29,6 @@ export function RandomArticle() {
   const handleGetRandomArticle = async () => {
     setLoading(true);
     try {
-      const repository = new JsonArticleRepository();
       const useCase = new GetRandomArticle(repository);
       const randomArticle = await useCase.execute();
       setArticle(randomArticle);
@@ -78,7 +78,7 @@ export function RandomArticle() {
                 )}
               </div>
               <p className="article-date">
-                Guardado el: {article.created_at.toLocaleDateString()}
+                Guardado el: {article.dateAdded.toLocaleDateString()}
               </p>
             </>
           ) : loading ? (
