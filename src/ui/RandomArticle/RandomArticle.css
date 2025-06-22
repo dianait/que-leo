@@ -3,15 +3,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 260px;
-  width: 100%;
-  padding: 0 20px;
   box-sizing: border-box;
 }
 
 /* Estilos para el contenedor del artículo */
 .article-container {
-  min-height: 180px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -20,10 +16,11 @@
 
 /* Estilos para la tarjeta de artículo */
 .content-card.random-article-card {
-  width: 100%;
-  max-width: 520px;
-  min-height: 180px;
-  margin: 0 auto 2rem;
+  width: 520px;
+  height: 240px;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 2rem;
   padding: 1.5rem;
   border: 1px solid #e3e8f0;
   border-radius: 10px;
@@ -33,6 +30,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
 /* Estilos para el título del artículo */
