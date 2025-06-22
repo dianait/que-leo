@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { ArticleRepository } from "./ArticleRepository";
+import type { ArticleRepository } from "./ArticleRepository";
 
 // Creamos el Context con un valor por defecto nulo.
 export const ArticleRepositoryContext = createContext<ArticleRepository | null>(

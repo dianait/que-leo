@@ -1,8 +1,12 @@
 import { Article } from "../domain/Article";
-import { ArticleRepository } from "../domain/ArticleRepository";
+import type { ArticleRepository } from "../domain/ArticleRepository";
 
 export class GetRandomArticleForUser {
-  constructor(private readonly repository: ArticleRepository) {}
+  private readonly repository: ArticleRepository;
+
+  constructor(repository: ArticleRepository) {
+    this.repository = repository;
+  }
 
   async execute(userId: string): Promise<Article | null> {
     const articles = await this.repository.getArticlesByUser(userId);

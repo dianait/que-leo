@@ -1,7 +1,11 @@
-import { ArticleRepository } from "../domain/ArticleRepository";
+import type { ArticleRepository } from "../domain/ArticleRepository";
 
 export class MarkArticleAsRead {
-  constructor(private readonly repository: ArticleRepository) {}
+  private readonly repository: ArticleRepository;
+
+  constructor(repository: ArticleRepository) {
+    this.repository = repository;
+  }
 
   async execute(articleId: number, isRead: boolean): Promise<void> {
     return this.repository.markAsRead(articleId, isRead);

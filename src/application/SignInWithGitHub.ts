@@ -1,7 +1,11 @@
-import { AuthRepository } from "../domain/AuthRepository";
+import type { AuthRepository } from "../domain/AuthRepository";
 
 export class SignInWithGitHub {
-  constructor(private readonly repository: AuthRepository) {}
+  private readonly repository: AuthRepository;
+
+  constructor(repository: AuthRepository) {
+    this.repository = repository;
+  }
 
   async execute(): Promise<void> {
     return this.repository.signInWithGitHub();

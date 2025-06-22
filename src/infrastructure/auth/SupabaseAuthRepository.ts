@@ -1,8 +1,12 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { AuthRepository } from "../../domain/AuthRepository";
+import type { AuthRepository } from "../../domain/AuthRepository";
 
 export class SupabaseAuthRepository implements AuthRepository {
-  constructor(private readonly supabase: SupabaseClient) {}
+  private readonly supabase: SupabaseClient;
+
+  constructor(supabase: SupabaseClient) {
+    this.supabase = supabase;
+  }
 
   async signInWithGitHub(): Promise<void> {
     const { error } = await this.supabase.auth.signInWithOAuth({
