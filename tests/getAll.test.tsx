@@ -16,20 +16,7 @@ jest.mock(
   () => ({
     SupabaseArticleRepository: {
       getInstance: jest.fn().mockReturnValue({
-        getAllArticles: jest.fn().mockResolvedValue([]),
-        getArticlesByUser: jest.fn().mockResolvedValue([]),
-        addArticle: jest.fn().mockResolvedValue(null),
-        deleteArticle: jest.fn().mockResolvedValue(null),
-        supabase: {
-          auth: {
-            onAuthStateChange: jest.fn(() => ({
-              data: { subscription: { unsubscribe: jest.fn() } },
-            })),
-            getSession: jest
-              .fn()
-              .mockResolvedValue({ data: { session: null } }),
-          },
-        },
+        // No necesitamos implementar los métodos aquí si no se usan directamente
       }),
     },
   })
@@ -38,35 +25,37 @@ jest.mock(
 const jsonRepository = new JsonArticleRepository();
 const mockUser = { id: "123-test-user" } as User;
 
-test("GetArticlesByUser devuelve artículos del repositorio", async () => {
-  const useCase = new GetArticlesByUser(jsonRepository);
-  const articles = await useCase.execute(mockUser.id);
+describe("Obtención de artículos", () => {
+  test("GetArticlesByUser devuelve artículos del repositorio", async () => {
+    const useCase = new GetArticlesByUser(jsonRepository);
+    const articles = await useCase.execute(mockUser.id);
 
-  expect(Array.isArray(articles)).toBe(true);
-  expect(articles.length).toBeGreaterThan(0);
-  expect(articles[0]).toBeInstanceOf(Article);
-});
+    expect(Array.isArray(articles)).toBe(true);
+    expect(articles.length).toBeGreaterThan(0);
+    expect(articles[0]).toBeInstanceOf(Article);
+  });
 
-test("ListOfArticles muestra artículos usando el caso de uso", async () => {
-  render(
-    <AuthContext.Provider
-      value={{
-        user: mockUser,
-        session: null,
-        signInWithGitHub: async () => {},
-        signOut: async () => {},
-        loading: false,
-      }}
-    >
-      <ArticleRepositoryContext.Provider value={jsonRepository}>
-        <ListOfArticles />
-      </ArticleRepositoryContext.Provider>
-    </AuthContext.Provider>
-  );
+  test("ListOfArticles muestra artículos usando el caso de uso", async () => {
+    render(
+      <AuthContext.Provider
+        value={{
+          user: mockUser,
+          session: null,
+          signInWithGitHub: async () => {},
+          signOut: async () => {},
+          loading: false,
+        }}
+      >
+        <ArticleRepositoryContext.Provider value={jsonRepository}>
+          <ListOfArticles />
+        </ArticleRepositoryContext.Provider>
+      </AuthContext.Provider>
+    );
 
-  await waitFor(() => {
-    const listItems = screen.getAllByRole("listitem");
-    expect(listItems.length).toBeGreaterThan(0);
-    expect(screen.getByText(/Mis Artículos/)).toBeInTheDocument();
+    await waitFor(() => {
+      const listItems = screen.getAllByRole("listitem");
+      expect(listItems.length).toBeGreaterThan(0);
+      expect(screen.getByText(/Mis Artículos/)).toBeInTheDocument();
+    });
   });
 });
