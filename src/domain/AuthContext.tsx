@@ -4,7 +4,7 @@ import type { User, Session } from "@supabase/supabase-js";
 export interface AuthContextType {
   user: User | null;
   session: Session | null;
-  signInWithGitHub: () => Promise<void>;
+  signInWithGitHub: (redirectTo?: string) => Promise<void>;
   signOut: () => Promise<void>;
   loading: boolean;
 }

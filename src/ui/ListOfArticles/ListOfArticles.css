@@ -209,26 +209,33 @@
   }
 }
 
-.empty-state-sidebar {
+.empty-state-sidebar,
+.all-read-message {
   text-align: center;
   padding: 40px 20px;
   color: #666;
 }
 
-.empty-state-sidebar .empty-state-icon {
+.empty-state-icon {
   font-size: 3rem;
   margin-bottom: 16px;
   opacity: 0.7;
 }
 
-.empty-state-sidebar h3 {
+.empty-state-sidebar h3,
+.all-read-message h3 {
   margin: 0 0 12px 0;
   color: #333;
   font-size: 1.2rem;
   font-weight: 600;
 }
 
-.empty-state-sidebar p {
+.all-read-message h3 {
+  color: #28a745;
+}
+
+.empty-state-sidebar p,
+.all-read-message p {
   margin: 0 0 8px 0;
   font-size: 0.9rem;
   line-height: 1.4;
@@ -242,29 +249,4 @@
   border-left: 3px solid #5a6fd8;
   font-size: 0.85rem !important;
   color: #555 !important;
-}
-
-.all-read-message {
-  text-align: center;
-  padding: 40px 20px;
-  color: #666;
-}
-
-.all-read-message .empty-state-icon {
-  font-size: 3rem;
-  margin-bottom: 16px;
-  opacity: 0.7;
-}
-
-.all-read-message h3 {
-  margin: 0 0 12px 0;
-  color: #28a745;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.all-read-message p {
-  margin: 0 0 8px 0;
-  font-size: 0.9rem;
-  line-height: 1.4;
 }

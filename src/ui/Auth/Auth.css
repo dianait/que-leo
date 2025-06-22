@@ -1,3 +1,4 @@
+/* Contenedor principal */
 .auth-container {
   display: flex;
   justify-content: center;
@@ -18,6 +19,7 @@
   border: 1px solid #e3e8f0;
 }
 
+/* Header */
 .auth-header {
   margin-bottom: 32px;
 }
@@ -90,6 +92,7 @@
   gap: 10px;
 }
 
+/* Botón de GitHub */
 .auth-button.github-button {
   background-color: #24292e;
   color: white;
@@ -124,6 +127,7 @@
   cursor: not-allowed;
 }
 
+/* Footer */
 .auth-footer {
   margin-top: 24px;
   color: #889ab2;
@@ -151,6 +155,7 @@
   color: #5a67d8;
 }
 
+/* Mensajes de error */
 .error-message {
   background-color: #fff5f5;
   color: #c53030;

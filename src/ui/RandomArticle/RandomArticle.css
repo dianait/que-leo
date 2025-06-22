@@ -1,15 +1,13 @@
-/* Estilos para el contenedor principal */
+/* Contenedor principal */
 .random-article-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-sizing: border-box;
   width: 100%;
   margin-top: 48px;
   padding: 0 24px;
 }
 
-/* Estilos para el contenedor del artículo */
 .article-container {
   width: 100%;
   display: flex;
@@ -17,12 +15,11 @@
   align-items: center;
 }
 
-/* Estilos para la tarjeta de artículo */
+/* Tarjeta del artículo */
 .content-card.random-article-card {
   width: 520px;
   height: 280px;
   max-width: 100%;
-  box-sizing: border-box;
   margin-bottom: 2rem;
   padding: 1rem;
   border: 1px solid #e3e8f0;
@@ -36,7 +33,6 @@
   text-align: center;
 }
 
-/* Estilos para el título del artículo */
 .article-title {
   margin: 0;
   color: #333;
@@ -46,7 +42,7 @@
   flex: 1;
 }
 
-/* Contenedor de enlaces */
+/* Enlaces */
 .article-links-container {
   margin-bottom: 10px;
   width: 100%;
@@ -55,13 +51,11 @@
   align-items: center;
 }
 
-/* Mensaje de URL no disponible */
 .url-not-available {
   padding: 12px;
   text-align: center;
 }
 
-/* Estilos comunes para los enlaces */
 .article-link {
   color: #5a6fd8;
   text-decoration: none;
@@ -81,7 +75,13 @@
   text-decoration: underline;
 }
 
-/* Estilos para la fecha de guardado */
+/* Metadatos */
+.article-meta-container {
+  margin-top: 16px;
+  text-align: center;
+  width: 100%;
+}
+
 .article-date {
   color: #888;
   font-size: 0.98rem;
@@ -90,16 +90,8 @@
   width: 100%;
 }
 
-/* Estilos para el contenedor de metadatos del artículo */
-.article-meta-container {
-  margin-top: 16px;
-  text-align: center;
-  width: 100%;
-}
-
-/* Estilos para el mensaje de advertencia */
 .article-warning {
-  color: #d97706; /* Un tono ámbar */
+  color: #d97706;
   font-size: 0.875rem;
   font-weight: 500;
   margin-top: 8px;
@@ -109,26 +101,13 @@
   display: inline-block;
 }
 
-/* Estilos para el botón */
+/* Botón */
 .random-article-button {
   width: 100%;
   max-width: 520px;
-  min-width: auto;
   margin-top: 24px;
 }
 
-/* Estado de carga */
-.loading-state {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.1rem;
-  color: #667eea;
-  padding: 20px;
-  text-align: center;
-}
-
-/* Estilos para el botón mientras está cargando */
 .random-article-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -143,9 +122,78 @@
   box-shadow: none;
 }
 
-/* Sin animaciones */
+/* Estados */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #667eea;
+  padding: 20px;
+  text-align: center;
+}
 
-/* Media queries para responsive */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.empty-state h3 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.empty-state p {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.empty-state-cta {
+  margin-top: 16px !important;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #5a6fd8;
+  font-size: 0.85rem !important;
+  color: #555 !important;
+}
+
+/* Elementos específicos */
+.article-header {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.remember-text {
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  background: rgba(40, 167, 69, 0.1);
+  border-radius: 8px;
+  color: #28a745;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.read-tag-inline {
+  background: #28a745;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Responsive */
 @media (max-width: 600px) {
   .content-card.random-article-card {
     padding: 1.2rem;
@@ -179,7 +227,6 @@
   }
 }
 
-/* Para pantallas muy pequeñas */
 @media (max-width: 375px) {
   .content-card.random-article-card {
     padding: 1rem;
@@ -193,94 +240,4 @@
     font-size: 0.9rem;
     padding: 0.45rem 0.9rem;
   }
-}
-
-/* Para asegurar un buen comportamiento en tablets */
-@media (min-width: 601px) and (max-width: 1024px) {
-  .content-card.random-article-card {
-    width: 90%;
-    max-width: 480px;
-  }
-
-  .random-article-button {
-    width: auto;
-    min-width: 180px;
-  }
-}
-
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #666;
-}
-
-.empty-state-icon {
-  font-size: 4rem;
-  margin-bottom: 20px;
-  opacity: 0.7;
-}
-
-.empty-state h3 {
-  margin: 0 0 16px 0;
-  color: #333;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.empty-state p {
-  margin: 0 0 12px 0;
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-.empty-state-cta {
-  margin-top: 20px !important;
-  padding: 16px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #5a6fd8;
-  font-size: 0.9rem !important;
-  color: #555 !important;
-}
-
-.article-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.read-tag {
-  background: #28a745;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.remember-text {
-  text-align: center;
-  margin-bottom: 16px;
-  padding: 8px 12px;
-  color: #5a6fd8;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.remember-text span {
-  display: block;
-}
-
-.read-tag-inline {
-  background: #28a745;
-  color: white;
-  padding: 5px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  margin-right: 6px;
 }

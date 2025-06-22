@@ -1,4 +1,4 @@
 export interface AuthRepository {
-  signInWithGitHub(): Promise<void>;
+  signInWithGitHub(redirectTo?: string): Promise<void>;
   signOut(): Promise<void>;
 }

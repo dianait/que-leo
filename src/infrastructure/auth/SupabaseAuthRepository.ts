@@ -8,9 +8,12 @@ export class SupabaseAuthRepository implements AuthRepository {
     this.supabase = supabase;
   }
 
-  async signInWithGitHub(): Promise<void> {
+  async signInWithGitHub(redirectTo?: string): Promise<void> {
     const { error } = await this.supabase.auth.signInWithOAuth({
       provider: "github",
+      options: {
+        redirectTo: redirectTo || window.location.origin,
+      },
     });
     if (error) {
       throw new Error(`Error al iniciar sesión con GitHub: ${error.message}`);

@@ -48,8 +48,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     return () => subscription.unsubscribe();
   }, [supabase.auth]);
 
-  const signInWithGitHub = async () => {
-    await signInUseCase.execute();
+  const signInWithGitHub = async (redirectTo?: string) => {
+    await signInUseCase.execute(redirectTo);
   };
 
   const signOut = async () => {

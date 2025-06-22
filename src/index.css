@@ -20,110 +20,26 @@ body {
   flex-direction: column;
 }
 
-.main-actions {
+/* Layout principal */
+.app-container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  margin-bottom: 3rem;
-  width: 100%;
-  max-width: 400px;
+  height: 100vh;
 }
 
-.modern-button {
-  margin: 1rem;
-  padding: 1.2rem 2.5rem;
-  font-size: 1.2rem;
-  font-weight: 700;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.main-layout {
+  display: flex;
+  flex-grow: 1;
 }
 
-.button-primary {
-  background-color: #5a6fd8;
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-
-.button-primary:hover:not(:disabled) {
-  background-color: #4a58cc;
-}
-
-/* Área reservada para contenido dinámico */
-.dynamic-content-area {
-  min-height: 300px;
+.main-view {
+  flex-grow: 1;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-/* Responsive */
-@media (max-width: 768px) {
-  #root {
-    padding: 0;
-  }
-
-  .main-actions {
-    max-width: 100%;
-  }
 }
 
-/* Loading spinner */
-.loading-spinner {
-  display: inline-block;
-  margin-right: 0.5rem;
-}
-
-/* Loading styles */
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
-.loading-spinner {
-  font-size: 48px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.loading-container p {
-  font-size: 18px;
-  font-weight: 500;
-  margin: 0;
-}
-
-/* Main content styles */
-.main-content {
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .main-content {
-    padding: 0 15px;
-  }
-}
-
-/* Clase común para botones de la aplicación */
+/* Botones comunes */
 .app-button {
   background: none;
   border: 1px solid #5a6fd8;
@@ -163,29 +79,74 @@ body {
   font-weight: 600;
 }
 
-.app-layout {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-  background-color: #f5f7ff;
-  padding: 24px;
-  box-sizing: border-box;
+/* Botón principal */
+.modern-button {
+  margin: 1rem;
+  padding: 1.2rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.main-view {
-  flex-grow: 1;
-  overflow-y: auto;
+.button-primary {
+  background-color: #5a6fd8;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.button-primary:hover:not(:disabled) {
+  background-color: #4a58cc;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-size: 48px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #root {
+    padding: 0;
+  }
+}
+
+/* Área reservada para contenido dinámico */
+.dynamic-content-area {
+  min-height: 300px;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-.app-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+/* Main content styles */
+.main-content {
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.main-layout {
-  display: flex;
-  flex-grow: 1;
+/* Responsive */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0 15px;
+  }
 }

@@ -7,7 +7,7 @@ export class SignInWithGitHub {
     this.repository = repository;
   }
 
-  async execute(): Promise<void> {
-    return this.repository.signInWithGitHub();
+  async execute(redirectTo?: string): Promise<void> {
+    return this.repository.signInWithGitHub(redirectTo);
   }
 }

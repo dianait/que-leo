@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../domain/AuthContext";
+import { AUTH_CONFIG } from "../../domain/config/auth";
 import "./Auth.css";
 
 export const LoginForm: React.FC = () => {
@@ -11,7 +12,7 @@ export const LoginForm: React.FC = () => {
     setError("");
     setLoading(true);
     try {
-      await signInWithGitHub();
+      await signInWithGitHub(AUTH_CONFIG.REDIRECT_URL);
     } catch (error: any) {
       setError(error.message);
       setLoading(false);
@@ -37,11 +38,7 @@ export const LoginForm: React.FC = () => {
           className="auth-button github-button"
           disabled={loading}
         >
-          <img
-            src="/github.svg"
-            alt="GitHub Logo"
-            className="github-logo"
-          />
+          <img src="/github.svg" alt="GitHub Logo" className="github-logo" />
           <span>{loading ? "Redirigiendo..." : "Continuar con GitHub"}</span>
         </button>
 
