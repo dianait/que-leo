@@ -5,7 +5,7 @@ import "./Header.css";
 export const Header: React.FC = () => {
   const { user, signOut } = useAuth();
 
-  const handleSignOut = async () => {
+  const handleLogout = async () => {
     try {
       await signOut();
     } catch (error) {
@@ -24,11 +24,20 @@ export const Header: React.FC = () => {
         {user && (
           <div className="header-right">
             <div className="user-info">
-              <span className="user-email">
-                {user.user_metadata.user_name || user.email}
-              </span>
+              {user.user_metadata.avatar_url ? (
+                <img
+                  src={user.user_metadata.avatar_url}
+                  alt={user.user_metadata.user_name || "Avatar"}
+                  className="user-avatar"
+                  title={user.user_metadata.user_name || user.email}
+                />
+              ) : (
+                <span className="user-email">
+                  {user.user_metadata.user_name || user.email}
+                </span>
+              )}
               <button
-                onClick={handleSignOut}
+                onClick={handleLogout}
                 className="logout-button"
                 title="Cerrar sesión"
               >

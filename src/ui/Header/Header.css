@@ -35,17 +35,33 @@
 .user-info {
   display: flex;
   align-items: center;
-  gap: 15px;
   background: rgba(255, 255, 255, 0.1);
-  padding: 10px 15px;
-  border-radius: 25px;
+  padding: 4px;
+  border-radius: 28px;
   backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.user-info:hover {
+  background: rgba(255, 255, 255, 0.2);
+  padding-right: 12px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .user-email {
   font-size: 14px;
   font-weight: 500;
   opacity: 0.9;
+  padding: 0 10px;
+  white-space: nowrap;
 }
 
 .logout-button {
@@ -56,8 +72,25 @@
   border-radius: 20px;
   font-size: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  max-width: 0;
+  margin-left: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.user-info:hover .logout-button {
+  opacity: 1;
+  visibility: visible;
+  max-width: 100px;
+  margin-left: 8px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 .logout-button:hover {
