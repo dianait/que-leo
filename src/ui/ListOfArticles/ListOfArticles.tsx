@@ -91,7 +91,7 @@ export function ListOfArticles() {
         <div className="sidebar-header">
           <div className="sidebar-header-actions">
             <button
-              className="close-btn"
+              className={`close-btn ${isMobile ? "mobile-only" : "hidden"}`}
               onClick={() => {
                 if (isMobile) {
                   setSidebarOpen(false);

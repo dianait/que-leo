@@ -111,6 +111,14 @@
   width: 32px;
 }
 
+.close-btn.hidden {
+  display: none;
+}
+
+.close-btn.mobile-only {
+  display: flex;
+}
+
 .close-btn:hover {
   color: #4a58cc;
 }

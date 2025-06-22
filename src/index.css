@@ -157,6 +157,10 @@ body {
 
 .app-button.new-button {
   margin-top: 6px;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 16px;
+  font-weight: 600;
 }
 
 .app-layout {
