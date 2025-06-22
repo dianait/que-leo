@@ -1,18 +1,24 @@
 .app-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 20px 0;
-  margin-bottom: 30px;
+  padding: 20px 24px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+}
+
+.header-left {
+  padding-left: 48px;
+}
+
+.header-right {
+  padding-right: 48px;
 }
 
 .header-left h1 {
@@ -25,11 +31,6 @@
   margin: 0;
   font-size: 16px;
   opacity: 0.9;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
 }
 
 .user-info {

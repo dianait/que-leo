@@ -78,37 +78,26 @@ export function ListOfArticles() {
 
   return (
     <>
-      <button
-        className={`sidebar-toggle${sidebarOpen ? " hidden" : ""}`}
-        aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
-        onClick={() => setSidebarOpen((open) => !open)}
-      >
-        <span className="hamburger-icon">☰</span>
-      </button>
-
-      {sidebarOpen && isMobile && (
-        <div
-          className="sidebar-overlay"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
       <aside
         className={`sidebar${sidebarOpen ? " open" : ""}`}
         style={{ minWidth: 340, maxWidth: 420 }}
       >
         <div className="sidebar-header">
-          <h2>Mis Artículos ({articles.length})</h2>
           <div className="sidebar-header-actions">
-            <AddArticle />
             <button
               className="close-btn"
-              onClick={() => setSidebarOpen(false)}
+              onClick={() => {
+                if (isMobile) {
+                  setSidebarOpen(false);
+                }
+              }}
               aria-label="Close sidebar"
             >
               ×
             </button>
+            <AddArticle />
           </div>
+          <h2>Mis Artículos ({articles.length})</h2>
         </div>
         {loading ? (
           <ul className="sidebar-list">

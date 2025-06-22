@@ -25,10 +25,14 @@ const AppContent: React.FC = () => {
 
   return (
     <ArticleRepositoryContext.Provider value={repository}>
-      <Header />
-      <div className="main-content">
-        <RandomArticle />
-        <ListOfArticles />
+      <div className="app-container">
+        <Header />
+        <div className="main-layout">
+          <main className="main-view">
+            <RandomArticle />
+          </main>
+          <ListOfArticles />
+        </div>
       </div>
     </ArticleRepositoryContext.Provider>
   );
