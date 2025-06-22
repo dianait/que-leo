@@ -5,6 +5,7 @@ import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext"
 import { useAuth } from "../../domain/AuthContext";
 import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
+import { AddArticle } from "../AddArticle/AddArticle";
 
 export function ListOfArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -93,13 +94,16 @@ export function ListOfArticles() {
       >
         <div className="sidebar-header">
           <h2>Mis Artículos ({articles.length})</h2>
-          <button
-            className="close-btn"
-            onClick={() => setSidebarOpen(false)}
-            aria-label="Close sidebar"
-          >
-            ×
-          </button>
+          <div className="sidebar-header-actions">
+            <AddArticle />
+            <button
+              className="close-btn"
+              onClick={() => setSidebarOpen(false)}
+              aria-label="Close sidebar"
+            >
+              ×
+            </button>
+          </div>
         </div>
         {loading ? (
           <div className="sidebar-loading">Cargando...</div>

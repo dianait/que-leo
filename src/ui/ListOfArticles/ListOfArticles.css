@@ -73,12 +73,30 @@
   border-bottom: 1px solid #eee;
 }
 
+.sidebar-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+}
+
+.sidebar-header-actions > * {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .close-btn {
   background: none;
   border: none;
   font-size: 2rem;
   color: #5a6fd8;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
 }
 
 .close-btn:hover {

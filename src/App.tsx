@@ -32,7 +32,6 @@ const AppContent: React.FC = () => {
       <Header />
       <div className="main-content">
         <RandomArticle />
-        <AddArticle />
         <ListOfArticles />
       </div>
     </ArticleRepositoryContext.Provider>

@@ -1,45 +1,53 @@
 .add-article-container {
-  margin: 20px 0;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .add-article-toggle {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
+  background: none;
+  border: 1px solid #5a6fd8;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  width: 100%;
+  font-size: 13px;
+  color: #5a6fd8;
+  padding: 4px 8px;
+  border-radius: 12px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  margin-top: 6px;
 }
 
 .add-article-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  background-color: #5a6fd8;
+  color: white;
 }
 
 .add-article-form-container {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #e1e5e9;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 300px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  z-index: 1000;
+  margin-top: 8px;
+  padding: 16px;
 }
 
 .add-article-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .add-article-form h3 {
-  margin: 0 0 10px 0;
+  margin: 0;
   color: #333;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -56,17 +64,15 @@
 }
 
 .form-group input {
-  padding: 12px 16px;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: border-color 0.3s ease;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #5a6fd8;
 }
 
 .form-group input:disabled {
@@ -75,34 +81,30 @@
 }
 
 .submit-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #5a6fd8;
   color: white;
   border: none;
-  padding: 14px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  margin-top: 10px;
 }
 
 .submit-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  background: #4a58cc;
 }
 
 .submit-button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
-  transform: none;
 }
 
 .error-message {
   background: #fee;
   color: #c53030;
-  padding: 12px 16px;
-  border-radius: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
   border: 1px solid #feb2b2;
   font-size: 14px;
 }
@@ -110,8 +112,8 @@
 .success-message {
   background: #f0fff4;
   color: #38a169;
-  padding: 12px 16px;
-  border-radius: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
   border: 1px solid #9ae6b4;
   font-size: 14px;
 }
