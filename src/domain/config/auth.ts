@@ -1,15 +1,26 @@
 // Configuración de URLs de autenticación
 export const AUTH_CONFIG = {
   // URL de redirección después del login exitoso
-  // Cambia esto según tu entorno (desarrollo, staging, producción)
-  REDIRECT_URL:
-    import.meta.env.VITE_AUTH_REDIRECT_URL || window.location.origin,
+  // Detecta automáticamente el entorno
+  REDIRECT_URL: (() => {
+    // Si hay una variable de entorno específica, úsala
+    if (import.meta.env.VITE_AUTH_REDIRECT_URL) {
+      return import.meta.env.VITE_AUTH_REDIRECT_URL;
+    }
+
+    // En desarrollo local, usa la URL actual
+    if (import.meta.env.DEV) {
+      return window.location.origin;
+    }
+
+    // En producción, usa la URL de producción
+    return "https://que-leo.vercel.app";
+  })(),
 
   // URLs permitidas para redirección (configurar en Supabase Dashboard)
   ALLOWED_REDIRECT_URLS: [
     "http://localhost:5173", // Desarrollo local
     "http://localhost:3000", // Puerto alternativo
-    "https://tu-dominio.vercel.app", // Reemplaza con tu dominio de producción
-    "https://tu-dominio.com", // Reemplaza con tu dominio personalizado
+    "https://que-leo.vercel.app", // Tu dominio de producción
   ],
 };

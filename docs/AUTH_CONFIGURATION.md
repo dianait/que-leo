@@ -10,7 +10,7 @@ Para que el login con GitHub funcione correctamente, necesitas configurar las UR
 2. Selecciona tu proyecto
 3. Ve a **Authentication** → **URL Configuration**
 4. Configura:
-   - **Site URL**: Tu URL de producción (ej: `https://tu-app.vercel.app`)
+   - **Site URL**: Tu URL de producción (ej: `https://que-leo.vercel.app`)
    - **Redirect URLs**: Agrega todas las URLs donde quieres que redirija después del login
 
 ### 2. Variables de Entorno
@@ -23,26 +23,51 @@ VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 # Authentication Redirect URL (opcional)
-VITE_AUTH_REDIRECT_URL=https://tu-dominio.vercel.app
+# Si no se especifica, se detecta automáticamente según el entorno
+VITE_AUTH_REDIRECT_URL=https://que-leo.vercel.app
 ```
 
-### 3. Configuración en el Código
+### 3. Configuración Automática
 
-El archivo `src/config/auth.ts` contiene la configuración de URLs permitidas:
+El archivo `src/domain/config/auth.ts` ahora detecta automáticamente el entorno:
 
 ```typescript
 export const AUTH_CONFIG = {
-  REDIRECT_URL:
-    import.meta.env.VITE_AUTH_REDIRECT_URL || window.location.origin,
+  REDIRECT_URL: (() => {
+    // Si hay una variable de entorno específica, úsala
+    if (import.meta.env.VITE_AUTH_REDIRECT_URL) {
+      return import.meta.env.VITE_AUTH_REDIRECT_URL;
+    }
+
+    // En desarrollo local, usa la URL actual
+    if (import.meta.env.DEV) {
+      return window.location.origin;
+    }
+
+    // En producción, usa la URL de producción
+    return "https://que-leo.vercel.app";
+  })(),
 
   ALLOWED_REDIRECT_URLS: [
     "http://localhost:5173", // Desarrollo local
     "http://localhost:3000", // Puerto alternativo
-    "https://tu-dominio.vercel.app", // Tu dominio de producción
-    "https://tu-dominio.com", // Tu dominio personalizado
+    "https://que-leo.vercel.app", // Tu dominio de producción
   ],
 };
 ```
+
+## Cómo Funciona
+
+### Desarrollo Local (`npm run dev`)
+
+- ✅ Usa automáticamente `http://localhost:5173`
+- ✅ No necesitas configurar `VITE_AUTH_REDIRECT_URL`
+- ✅ Funciona inmediatamente sin configuración adicional
+
+### Producción (Vercel)
+
+- ✅ Usa automáticamente la URL de producción configurada
+- ✅ O puedes especificar `VITE_AUTH_REDIRECT_URL` en las variables de entorno de Vercel
 
 ## URLs Recomendadas
 
@@ -53,8 +78,7 @@ export const AUTH_CONFIG = {
 
 ### Producción (Vercel)
 
-- `https://tu-app.vercel.app`
-- `https://tu-dominio.com` (si tienes dominio personalizado)
+- `https://que-leo.vercel.app`
 
 ## Solución de Problemas
 
