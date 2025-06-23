@@ -6,7 +6,7 @@ import type { Article } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
 import { ChangeEvent } from "react";
-import articlesData from "../../infrastructure/data/articles.json";
+import articlesData from "../../infrastructure/data/eferro.json";
 
 export function RandomArticle({
   setArticlesVersion,
@@ -81,7 +81,9 @@ export function RandomArticle({
       const selected = shuffled.slice(0, 7);
       // Añadir todos
       const added = await Promise.all(
-        selected.map((a) => repository.addArticle(a.title, a.url, user.id))
+        selected.map((a) =>
+          repository.addArticle(a.Name ?? "", a.Url ?? "", user.id)
+        )
       );
       // Marcar 3 como leídos (elige 3 aleatorios entre los añadidos)
       const shuffledAdded = [...added].sort(() => 0.5 - Math.random());

@@ -15,7 +15,7 @@ const supabase = repository.supabase;
 
 const AppContent: React.FC<{
   articlesVersion: number;
-  setArticlesVersion: (v: number) => void;
+  setArticlesVersion: (v: (v: number) => number) => void;
 }> = ({ articlesVersion, setArticlesVersion }) => {
   const { user, loading } = useAuth();
   const isMobile = useIsMobile();

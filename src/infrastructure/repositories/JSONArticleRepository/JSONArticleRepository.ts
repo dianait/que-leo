@@ -1,25 +1,23 @@
 import type { Article } from "../../../domain/Article";
 import type { ArticleRepository } from "../../../domain/ArticleRepository";
-import articlesData from "../../data/articles.json";
-
-interface ArticleJSON {
-  id: string;
-  title: string;
-  url: string;
-  dateAdded: string;
-}
+import articlesData from "../../data/eferro.json";
 
 export class JsonArticleRepository implements ArticleRepository {
   async getAllArticles(): Promise<Article[]> {
     // Aseguramos que los datos se cargan correctamente
     const rawArticles = articlesData ?? [];
-    return rawArticles.map((item: ArticleJSON) => ({
-      id: item.id,
-      title: item.title,
-      url: item.url,
-      dateAdded: new Date(item.dateAdded),
-      isRead: false,
-    }));
+    return rawArticles.map((item: unknown) => {
+      const obj = item as Record<string, unknown>;
+      return {
+        id:
+          (obj.airtable_id as string) ||
+          `${obj.Name as string}-${obj.Url as string}`,
+        title: obj.Name as string,
+        url: obj.Url as string,
+        dateAdded: new Date(obj.Created as string),
+        isRead: false,
+      };
+    });
   }
 
   async getArticlesByUser(userId: string): Promise<Article[]> {
