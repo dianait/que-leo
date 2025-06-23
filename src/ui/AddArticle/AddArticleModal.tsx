@@ -87,11 +87,11 @@ export const AddArticle: React.FC = () => {
   return (
     <div className="add-article-container">
       <button
-        onClick={openModal}
         className="app-button new-button"
+        onClick={openModal}
         title="Añadir artículo"
       >
-        + New
+        + Nuevo
       </button>
       <Modal open={isModalOpen} onClose={closeModal}>
         <form onSubmit={handleSubmit} className="add-article-form">

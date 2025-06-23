@@ -103,7 +103,7 @@ export function ListOfArticles({
               <h3>¡Todo leído!</h3>
               <p>Has repasado todos tus artículos pendientes. ¡Buen trabajo!</p>
               <p className="empty-state-cta">
-                Añade más artículos con el botón <strong>+ New</strong> para
+                Añade más artículos con el botón <strong>+ Nuevo</strong> para
                 seguir leyendo.
               </p>
             </div>
@@ -156,8 +156,8 @@ export function ListOfArticles({
             <h3>¡Comienza tu colección!</h3>
             <p>No tienes artículos guardados todavía.</p>
             <p className="empty-state-cta">
-              Usa el botón <strong>+ New</strong> de arriba para añadir tu
-              primer artículo.
+              Añade más artículos con el botón <strong>+ Nuevo</strong> de
+              arriba para añadir tu primer artículo.
             </p>
           </div>
         )}

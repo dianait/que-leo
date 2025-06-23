@@ -220,7 +220,7 @@ export function RandomArticle({
                 }}
               >
                 <span>
-                  Haz clic en el botón <strong>+ New</strong> del sidebar para
+                  Haz clic en el botón <strong>+ Nuevo</strong> del sidebar para
                   añadir tu primer artículo y empezar a leer
                 </span>
                 <div
