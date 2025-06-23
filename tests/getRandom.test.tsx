@@ -1,14 +1,12 @@
 /// <reference types="@testing-library/jest-dom" />
 import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
-import { User } from "@supabase/supabase-js";
-import React from "react";
+import userEvent from "@testing-library/user-event";
 
 import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
 import { AuthContext } from "../src/domain/AuthContext";
-import type { Article } from "../src/domain/Article";
 import { GetRandomArticleForUser } from "../src/application/GetRandomArticleForUser";
 
 // Mock del repositorio de Supabase para que los componentes no fallen al importarse
@@ -37,7 +35,25 @@ jest.mock(
 );
 
 const jsonRepository = new JsonArticleRepository();
-const mockUser = { id: "123-test-user" } as User;
+const mockUser = {
+  id: "test",
+  app_metadata: {},
+  user_metadata: {},
+  aud: "",
+  created_at: "",
+  email: "test@example.com",
+  phone: "",
+  role: "",
+  confirmed_at: "",
+  email_confirmed_at: "",
+  phone_confirmed_at: "",
+  last_sign_in_at: "",
+  factor_ids: [],
+  identities: [],
+  banned_until: "",
+  reauthentication_sent_at: "",
+  is_anonymous: false,
+};
 
 test("GetRandomArticleForUser devuelve un artículo válido", async () => {
   const useCase = new GetRandomArticleForUser(jsonRepository);
@@ -72,5 +88,56 @@ test("RandomArticle muestra un artículo usando el caso de uso", async () => {
     // Esto confirma que un artículo se ha renderizado.
     const articleTitle = screen.getByRole("heading", { level: 4 });
     expect(articleTitle).toBeInTheDocument();
+  });
+});
+
+describe("RandomArticle switch", () => {
+  test("al alternar el switch muestra artículos leídos y no leídos según la posición", async () => {
+    const articles = [
+      {
+        id: "1",
+        title: "Artículo 1",
+        url: "#",
+        dateAdded: new Date(),
+        isRead: false,
+      },
+      {
+        id: "2",
+        title: "Artículo 2",
+        url: "#",
+        dateAdded: new Date(),
+        isRead: true,
+        readAt: new Date(),
+      },
+    ];
+    const repo = {
+      getArticlesByUser: jest.fn().mockResolvedValue(articles),
+    } as any;
+    render(
+      <AuthContext.Provider
+        value={{
+          user: mockUser,
+          session: null,
+          signInWithGitHub: async () => {},
+          signOut: async () => {},
+          loading: false,
+        }}
+      >
+        <ArticleRepositoryContext.Provider value={repo}>
+          <RandomArticle />
+        </ArticleRepositoryContext.Provider>
+      </AuthContext.Provider>
+    );
+    // Por defecto solo no leídos
+    await screen.findByText("Artículo 1");
+    expect(screen.queryByText("Artículo 2")).not.toBeInTheDocument();
+    // Cambia el switch para mostrar todos
+    const switchInput = screen.getByLabelText(/Solo no leídos/i);
+    userEvent.click(switchInput);
+    // Ahora puede aparecer cualquiera
+    await screen.findByText(/Artículo/);
+    expect(
+      screen.queryByText("Artículo 1") || screen.queryByText("Artículo 2")
+    ).toBeTruthy();
   });
 });

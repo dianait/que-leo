@@ -5,12 +5,13 @@ import "./RandomArticle.css";
 import type { Article } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
-import { GetRandomArticleForUser } from "../../application/GetRandomArticleForUser";
+import { ChangeEvent } from "react";
 
 export function RandomArticle() {
   // Estados para manejar el artículo seleccionado y el estado de carga
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(false);
+  const [onlyUnread, setOnlyUnread] = useState(true);
 
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
@@ -19,9 +20,16 @@ export function RandomArticle() {
     if (!repository || !user) return;
     setLoading(true);
     try {
-      const useCase = new GetRandomArticleForUser(repository);
-      const randomArticle = await useCase.execute(user.id);
-      setArticle(randomArticle); // Puede ser un artículo o null
+      let articles = await repository.getArticlesByUser(user.id);
+      if (onlyUnread) {
+        articles = articles.filter((a) => !a.isRead);
+      }
+      if (articles.length === 0) {
+        setArticle(null);
+      } else {
+        const randomIndex = Math.floor(Math.random() * articles.length);
+        setArticle(articles[randomIndex]);
+      }
     } catch (error) {
       console.error("Error al obtener artículo aleatorio:", error);
       setArticle(null);
@@ -50,8 +58,42 @@ export function RandomArticle() {
     window.open(searchUrl, "_blank", "noopener,noreferrer");
   };
 
+  const handleSwitchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setOnlyUnread(e.target.checked);
+  };
+
   return (
     <div className="random-article-container">
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 520,
+          margin: "0 auto 16px auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+        }}
+      >
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            fontSize: 14,
+            fontWeight: 500,
+            color: "#5a6fd8",
+            cursor: "pointer",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={onlyUnread}
+            onChange={handleSwitchChange}
+            style={{ accentColor: "#5a6fd8", width: 18, height: 18 }}
+          />
+          Solo no leídos
+        </label>
+      </div>
       <div className="article-container">
         <div
           className={`content-card random-article-card ${
