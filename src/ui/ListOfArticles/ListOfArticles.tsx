@@ -8,7 +8,6 @@ import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
 import { AddArticle } from "../AddArticle/AddArticle";
 import { ArticleItemSkeleton } from "./ArticleItemSkeleton";
-import { useIsMobile } from "../utils/useIsMobile";
 
 export function ListOfArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
