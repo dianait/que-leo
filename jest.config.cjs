@@ -13,6 +13,6 @@ module.exports = {
     ],
   },
   moduleNameMapper: {
-    "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
+    "\\.(css|less)$": "<rootDir>/tests/__mocks__/styleMock.js",
   },
 };
