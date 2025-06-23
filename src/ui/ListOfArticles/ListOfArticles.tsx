@@ -9,7 +9,11 @@ import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
 import { AddArticle } from "../AddArticle/AddArticleModal";
 import { ArticleItemSkeleton } from "./ArticleItemSkeleton";
 
-export function ListOfArticles() {
+export function ListOfArticles({
+  articlesVersion,
+}: {
+  articlesVersion: number;
+}) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
   const [sidebarOpen] = useState(true);
@@ -40,7 +44,7 @@ export function ListOfArticles() {
       }
     };
     fetchArticles();
-  }, [user, repository]);
+  }, [user, repository, articlesVersion]);
 
   const handleToggleRead = async (articleToToggle: Article) => {
     if (!repository) return;

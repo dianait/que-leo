@@ -8,11 +8,15 @@ import { AuthProvider } from "./ui/Auth/AuthProvider";
 import { SupabaseArticleRepository } from "./infrastructure/repositories/SupabaseArticleRepository";
 import { AppSkeleton } from "./ui/AppSkeleton/AppSkeleton";
 import { useIsMobile } from "./ui/utils/useIsMobile";
+import { useState } from "react";
 
 const repository = SupabaseArticleRepository.getInstance();
 const supabase = repository.supabase;
 
-const AppContent: React.FC = () => {
+const AppContent: React.FC<{
+  articlesVersion: number;
+  setArticlesVersion: (v: number) => void;
+}> = ({ articlesVersion, setArticlesVersion }) => {
   const { user, loading } = useAuth();
   const isMobile = useIsMobile();
 
@@ -34,9 +38,9 @@ const AppContent: React.FC = () => {
         <Header />
         <div className="main-layout">
           <main className="main-view">
-            <RandomArticle />
+            <RandomArticle setArticlesVersion={setArticlesVersion} />
           </main>
-          {!isMobile && <ListOfArticles />}
+          {!isMobile && <ListOfArticles articlesVersion={articlesVersion} />}
         </div>
       </div>
     </ArticleRepositoryContext.Provider>
@@ -44,9 +48,13 @@ const AppContent: React.FC = () => {
 };
 
 function App() {
+  const [articlesVersion, setArticlesVersion] = useState(0);
   return (
     <AuthProvider supabase={supabase}>
-      <AppContent />
+      <AppContent
+        articlesVersion={articlesVersion}
+        setArticlesVersion={setArticlesVersion}
+      />
     </AuthProvider>
   );
 }

@@ -78,7 +78,7 @@ test("RandomArticle muestra un artículo usando el caso de uso", async () => {
       }}
     >
       <ArticleRepositoryContext.Provider value={jsonRepository}>
-        <RandomArticle />
+        <RandomArticle setArticlesVersion={() => {}} />
       </ArticleRepositoryContext.Provider>
     </AuthContext.Provider>
   );
@@ -124,7 +124,7 @@ describe("RandomArticle switch", () => {
         }}
       >
         <ArticleRepositoryContext.Provider value={repo}>
-          <RandomArticle />
+          <RandomArticle setArticlesVersion={() => {}} />
         </ArticleRepositoryContext.Provider>
       </AuthContext.Provider>
     );
