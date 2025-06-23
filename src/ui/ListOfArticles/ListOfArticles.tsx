@@ -6,7 +6,7 @@ import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext"
 import { useAuth } from "../../domain/AuthContext";
 import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
-import { AddArticle } from "../AddArticle/AddArticle";
+import { AddArticle } from "../AddArticle/AddArticleModal";
 import { ArticleItemSkeleton } from "./ArticleItemSkeleton";
 
 export function ListOfArticles() {

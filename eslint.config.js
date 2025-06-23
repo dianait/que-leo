@@ -15,6 +15,7 @@ export default tseslint.config(
       "src/App.tsx",
       "src/main.tsx",
       "src/vite-env.d.ts",
+      "src/ui/**",
     ],
   },
   {

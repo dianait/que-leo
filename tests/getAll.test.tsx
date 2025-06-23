@@ -1,14 +1,12 @@
 import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import { User } from "@supabase/supabase-js";
-import React from "react";
 
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
-import { AuthContext, useAuth } from "../src/domain/AuthContext";
+import { AuthContext } from "../src/domain/AuthContext";
 import { JsonArticleRepository } from "../src/infrastructure/repositories/JSONArticleRepository";
 import { ListOfArticles } from "../src/ui/ListOfArticles/ListOfArticles";
 import { GetArticlesByUser } from "../src/application/GetArticlesByUser";
-import type { Article } from "../src/domain/Article";
 
 // Mock del repositorio de Supabase para que los componentes no fallen al importarse
 jest.mock(

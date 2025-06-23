@@ -81,8 +81,8 @@ body {
 
 /* Botón principal */
 .modern-button {
-  margin: 1rem;
-  padding: 1.2rem 2.5rem;
+  margin: 1rem 0 0 0;
+  padding: 0.8rem 1.2rem;
   font-size: 1.2rem;
   font-weight: 700;
   border: none;
@@ -91,6 +91,7 @@ body {
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .button-primary {
