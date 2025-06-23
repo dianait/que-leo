@@ -13,8 +13,7 @@ import { useIsMobile } from "../utils/useIsMobile";
 export function ListOfArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const isMobile = useIsMobile();
+  const [sidebarOpen] = useState(true);
 
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
