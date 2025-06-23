@@ -18,7 +18,8 @@
 /* Tarjeta del artículo */
 .content-card.random-article-card {
   width: 520px;
-  height: 280px;
+  /* height: 280px; */
+  min-height: 180px;
   max-width: 100%;
   margin-bottom: 2rem;
   padding: 1rem;
@@ -198,6 +199,7 @@
   .content-card.random-article-card {
     padding: 1.2rem;
     min-height: 160px;
+    /* height: unset; */
   }
 
   .article-title {

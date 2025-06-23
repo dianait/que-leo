@@ -8,22 +8,16 @@ import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
 import { AddArticle } from "../AddArticle/AddArticle";
 import { ArticleItemSkeleton } from "./ArticleItemSkeleton";
+import { useIsMobile } from "../utils/useIsMobile";
 
 export function ListOfArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
 
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 900);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   useEffect(() => {
     if (!repository || !user) {
@@ -90,17 +84,6 @@ export function ListOfArticles() {
       >
         <div className="sidebar-header">
           <div className="sidebar-header-actions">
-            <button
-              className={`close-btn ${isMobile ? "mobile-only" : "hidden"}`}
-              onClick={() => {
-                if (isMobile) {
-                  setSidebarOpen(false);
-                }
-              }}
-              aria-label="Close sidebar"
-            >
-              ×
-            </button>
             <AddArticle />
           </div>
           <h2>Mis Artículos ({articles.length})</h2>

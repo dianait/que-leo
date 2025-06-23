@@ -7,12 +7,14 @@ import { useAuth } from "./domain/AuthContext";
 import { AuthProvider } from "./ui/Auth/AuthProvider";
 import { SupabaseArticleRepository } from "./infrastructure/repositories/SupabaseArticleRepository";
 import { AppSkeleton } from "./ui/AppSkeleton/AppSkeleton";
+import { useIsMobile } from "./ui/utils/useIsMobile";
 
 const repository = SupabaseArticleRepository.getInstance();
 const supabase = repository.supabase;
 
 const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
+  const isMobile = useIsMobile();
 
   if (loading) {
     return <AppSkeleton />;
@@ -20,6 +22,10 @@ const AppContent: React.FC = () => {
 
   if (!user) {
     return <LoginForm />;
+  }
+
+  if (isMobile === undefined) {
+    return null;
   }
 
   return (
@@ -30,7 +36,7 @@ const AppContent: React.FC = () => {
           <main className="main-view">
             <RandomArticle />
           </main>
-          <ListOfArticles />
+          {!isMobile && <ListOfArticles />}
         </div>
       </div>
     </ArticleRepositoryContext.Provider>
