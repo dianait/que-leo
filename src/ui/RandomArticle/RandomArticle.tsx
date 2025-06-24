@@ -1,21 +1,20 @@
 import { useState, useEffect, useContext } from "react";
-import { formatDistanceToNow, isBefore, subYears } from "date-fns";
-import { es } from "date-fns/locale";
+import { isBefore, subYears } from "date-fns";
 import "./RandomArticle.css";
 import type { Article } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
 import { ChangeEvent } from "react";
 import articlesData from "../../infrastructure/data/eferro.json";
+import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 
 export function RandomArticle({
   setArticlesVersion,
 }: {
   setArticlesVersion: (v: (v: number) => number) => void;
 }) {
-  // Estados para manejar el artículo seleccionado y el estado de carga
+  const [articles, setArticles] = useState<Article[]>([]);
   const [article, setArticle] = useState<Article | null>(null);
-  const [loading, setLoading] = useState(false);
   const [onlyUnread, setOnlyUnread] = useState(true);
   const [importing, setImporting] = useState(false);
   const [importSuccess, setImportSuccess] = useState(false);
@@ -24,34 +23,34 @@ export function RandomArticle({
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
 
-  const fetchAndSetRandomArticle = async () => {
+  useEffect(() => {
     if (!repository || !user) return;
-    setLoading(true);
-    try {
-      let articles = await repository.getArticlesByUser(user.id);
-      if (onlyUnread) {
-        articles = articles.filter((a) => !a.isRead);
-      }
-      if (articles.length === 0) {
-        setArticle(null);
-      } else {
-        const randomIndex = Math.floor(Math.random() * articles.length);
-        setArticle(articles[randomIndex]);
-      }
-    } catch (error) {
-      console.error("Error al obtener artículo aleatorio:", error);
-      setArticle(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchArticles = async () => {
+      const useCase = new GetArticlesByUser(repository);
+      const result = await useCase.execute(user.id);
+      setArticles(result);
+    };
+    fetchArticles();
+  }, [user, repository, setArticlesVersion]);
 
   useEffect(() => {
-    fetchAndSetRandomArticle();
-  }, [user, repository, onlyUnread]);
+    let filtered = onlyUnread ? articles.filter((a) => !a.isRead) : articles;
+    if (filtered.length === 0) {
+      setArticle(null);
+    } else {
+      const randomIndex = Math.floor(Math.random() * filtered.length);
+      setArticle(filtered[randomIndex]);
+    }
+  }, [articles, onlyUnread]);
 
   const handleGetRandomArticle = () => {
-    fetchAndSetRandomArticle();
+    let filtered = onlyUnread ? articles.filter((a) => !a.isRead) : articles;
+    if (filtered.length === 0) {
+      setArticle(null);
+    } else {
+      const randomIndex = Math.floor(Math.random() * filtered.length);
+      setArticle(filtered[randomIndex]);
+    }
   };
 
   const handleArticleClick = (url: string, event: React.MouseEvent) => {
@@ -82,7 +81,15 @@ export function RandomArticle({
       // Añadir todos
       const added = await Promise.all(
         selected.map((a) =>
-          repository.addArticle(a.Name ?? "", a.Url ?? "", user.id)
+          repository.addArticle(
+            a.Name ?? "",
+            a.Url ?? "",
+            user.id,
+            a.Language ?? null,
+            a.Speakers_Names ?? null,
+            a.Topics_Names ?? null,
+            a["Less 15"] !== undefined ? Boolean(a["Less 15"]) : null
+          )
         )
       );
       // Marcar 3 como leídos (elige 3 aleatorios entre los añadidos)
@@ -92,9 +99,11 @@ export function RandomArticle({
         await repository.markAsRead(Number(art.id), true);
       }
       // Refrescar el estado local
-      await fetchAndSetRandomArticle();
+      await handleGetRandomArticle();
       setImportSuccess(true);
-      setArticlesVersion((v) => v + 1);
+      setTimeout(() => {
+        setArticlesVersion((v) => v + 1);
+      }, 400);
     } catch (e) {
       setImportError("Error al importar artículos de prueba");
     } finally {
@@ -102,6 +111,12 @@ export function RandomArticle({
       setTimeout(() => setImportSuccess(false), 2000);
     }
   };
+
+  function getFlagEmoji(language?: string) {
+    if (language === "English") return "🇬🇧";
+    if (language === "Spanish") return "🇪🇸";
+    return "";
+  }
 
   return (
     <div className="random-article-container">
@@ -149,7 +164,21 @@ export function RandomArticle({
                 </div>
               )}
               <div className="article-header">
-                <h4 className="article-title">{article.title}</h4>
+                <h4 className="article-title">
+                  {getFlagEmoji(article.language)} {article.title}
+                </h4>
+                {article.authors && article.authors.length > 0 && (
+                  <div
+                    style={{
+                      marginTop: 4,
+                      fontSize: 18,
+                      color: "#444",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {article.authors.join(", ")}
+                  </div>
+                )}
               </div>
               <div className="article-links-container">
                 {article.url === "#" ? (
@@ -180,23 +209,71 @@ export function RandomArticle({
                   </a>
                 )}
               </div>
+              {article.less_15 && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    marginTop: 4,
+                    fontSize: 15,
+                    color: "#888",
+                  }}
+                >
+                  <span role="img" aria-label="Reloj">
+                    ⏱️
+                  </span>{" "}
+                  menos de 15'
+                </div>
+              )}
+              {article.topics && article.topics.length > 0 && (
+                <div
+                  style={{
+                    marginTop: 18,
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 8,
+                  }}
+                >
+                  {article.topics.map((tag, idx) => {
+                    // Paleta de colores pastel
+                    const colors = [
+                      "#E0E7FF", // azul
+                      "#FDE68A", // amarillo
+                      "#FCA5A5", // rojo
+                      "#6EE7B7", // verde
+                      "#FBCFE8", // rosa
+                      "#A7F3D0", // turquesa
+                      "#F9A8D4", // fucsia
+                      "#FCD34D", // naranja
+                      "#C7D2FE", // lila
+                      "#FECACA", // coral
+                    ];
+                    const bgColor = colors[idx % colors.length];
+                    return (
+                      <span
+                        key={tag}
+                        style={{
+                          background: bgColor,
+                          color: "#333",
+                          borderRadius: 16,
+                          padding: "8px 12px",
+                          fontSize: 14,
+                          fontWeight: 600,
+                          display: "inline-block",
+                          marginTop: 2,
+                          fontFamily: "inherit",
+                          border: "none",
+                          boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
               <div className="article-meta-container">
-                <p className="article-date">
-                  {article.isRead && article.readAt ? (
-                    <>
-                      <span className="read-tag-inline">📖 Leído</span>
-                      {` ${formatDistanceToNow(article.readAt, {
-                        addSuffix: true,
-                        locale: es,
-                      })}`}
-                    </>
-                  ) : (
-                    `Guardado ${formatDistanceToNow(article.dateAdded, {
-                      addSuffix: true,
-                      locale: es,
-                    })}`
-                  )}
-                </p>
                 {isBefore(article.dateAdded, subYears(new Date(), 1)) && (
                   <p className="article-warning">
                     ⚠️ Este artículo podría estar desactualizado.
@@ -204,8 +281,6 @@ export function RandomArticle({
                 )}
               </div>
             </>
-          ) : loading ? (
-            <div className="loading-state">🔄 Buscando en tus artículos...</div>
           ) : (
             <div className="empty-state">
               <div className="empty-state-icon">📚</div>
@@ -280,14 +355,10 @@ export function RandomArticle({
       </div>
       <button
         onClick={handleGetRandomArticle}
-        disabled={loading || !article}
+        disabled={!article}
         className="modern-button button-primary random-article-button"
       >
-        {loading
-          ? "🔄 Buscando..."
-          : !article
-          ? "No hay artículos"
-          : "Dame otro 🎲"}
+        {article ? "Dame otro 🎲" : "No hay artículos"}
       </button>
     </div>
   );

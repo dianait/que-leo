@@ -11,6 +11,10 @@ interface ArticleRow {
   user_id?: string;
   is_read: boolean;
   read_at?: string;
+  language?: string;
+  authors?: string[];
+  topics?: string[];
+  less_15?: boolean;
 }
 
 interface SupabaseRepoOptions {
@@ -68,6 +72,10 @@ export class SupabaseArticleRepository implements ArticleRepository {
         dateAdded: new Date(row.dateAdded),
         isRead: row.is_read,
         readAt: row.read_at ? new Date(row.read_at) : undefined,
+        language: row.language,
+        authors: row.authors,
+        topics: row.topics,
+        less_15: row.less_15,
       }));
     } catch (error) {
       console.error(
@@ -99,6 +107,10 @@ export class SupabaseArticleRepository implements ArticleRepository {
         dateAdded: new Date(row.dateAdded),
         isRead: row.is_read,
         readAt: row.read_at ? new Date(row.read_at) : undefined,
+        language: row.language,
+        authors: row.authors,
+        topics: row.topics,
+        less_15: row.less_15,
       }));
     } catch (error) {
       console.error(
@@ -112,12 +124,26 @@ export class SupabaseArticleRepository implements ArticleRepository {
   async addArticle(
     title: string,
     url: string,
-    userId: string
+    userId: string,
+    language?: string | null,
+    authors?: string[] | null,
+    topics?: string[] | null,
+    less_15?: boolean | null
   ): Promise<Article> {
     try {
       const { data, error } = await this.supabase
         .from("articles")
-        .insert([{ title, url, user_id: userId }])
+        .insert([
+          {
+            title,
+            url,
+            user_id: userId,
+            language: language ?? null,
+            authors: authors ?? null,
+            topics: topics ?? null,
+            less_15: less_15 ?? null,
+          },
+        ])
         .select()
         .single();
 
@@ -133,6 +159,10 @@ export class SupabaseArticleRepository implements ArticleRepository {
         dateAdded: new Date(row.dateAdded),
         isRead: row.is_read,
         readAt: row.read_at ? new Date(row.read_at) : undefined,
+        language: row.language,
+        authors: row.authors,
+        topics: row.topics,
+        less_15: row.less_15,
       };
     } catch (error) {
       console.error("Error en SupabaseArticleRepository.addArticle:", error);

@@ -1,8 +1,7 @@
-import React from "react";
 import { useAuth } from "../../domain/AuthContext";
 import "./Header.css";
 
-export const Header: React.FC = () => {
+export const Header = () => {
   const { user, signOut } = useAuth();
 
   const handleLogout = async () => {

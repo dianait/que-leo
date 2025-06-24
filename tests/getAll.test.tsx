@@ -49,7 +49,7 @@ describe("Obtención de artículos", () => {
         }}
       >
         <ArticleRepositoryContext.Provider value={jsonRepository}>
-          <ListOfArticles articlesVersion={0} />
+          <ListOfArticles setArticlesVersion={() => {}} />
         </ArticleRepositoryContext.Provider>
       </AuthContext.Provider>
     );

@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import "./ArticleItemSkeleton.css";
 
 export const ArticleItemSkeleton: React.FC = () => {

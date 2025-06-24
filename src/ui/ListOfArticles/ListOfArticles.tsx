@@ -10,9 +10,9 @@ import { AddArticle } from "../AddArticle/AddArticleModal";
 import { ArticleItemSkeleton } from "./ArticleItemSkeleton";
 
 export function ListOfArticles({
-  articlesVersion,
+  setArticlesVersion,
 }: {
-  articlesVersion: number;
+  setArticlesVersion: (v: (v: number) => number) => void;
 }) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
@@ -25,12 +25,6 @@ export function ListOfArticles({
     if (!repository || !user) {
       return;
     }
-
-    if (articles.length > 0) {
-      setLoading(false);
-      return;
-    }
-
     setLoading(true);
     const fetchArticles = async () => {
       try {
@@ -44,7 +38,7 @@ export function ListOfArticles({
       }
     };
     fetchArticles();
-  }, [user, repository, articlesVersion]);
+  }, [user, repository, setArticlesVersion]);
 
   const handleToggleRead = async (articleToToggle: Article) => {
     if (!repository) return;
@@ -53,23 +47,12 @@ export function ListOfArticles({
       ? markArticleAsUnread(articleToToggle)
       : markArticleAsRead(articleToToggle);
 
-    setArticles((currentArticles) =>
-      currentArticles.map((article) =>
-        article.id === articleToToggle.id ? newArticleState : article
-      )
-    );
-
     try {
       const useCase = new MarkArticleAsRead(repository);
       await useCase.execute(Number(articleToToggle.id), newArticleState.isRead);
+      setArticlesVersion((v) => v + 1);
     } catch (error) {
       console.error("Error al marcar como leído:", error);
-      // Revertir en caso de error
-      setArticles((currentArticles) =>
-        currentArticles.map((article) =>
-          article.id === articleToToggle.id ? articleToToggle : article
-        )
-      );
     }
   };
 

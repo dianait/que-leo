@@ -16,6 +16,7 @@ export class JsonArticleRepository implements ArticleRepository {
         url: obj.Url as string,
         dateAdded: new Date(obj.Created as string),
         isRead: false,
+        language: obj.Language as string | undefined,
       };
     });
   }
@@ -30,11 +31,13 @@ export class JsonArticleRepository implements ArticleRepository {
   async addArticle(
     title: string,
     url: string,
-    userId: string
+    userId: string,
+    language?: string | null,
+    authors?: string[] | null,
+    topics?: string[] | null,
+    less_15?: boolean | null
   ): Promise<Article> {
-    // Para el repositorio JSON, simulamos la adición
-    // En un entorno real, esto no funcionaría con un archivo JSON estático
-    void userId; // Silenciar el error de parámetro no usado
+    void userId;
     const newId = Date.now().toString();
     const newArticle: Article = {
       id: newId,
@@ -42,13 +45,14 @@ export class JsonArticleRepository implements ArticleRepository {
       url,
       dateAdded: new Date(),
       isRead: false,
+      language: language ?? undefined,
+      authors: authors ?? undefined,
+      topics: topics ?? undefined,
+      less_15: less_15 ?? undefined,
     };
-
-    // Nota: En un entorno real, esto no persistiría los cambios
     console.warn(
       "JsonArticleRepository: Los cambios no se persisten en el archivo JSON"
     );
-
     return newArticle;
   }
 

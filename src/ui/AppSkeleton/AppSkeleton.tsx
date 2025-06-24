@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import "./AppSkeleton.css";
 
 export const AppSkeleton: React.FC = () => {

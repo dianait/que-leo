@@ -5,6 +5,10 @@ export interface Article {
   readonly dateAdded: Date;
   readonly isRead: boolean;
   readonly readAt?: Date;
+  readonly language?: string;
+  readonly authors?: string[];
+  readonly topics?: string[];
+  readonly less_15?: boolean;
 }
 
 export const markArticleAsRead = (article: Article): Article => {
