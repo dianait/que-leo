@@ -32,6 +32,12 @@ body {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .app-main-content {
+    flex-direction: column;
+  }
+}
+
 .main-layout {
   display: flex;
   flex-grow: 1;

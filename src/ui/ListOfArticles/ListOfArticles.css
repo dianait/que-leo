@@ -241,3 +241,14 @@
   font-size: 0.85rem !important;
   color: #555 !important;
 }
+
+.empty-state-cta strong {
+  font-weight: 600;
+  color: #3b4a6e;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}
