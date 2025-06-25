@@ -10,11 +10,11 @@ export function App() {
     <div className="app-container">
       <Header />
       <main className="app-main-content">
-        <ListOfArticles
+        <RandomArticle
           articlesVersion={articlesVersion}
           setArticlesVersion={setArticlesVersion}
         />
-        <RandomArticle
+        <ListOfArticles
           articlesVersion={articlesVersion}
           setArticlesVersion={setArticlesVersion}
         />
