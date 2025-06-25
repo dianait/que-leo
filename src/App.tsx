@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ListOfArticles } from "./ListOfArticles/ListOfArticles";
-import { RandomArticle } from "./RandomArticle/RandomArticle";
+import { ListOfArticles } from "./ui/ListOfArticles/ListOfArticles";
+import { RandomArticle } from "./ui/RandomArticle/RandomArticle";
 
 export function App() {
   const [articlesVersion, setArticlesVersion] = useState(0);
