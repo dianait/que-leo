@@ -2,8 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import { ArticleRepositoryContext } from "../domain/ArticleRepositoryContext";
 import { useAuth } from "../domain/AuthContext";
 import { GetArticlesByUser } from "../application/GetArticlesByUser";
-import ListOfArticles from "./ListOfArticles/ListOfArticles";
-import RandomArticle from "./RandomArticle/RandomArticle";
+import { ListOfArticles } from "./ListOfArticles/ListOfArticles";
+import { RandomArticle } from "./RandomArticle/RandomArticle";
 
 export function App() {
   const [articles, setArticles] = useState([]);
@@ -26,14 +26,8 @@ export function App() {
 
   return (
     <>
-      <ListOfArticles
-        articles={articles}
-        setArticlesVersion={setArticlesVersion}
-      />
-      <RandomArticle
-        articles={articles}
-        setArticlesVersion={setArticlesVersion}
-      />
+      <ListOfArticles setArticlesVersion={setArticlesVersion} />
+      <RandomArticle setArticlesVersion={setArticlesVersion} />
     </>
   );
 }
