@@ -7,9 +7,9 @@ export function App() {
   const [articlesVersion, setArticlesVersion] = useState(0);
 
   return (
-    <>
+    <div className="app-container">
       <Header />
-      <div className="app-container">
+      <main className="app-main-content">
         <ListOfArticles
           articlesVersion={articlesVersion}
           setArticlesVersion={setArticlesVersion}
@@ -18,7 +18,7 @@ export function App() {
           articlesVersion={articlesVersion}
           setArticlesVersion={setArticlesVersion}
         />
-      </div>
-    </>
+      </main>
+    </div>
   );
 }

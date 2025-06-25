@@ -5,6 +5,8 @@ import { AuthContext } from "../../domain/AuthContext";
 import { SupabaseAuthRepository } from "../../infrastructure/auth/SupabaseAuthRepository";
 import { SignInWithGitHub } from "../../application/SignInWithGitHub";
 import { SignOut } from "../../application/SignOut";
+import { LoginForm } from "./LoginForm";
+import { AppSkeleton } from "../AppSkeleton/AppSkeleton";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -64,5 +66,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     loading,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  if (loading) {
+    return <AppSkeleton />;
+  }
+
+  return (
+    <AuthContext.Provider value={value}>
+      {user ? children : <LoginForm />}
+    </AuthContext.Provider>
+  );
 };

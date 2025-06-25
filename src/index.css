@@ -22,9 +22,14 @@ body {
 
 /* Layout principal */
 .app-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr;
   height: 100vh;
+}
+
+.app-main-content {
+  display: flex;
+  overflow: hidden;
 }
 
 .main-layout {
