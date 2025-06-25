@@ -9,8 +9,10 @@ import articlesData from "../../infrastructure/data/eferro.json";
 import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 
 export function RandomArticle({
+  articlesVersion,
   setArticlesVersion,
 }: {
+  articlesVersion: number;
   setArticlesVersion: (v: (v: number) => number) => void;
 }) {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -31,7 +33,7 @@ export function RandomArticle({
       setArticles(result);
     };
     fetchArticles();
-  }, [user, repository, setArticlesVersion]);
+  }, [user, repository, articlesVersion]);
 
   useEffect(() => {
     let filtered = onlyUnread ? articles.filter((a) => !a.isRead) : articles;

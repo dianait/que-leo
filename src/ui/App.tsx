@@ -7,8 +7,14 @@ export function App() {
 
   return (
     <>
-      <ListOfArticles setArticlesVersion={setArticlesVersion} />
-      <RandomArticle setArticlesVersion={setArticlesVersion} />
+      <ListOfArticles
+        articlesVersion={articlesVersion}
+        setArticlesVersion={setArticlesVersion}
+      />
+      <RandomArticle
+        articlesVersion={articlesVersion}
+        setArticlesVersion={setArticlesVersion}
+      />
     </>
   );
 }

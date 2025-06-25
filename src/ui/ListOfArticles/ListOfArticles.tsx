@@ -10,8 +10,10 @@ import { AddArticle } from "../AddArticle/AddArticleModal";
 import { ArticleItemSkeleton } from "./ArticleItemSkeleton";
 
 export function ListOfArticles({
+  articlesVersion,
   setArticlesVersion,
 }: {
+  articlesVersion: number;
   setArticlesVersion: (v: (v: number) => number) => void;
 }) {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -38,7 +40,7 @@ export function ListOfArticles({
       }
     };
     fetchArticles();
-  }, [user, repository, setArticlesVersion]);
+  }, [user, repository, articlesVersion]);
 
   const handleToggleRead = async (articleToToggle: Article) => {
     if (!repository) return;
