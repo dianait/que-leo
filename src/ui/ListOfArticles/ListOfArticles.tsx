@@ -18,10 +18,21 @@ export function ListOfArticles({
 }) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
-  const [sidebarOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 900);
 
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 900;
+      setIsMobile(mobile);
+      setSidebarOpen(!mobile);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (!repository || !user) {
@@ -65,15 +76,45 @@ export function ListOfArticles({
 
   return (
     <>
+      {isMobile && !sidebarOpen && (
+        <button
+          className="sidebar-toggle"
+          onClick={() => setSidebarOpen(true)}
+          style={{
+            position: "fixed",
+            top: 15,
+            left: 15,
+            zIndex: 1101,
+            display: "flex",
+          }}
+          aria-label="Abrir sidebar"
+        >
+          ☰
+        </button>
+      )}
       <aside
         className={`sidebar${sidebarOpen ? " open" : ""}`}
-        style={{ minWidth: 340, maxWidth: 420 }}
+        style={{
+          minWidth: 340,
+          maxWidth: 420,
+          display: !sidebarOpen && isMobile ? "none" : undefined,
+        }}
       >
         <div className="sidebar-header">
           <div className="sidebar-header-actions">
             <AddArticle />
           </div>
           <h2>Mis Artículos ({articles.length})</h2>
+          {isMobile && sidebarOpen && (
+            <button
+              className="close-btn mobile-only"
+              onClick={() => setSidebarOpen(false)}
+              aria-label="Cerrar sidebar"
+              style={{ marginLeft: 8 }}
+            >
+              ×
+            </button>
+          )}
         </div>
         {loading ? (
           <ul className="sidebar-list">

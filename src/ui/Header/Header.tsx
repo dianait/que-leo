@@ -1,5 +1,6 @@
 import { useAuth } from "../../domain/AuthContext";
 import "./Header.css";
+import { TelegramLinkButton } from "../TelegramLinkButton";
 
 export const Header = () => {
   const { user, signOut } = useAuth();

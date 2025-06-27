@@ -26,3 +26,5 @@ dist-ssr
 
 # Ignorar la carpeta de la extensión temporalmente
 extension/
+
+telegram-bot/

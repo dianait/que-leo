@@ -7,6 +7,7 @@ import { useAuth } from "../../domain/AuthContext";
 import { ChangeEvent } from "react";
 import articlesData from "../../infrastructure/data/eferro.json";
 import { GetArticlesByUser } from "../../application/GetArticlesByUser";
+import { TelegramLinkButton } from "../TelegramLinkButton";
 
 export function RandomArticle({
   articlesVersion,
@@ -17,7 +18,10 @@ export function RandomArticle({
 }) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [article, setArticle] = useState<Article | null>(null);
-  const [onlyUnread, setOnlyUnread] = useState(true);
+  const [onlyUnread, setOnlyUnread] = useState(() => {
+    const stored = localStorage.getItem("onlyUnread");
+    return stored === null ? true : stored === "true";
+  });
   const [importing, setImporting] = useState(false);
   const [importSuccess, setImportSuccess] = useState(false);
   const [importError, setImportError] = useState("");
@@ -44,6 +48,10 @@ export function RandomArticle({
       setArticle(filtered[randomIndex]);
     }
   }, [articles, onlyUnread]);
+
+  useEffect(() => {
+    localStorage.setItem("onlyUnread", String(onlyUnread));
+  }, [onlyUnread]);
 
   const handleGetRandomArticle = () => {
     let filtered = onlyUnread ? articles.filter((a) => !a.isRead) : articles;
@@ -362,6 +370,19 @@ export function RandomArticle({
       >
         {article ? "Dame otro 🎲" : "No hay artículos"}
       </button>
+      {user && (
+        <div
+          style={{
+            width: "100%",
+            maxWidth: 520,
+            margin: "16px auto 0 auto",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <TelegramLinkButton userId={user.id} />
+        </div>
+      )}
     </div>
   );
 }

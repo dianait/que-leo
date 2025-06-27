@@ -1,23 +1,28 @@
-import React, { useState, useContext } from "react";
+import React, {
+  useState,
+  useContext,
+  useRef,
+  useEffect,
+  forwardRef,
+} from "react";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
 import { AddArticle as AddArticleUseCase } from "../../application/AddArticle";
 import "./AddArticle.css";
 
 // Modal simple
-function Modal({
-  open,
-  onClose,
-  children,
-}: {
-  open: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}) {
+const Modal = forwardRef<
+  HTMLDivElement,
+  {
+    open: boolean;
+    onClose: () => void;
+    children: React.ReactNode;
+  }
+>(({ open, onClose, children }, ref) => {
   if (!open) return null;
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
+      <div className="modal-content" ref={ref}>
         <button className="modal-close" onClick={onClose} title="Cerrar">
           ×
         </button>
@@ -25,7 +30,9 @@ function Modal({
       </div>
     </div>
   );
-}
+});
+
+Modal.displayName = "Modal";
 
 export const AddArticle: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -34,9 +41,29 @@ export const AddArticle: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        closeModal();
+      }
+    }
+
+    if (isModalOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isModalOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,7 +120,7 @@ export const AddArticle: React.FC = () => {
       >
         + Nuevo
       </button>
-      <Modal open={isModalOpen} onClose={closeModal}>
+      <Modal open={isModalOpen} onClose={closeModal} ref={modalRef}>
         <form onSubmit={handleSubmit} className="add-article-form">
           <h3>Añadir nuevo artículo</h3>
           {error && <div className="error-message">{error}</div>}
