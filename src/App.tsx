@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Header } from "./ui/Header/Header";
 import { ListOfArticles } from "./ui/ListOfArticles/ListOfArticles";
 import { RandomArticle } from "./ui/RandomArticle/RandomArticle";
+import { Routes, Route } from "react-router-dom";
+import { ArticleTable } from "./ui/ListOfArticles/ArticleTable";
+import { Footer } from "./ui/Footer";
 
 export function App() {
   const [articlesVersion, setArticlesVersion] = useState(0);
@@ -10,15 +13,34 @@ export function App() {
     <div className="app-container">
       <Header />
       <main className="app-main-content">
-        <RandomArticle
-          articlesVersion={articlesVersion}
-          setArticlesVersion={setArticlesVersion}
-        />
-        <ListOfArticles
-          articlesVersion={articlesVersion}
-          setArticlesVersion={setArticlesVersion}
-        />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <RandomArticle
+                  articlesVersion={articlesVersion}
+                  setArticlesVersion={setArticlesVersion}
+                />
+                <ListOfArticles
+                  articlesVersion={articlesVersion}
+                  setArticlesVersion={setArticlesVersion}
+                />
+              </>
+            }
+          />
+          <Route
+            path="/articulos"
+            element={
+              <ArticleTable
+                articlesVersion={articlesVersion}
+                setArticlesVersion={setArticlesVersion}
+              />
+            }
+          />
+        </Routes>
       </main>
+      <Footer />
     </div>
   );
 }

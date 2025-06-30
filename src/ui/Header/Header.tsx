@@ -1,5 +1,6 @@
 import { useAuth } from "../../domain/AuthContext";
 import "./Header.css";
+// import { Link } from "react-router-dom";
 
 export const Header = () => {
   const { user, signOut } = useAuth();
@@ -22,6 +23,11 @@ export const Header = () => {
 
         {user && (
           <div className="header-right">
+            {/* <nav className="header-nav">
+              <Link to="/articulos" className="header-link">
+                Mis artículos
+              </Link>
+            </nav> */}
             <div className="user-info">
               {user.user_metadata.avatar_url ? (
                 <img

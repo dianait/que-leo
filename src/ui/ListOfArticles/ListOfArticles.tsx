@@ -12,9 +12,11 @@ import { ArticleItemSkeleton } from "./ArticleItemSkeleton";
 export function ListOfArticles({
   articlesVersion,
   setArticlesVersion,
+  fullPage = false,
 }: {
   articlesVersion: number;
   setArticlesVersion: (v: (v: number) => number) => void;
+  fullPage?: boolean;
 }) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,7 @@ export function ListOfArticles({
   const { user } = useAuth();
 
   useEffect(() => {
+    if (fullPage) return; // No manejar sidebar en modo pantalla completa
     const handleResize = () => {
       const mobile = window.innerWidth <= 900;
       setIsMobile(mobile);
@@ -32,7 +35,7 @@ export function ListOfArticles({
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [fullPage]);
 
   useEffect(() => {
     if (!repository || !user) {
@@ -74,6 +77,76 @@ export function ListOfArticles({
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
+  // Render pantalla completa
+  if (fullPage) {
+    return (
+      <section className="articles-fullpage">
+        <div className="articles-header-fullpage">
+          <h1>Mis Artículos ({articles.length})</h1>
+          <AddArticle />
+        </div>
+        {loading ? (
+          <ul className="sidebar-list">
+            {[...Array(5)].map((_, index) => (
+              <ArticleItemSkeleton key={index} />
+            ))}
+          </ul>
+        ) : articles.length > 0 ? (
+          <ul className="sidebar-list">
+            {articles.map((article) => (
+              <li
+                key={article.id}
+                className={`sidebar-list-item ${
+                  article.isRead ? "is-read" : ""
+                }`}
+              >
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => handleArticleClick(article.url, e)}
+                >
+                  🔗 {article.title}
+                </a>
+                <div className="item-meta">
+                  <span className="sidebar-date">
+                    {article.isRead && article.readAt
+                      ? `Leído: ${new Date(
+                          article.readAt
+                        ).toLocaleDateString()}`
+                      : new Date(article.dateAdded).toLocaleDateString()}
+                  </span>
+                  <button
+                    className={`app-button ${article.isRead ? "success" : ""}`}
+                    onClick={() => handleToggleRead(article)}
+                    title={
+                      article.isRead
+                        ? "Marcar como no leído"
+                        : "Marcar como leído"
+                    }
+                  >
+                    {article.isRead ? "Leído" : "Marcar como leído"}
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="empty-state-sidebar">
+            <div className="empty-state-icon">📖</div>
+            <h3>¡Comienza tu colección!</h3>
+            <p>No tienes artículos guardados todavía.</p>
+            <p className="empty-state-cta">
+              Añade más artículos con el botón <strong>+ Nuevo</strong> de
+              arriba para añadir tu primer artículo.
+            </p>
+          </div>
+        )}
+      </section>
+    );
+  }
+
+  // Render sidebar (comportamiento original)
   return (
     <>
       {isMobile && !sidebarOpen && (

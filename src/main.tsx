@@ -6,6 +6,7 @@ import { AuthProvider } from "./ui/Auth/AuthProvider.tsx";
 import { createSupabaseClient } from "./infrastructure/repositories/SupabaseArticleRepository/supabaseConfig.ts";
 import { SupabaseArticleRepository } from "./infrastructure/repositories/SupabaseArticleRepository/SupabaseArticleRepository.ts";
 import { ArticleRepositoryContext } from "./domain/ArticleRepositoryContext.ts";
+import { BrowserRouter } from "react-router-dom";
 
 const supabase = createSupabaseClient();
 const articleRepository = SupabaseArticleRepository.getInstance({
@@ -16,7 +17,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ArticleRepositoryContext.Provider value={articleRepository}>
       <AuthProvider supabase={supabase}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </AuthProvider>
     </ArticleRepositoryContext.Provider>
   </StrictMode>

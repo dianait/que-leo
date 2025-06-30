@@ -118,3 +118,23 @@
     padding: 4px 8px;
   }
 }
+
+.header-nav {
+  margin-right: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.header-link {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-right: 1rem;
+  transition: color 0.2s;
+}
+
+.header-link:hover {
+  color: #0070f3;
+  text-decoration: underline;
+}
