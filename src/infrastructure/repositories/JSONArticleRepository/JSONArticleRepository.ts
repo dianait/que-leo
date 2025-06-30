@@ -73,4 +73,18 @@ export class JsonArticleRepository implements ArticleRepository {
       "JsonArticleRepository: Los cambios no se persisten en el archivo JSON"
     );
   }
+
+  async getArticlesByUserPaginated(
+    userId: string,
+    limit: number,
+    offset: number
+  ) {
+    // Para el repositorio JSON, devolvemos todos los artículos paginados (sin filtrar por usuario)
+    void userId;
+    const all = await this.getAllArticles();
+    return {
+      articles: all.slice(offset, offset + limit),
+      total: all.length,
+    };
+  }
 }

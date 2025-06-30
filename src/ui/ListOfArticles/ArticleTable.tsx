@@ -6,6 +6,7 @@ import { useAuth } from "../../domain/AuthContext";
 import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
 import { DeleteArticle } from "../../application/DeleteArticle";
+import { GetArticlesByUserPaginated } from "../../application/GetArticlesByUser";
 import "./ListOfArticles.css";
 
 function getFlagEmoji(language?: string) {
@@ -62,6 +63,9 @@ export function ArticleTable({
 }) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
@@ -73,9 +77,14 @@ export function ArticleTable({
     setLoading(true);
     const fetchArticles = async () => {
       try {
-        const useCase = new GetArticlesByUser(repository);
-        const result = await useCase.execute(user.id);
-        setArticles(result);
+        const useCase = new GetArticlesByUserPaginated(repository);
+        const { articles, total } = await useCase.execute(
+          user.id,
+          PAGE_SIZE,
+          (page - 1) * PAGE_SIZE
+        );
+        setArticles(articles);
+        setTotal(total);
       } catch (error) {
         console.error("Error al cargar artículos del usuario:", error);
       } finally {
@@ -83,7 +92,7 @@ export function ArticleTable({
       }
     };
     fetchArticles();
-  }, [user, repository, articlesVersion]);
+  }, [user, repository, articlesVersion, page]);
 
   const handleToggleRead = async (articleToToggle: Article) => {
     if (!repository) return;
@@ -224,6 +233,28 @@ export function ArticleTable({
           </table>
         </div>
       )}
+      <div className="pagination-controls">
+        <button
+          className="app-button"
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          Anterior
+        </button>
+        <span style={{ margin: "0 1.2em" }}>
+          Página {page} de {Math.max(1, Math.ceil(total / PAGE_SIZE))}
+        </span>
+        <button
+          className="app-button"
+          onClick={() => setPage((p) => p + 1)}
+          disabled={page * PAGE_SIZE >= total}
+        >
+          Siguiente
+        </button>
+        <span style={{ marginLeft: "2em", color: "#888", fontSize: "0.95em" }}>
+          Total: {total}
+        </span>
+      </div>
     </div>
   );
 }

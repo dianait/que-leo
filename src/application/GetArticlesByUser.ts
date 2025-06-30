@@ -12,3 +12,15 @@ export class GetArticlesByUser {
     return this.repository.getArticlesByUser(userId);
   }
 }
+
+export class GetArticlesByUserPaginated {
+  constructor(private repository: ArticleRepository) {}
+
+  async execute(
+    userId: string,
+    limit: number,
+    offset: number
+  ): Promise<{ articles: Article[]; total: number }> {
+    return this.repository.getArticlesByUserPaginated(userId, limit, offset);
+  }
+}

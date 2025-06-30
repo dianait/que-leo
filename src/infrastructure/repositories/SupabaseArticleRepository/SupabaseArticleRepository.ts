@@ -208,4 +208,45 @@ export class SupabaseArticleRepository implements ArticleRepository {
       throw error;
     }
   }
+
+  async getArticlesByUserPaginated(
+    userId: string,
+    limit: number,
+    offset: number
+  ): Promise<{ articles: Article[]; total: number }> {
+    try {
+      const { data, error, count } = await this.supabase
+        .from("articles")
+        .select("*", { count: "exact" })
+        .eq("user_id", userId)
+        .order("dateAdded", { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (error) {
+        throw new Error(
+          `Error al obtener artículos paginados: ${error.message}`
+        );
+      }
+
+      const articles = (data as ArticleRow[]).map((row) => ({
+        id: row.id,
+        title: row.title,
+        url: row.url,
+        dateAdded: new Date(row.dateAdded),
+        isRead: row.is_read,
+        readAt: row.read_at ? new Date(row.read_at) : undefined,
+        language: row.language,
+        authors: row.authors,
+        topics: row.topics,
+        less_15: row.less_15,
+      }));
+      return { articles, total: count ?? 0 };
+    } catch (error) {
+      console.error(
+        "Error en SupabaseArticleRepository.getArticlesByUserPaginated:",
+        error
+      );
+      throw error;
+    }
+  }
 }

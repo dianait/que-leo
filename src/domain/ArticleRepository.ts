@@ -3,6 +3,11 @@ import type { Article } from "./Article";
 export interface ArticleRepository {
   getAllArticles(): Promise<Article[]>;
   getArticlesByUser(userId: string): Promise<Article[]>;
+  getArticlesByUserPaginated(
+    userId: string,
+    limit: number,
+    offset: number
+  ): Promise<{ articles: Article[]; total: number }>;
   addArticle(
     title: string,
     url: string,

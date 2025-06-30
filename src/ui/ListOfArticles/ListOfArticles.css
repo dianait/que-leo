@@ -414,3 +414,11 @@
     opacity: 0;
   }
 }
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2.5rem 0 1.5rem 0;
+  gap: 0.5em;
+}

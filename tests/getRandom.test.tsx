@@ -23,6 +23,9 @@ const jsonRepository: ArticleRepository = {
       less_15: false,
     },
   ]),
+  getArticlesByUserPaginated: jest
+    .fn()
+    .mockResolvedValue({ articles: [], total: 0 }),
   addArticle: jest.fn(),
   deleteArticle: jest.fn(),
   markAsRead: jest.fn(),
