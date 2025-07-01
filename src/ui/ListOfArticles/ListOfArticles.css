@@ -86,7 +86,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.18s, color 0.18s, border 0.18s;
-  min-width: 120px;
 }
 
 .app-button:hover {

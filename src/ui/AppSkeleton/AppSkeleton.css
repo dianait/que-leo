@@ -27,8 +27,6 @@
 
 /* Sidebar Skeleton */
 .skeleton-sidebar {
-  min-width: 340px;
-  max-width: 420px;
   height: 100%;
   padding: 24px;
   background-color: white;
