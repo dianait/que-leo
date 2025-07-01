@@ -11,7 +11,6 @@
 
 .footer-content {
   width: 100%;
-  max-width: 1200px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -48,10 +47,4 @@
   color: #ffb3b3;
   font-size: 1.1em;
   margin: 0 0.2em;
-}
-
-@media (max-width: 600px) {
-  .app-footer {
-    display: none !important;
-  }
 }
