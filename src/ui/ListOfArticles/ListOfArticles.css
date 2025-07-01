@@ -43,6 +43,12 @@
   font-weight: 700;
   border-bottom: 2px solid #d1d5db;
   white-space: nowrap;
+  text-align: left;
+  padding-left: 24px;
+}
+
+.articles-table th:first-child {
+  padding-left: 24px;
 }
 
 .articles-table th span {
@@ -60,8 +66,13 @@
   background: #f1f5ff;
 }
 
+.articles-table td:first-child {
+  padding-left: 24px;
+}
+
 .articles-table td {
   border-bottom: 1px solid #e5e7eb;
+  text-align: left;
 }
 
 .articles-table tr.is-read {
@@ -181,4 +192,28 @@
     opacity: 0;
     transform: translateY(-16px);
   }
+}
+
+.article-actions {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+}
+
+.app-button,
+.app-button.danger,
+.app-button.success {
+  font-size: 1em;
+  padding: 0.3em 0.9em;
+  white-space: nowrap;
+}
+
+.pagination-info {
+  margin: 0 1.2em;
+}
+
+.pagination-total {
+  margin-left: 2em;
+  color: #888;
+  font-size: 0.95em;
 }

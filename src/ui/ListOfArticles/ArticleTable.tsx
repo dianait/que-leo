@@ -165,13 +165,7 @@ export function ArticleTable({
                 <td>{getFlagEmoji(article.language)}</td>
                 <td>{article.authors ? article.authors.join(", ") : "-"}</td>
                 <td>
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "0.5em",
-                      alignItems: "center",
-                    }}
-                  >
+                  <div className="article-actions">
                     <button
                       className={`app-button ${
                         article.isRead ? "success" : ""
@@ -182,11 +176,6 @@ export function ArticleTable({
                           ? "Marcar como no leído"
                           : "Marcar como leído"
                       }
-                      style={{
-                        fontSize: "1em",
-                        padding: "0.3em 0.9em",
-                        whiteSpace: "nowrap",
-                      }}
                     >
                       {article.isRead ? "✅ Leído" : "📖 No leído"}
                     </button>
@@ -197,11 +186,6 @@ export function ArticleTable({
                         setModalOpen(true);
                       }}
                       title="Borrar artículo"
-                      style={{
-                        fontSize: "1em",
-                        padding: "0.3em 0.9em",
-                        whiteSpace: "nowrap",
-                      }}
                     >
                       🗑️ Borrar
                     </button>
@@ -220,7 +204,7 @@ export function ArticleTable({
         >
           Anterior
         </button>
-        <span style={{ margin: "0 1.2em" }}>
+        <span className="pagination-info">
           Página {page} de {Math.max(1, Math.ceil(total / PAGE_SIZE))}
         </span>
         <button
@@ -230,9 +214,7 @@ export function ArticleTable({
         >
           Siguiente
         </button>
-        <span style={{ marginLeft: "2em", color: "#888", fontSize: "0.95em" }}>
-          Total: {total}
-        </span>
+        <span className="pagination-total">Total: {total}</span>
       </div>
     </div>
   );
