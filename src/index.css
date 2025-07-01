@@ -162,3 +162,11 @@ body {
     padding: 0 15px;
   }
 }
+
+@media (max-width: 900px) {
+  body,
+  #root {
+    overflow-x: hidden !important;
+    width: 100vw !important;
+  }
+}
