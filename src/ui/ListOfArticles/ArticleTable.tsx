@@ -61,7 +61,6 @@ export function ArticleTable({
   setArticlesVersion: (v: (v: number) => number) => void;
 }) {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 15;
@@ -73,7 +72,6 @@ export function ArticleTable({
 
   useEffect(() => {
     if (!repository || !user) return;
-    setLoading(true);
     const fetchArticles = async () => {
       try {
         const useCase = new GetArticlesByUserPaginated(repository);
@@ -86,8 +84,6 @@ export function ArticleTable({
         setTotal(total);
       } catch (error) {
         console.error("Error al cargar artículos del usuario:", error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchArticles();
