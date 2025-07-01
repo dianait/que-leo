@@ -1,13 +1,12 @@
+import "./ListOfArticles.css";
 import { useEffect, useState, useContext } from "react";
 import type { Article } from "../../domain/Article";
 import { markArticleAsRead, markArticleAsUnread } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
-import { GetArticlesByUser } from "../../application/GetArticlesByUser";
+import { GetArticlesByUserPaginated } from "../../application/GetArticlesByUser";
 import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
 import { DeleteArticle } from "../../application/DeleteArticle";
-import { GetArticlesByUserPaginated } from "../../application/GetArticlesByUser";
-import "./ListOfArticles.css";
 
 function getFlagEmoji(language?: string) {
   if (!language) return "";
@@ -65,7 +64,7 @@ export function ArticleTable({
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 15;
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
@@ -137,102 +136,86 @@ export function ArticleTable({
           if (articleToDelete !== null) handleDelete(articleToDelete);
         }}
       />
-      <h1 style={{ marginBottom: "1.5rem" }}>
-        Mis Artículos ({articles.length})
-      </h1>
-      {loading ? (
-        <p>Cargando artículos...</p>
-      ) : articles.length === 0 ? (
-        <div className="empty-state-sidebar">
-          <div className="empty-state-icon">📖</div>
-          <h3>¡Comienza tu colección!</h3>
-          <p>No tienes artículos guardados todavía.</p>
-        </div>
-      ) : (
-        <div className="table-responsive">
-          <table className="articles-table">
-            <thead>
-              <tr>
-                <th>
-                  <span>📖 Título</span>
-                </th>
-                <th>
-                  <span>🌎 Idioma</span>
-                </th>
-                <th>
-                  <span>👤 Autores</span>
-                </th>
-                <th>
-                  <span>⚡ Acciones</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {articles.map((article) => (
-                <tr
-                  key={article.id}
-                  className={article.isRead ? "is-read" : ""}
-                >
-                  <td>
-                    <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {article.title}
-                    </a>
-                  </td>
-                  <td>{getFlagEmoji(article.language)}</td>
-                  <td>{article.authors ? article.authors.join(", ") : "-"}</td>
-                  <td>
-                    <div
+      <div className="table-responsive">
+        <table className="articles-table">
+          <thead>
+            <tr>
+              <th>
+                <span>📖 Título</span>
+              </th>
+              <th>
+                <span>🌎 Idioma</span>
+              </th>
+              <th>
+                <span>👤 Autores</span>
+              </th>
+              <th>
+                <span>⚡ Acciones</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {articles.map((article) => (
+              <tr key={article.id} className={article.isRead ? "is-read" : ""}>
+                <td>
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {article.title}
+                  </a>
+                </td>
+                <td>{getFlagEmoji(article.language)}</td>
+                <td>{article.authors ? article.authors.join(", ") : "-"}</td>
+                <td>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "0.5em",
+                      alignItems: "center",
+                    }}
+                  >
+                    <button
+                      className={`app-button ${
+                        article.isRead ? "success" : ""
+                      }`}
+                      onClick={() => handleToggleRead(article)}
+                      title={
+                        article.isRead
+                          ? "Marcar como no leído"
+                          : "Marcar como leído"
+                      }
                       style={{
-                        display: "flex",
-                        gap: "0.5em",
-                        alignItems: "center",
+                        fontSize: "1em",
+                        padding: "0.3em 0.9em",
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      <button
-                        className={`app-button ${
-                          article.isRead ? "success" : ""
-                        }`}
-                        onClick={() => handleToggleRead(article)}
-                        title={
-                          article.isRead
-                            ? "Marcar como no leído"
-                            : "Marcar como leído"
-                        }
-                        style={{
-                          fontSize: "1em",
-                          padding: "0.3em 0.9em",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {article.isRead ? "✅ Leído" : "📖 No leído"}
-                      </button>
-                      <button
-                        className="app-button danger"
-                        onClick={() => {
-                          setArticleToDelete(Number(article.id));
-                          setModalOpen(true);
-                        }}
-                        title="Borrar artículo"
-                        style={{
-                          fontSize: "1em",
-                          padding: "0.3em 0.9em",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        🗑️ Borrar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                      {article.isRead ? "✅ Leído" : "📖 No leído"}
+                    </button>
+                    <button
+                      className="app-button danger"
+                      onClick={() => {
+                        setArticleToDelete(Number(article.id));
+                        setModalOpen(true);
+                      }}
+                      title="Borrar artículo"
+                      style={{
+                        fontSize: "1em",
+                        padding: "0.3em 0.9em",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      🗑️ Borrar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className="pagination-controls">
         <button
           className="app-button"

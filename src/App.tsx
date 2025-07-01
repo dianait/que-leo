@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Header } from "./ui/Header/Header";
-import { ListOfArticles } from "./ui/ListOfArticles/ListOfArticles";
 import { RandomArticle } from "./ui/RandomArticle/RandomArticle";
 import { Routes, Route } from "react-router-dom";
 import { ArticleTable } from "./ui/ListOfArticles/ArticleTable";
@@ -17,16 +16,10 @@ export function App() {
           <Route
             path="/"
             element={
-              <>
-                <RandomArticle
-                  articlesVersion={articlesVersion}
-                  setArticlesVersion={setArticlesVersion}
-                />
-                <ListOfArticles
-                  articlesVersion={articlesVersion}
-                  setArticlesVersion={setArticlesVersion}
-                />
-              </>
+              <RandomArticle
+                articlesVersion={articlesVersion}
+                setArticlesVersion={setArticlesVersion}
+              />
             }
           />
           <Route

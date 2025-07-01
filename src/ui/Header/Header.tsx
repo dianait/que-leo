@@ -1,6 +1,6 @@
 import { useAuth } from "../../domain/AuthContext";
 import "./Header.css";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const Header = () => {
   const { user, signOut } = useAuth();
@@ -17,18 +17,20 @@ export const Header = () => {
     <header className="app-header">
       <div className="header-content">
         <div className="header-left">
-          <h1>📚 ¿Qué leo?</h1>
+          <h1>
+            <Link to="/" className="header-title-link">
+              ¿Qué leo?
+            </Link>
+          </h1>
           <p>Menos decisiones, más lectura.</p>
         </div>
 
         {user && (
           <div className="header-right">
-            {/* <nav className="header-nav">
-              <Link to="/articulos" className="header-link">
+            <div className="user-info">
+              <Link to="/articulos" className="header-link-nav">
                 Mis artículos
               </Link>
-            </nav> */}
-            <div className="user-info">
               {user.user_metadata.avatar_url ? (
                 <img
                   src={user.user_metadata.avatar_url}
