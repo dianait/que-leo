@@ -53,6 +53,59 @@ function Toast({ message, show }: { message: string; show: boolean }) {
   return <div className="toast-notification">{message}</div>;
 }
 
+function ShareModal({
+  open,
+  article,
+  onClose,
+}: {
+  open: boolean;
+  article: Article | null;
+  onClose: () => void;
+}) {
+  if (!open || !article) return null;
+  const shareText = encodeURIComponent(`¡He leído: ${article.title}!`);
+  const url = encodeURIComponent(article.url);
+  const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content" style={{ position: "relative" }}>
+        <button className="modal-close" onClick={onClose} title="Cerrar">
+          <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>
+            ×
+          </span>
+        </button>
+        <h2>¡Genial! 🎉</h2>
+        <p>
+          Has marcado este artículo como leído.
+          <br />
+          ¿Quieres compartirlo en tus redes?
+        </p>
+        <div className="share-buttons-row">
+          <a
+            href={blueskyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="share-button bluesky"
+          >
+            <img src="/blusky.svg" alt="Bluesky" className="share-icon" />
+            Bluesky
+          </a>
+          <a
+            href={linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="share-button linkedin"
+          >
+            <img src="/linkedin.svg" alt="LinkedIn" className="share-icon" />
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ArticleTable({
   articlesVersion,
   setArticlesVersion,
@@ -69,6 +122,8 @@ export function ArticleTable({
   const [modalOpen, setModalOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<number | null>(null);
   const [toast, setToast] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [lastReadArticle, setLastReadArticle] = useState<Article | null>(null);
 
   useEffect(() => {
     if (!repository || !user) return;
@@ -98,6 +153,10 @@ export function ArticleTable({
       const useCase = new MarkArticleAsRead(repository);
       await useCase.execute(Number(articleToToggle.id), newArticleState.isRead);
       setArticlesVersion((v) => v + 1);
+      if (!articleToToggle.isRead) {
+        setLastReadArticle(articleToToggle);
+        setShowShareModal(true);
+      }
     } catch (error) {
       console.error("Error al marcar como leído:", error);
     }
@@ -131,6 +190,11 @@ export function ArticleTable({
         onConfirm={() => {
           if (articleToDelete !== null) handleDelete(articleToDelete);
         }}
+      />
+      <ShareModal
+        open={showShareModal}
+        article={lastReadArticle}
+        onClose={() => setShowShareModal(false)}
       />
       <div className="table-responsive">
         <table className="articles-table">
@@ -167,7 +231,7 @@ export function ArticleTable({
                 <td>
                   <div className="article-actions">
                     <button
-                      className={`app-button ${
+                      className={`app-button status ${
                         article.isRead ? "success" : ""
                       }`}
                       onClick={() => handleToggleRead(article)}

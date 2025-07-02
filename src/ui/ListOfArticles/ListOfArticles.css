@@ -130,6 +130,16 @@
   border-color: #047857;
 }
 
+.app-button.status {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -216,4 +226,63 @@
   margin-left: 2em;
   color: #888;
   font-size: 0.95em;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.3em;
+  color: #888;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.share-buttons-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 18px 0;
+}
+
+.share-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  text-decoration: none;
+  color: #fff;
+  background: #888;
+  border: none;
+  transition: background 0.18s;
+  min-width: 140px;
+  min-height: 44px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+}
+
+.share-button .share-icon {
+  width: 26px;
+  height: 26px;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+
+.share-button.bluesky {
+  background: #0072ff;
+}
+.share-button.bluesky:hover {
+  background: #005bb5;
+}
+
+.share-button.linkedin {
+  background: #0077b5;
+}
+.share-button.linkedin:hover {
+  background: #005983;
 }
