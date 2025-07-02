@@ -205,22 +205,6 @@
   justify-content: flex-end;
 }
 
-.random-article-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #5a6fd8;
-  cursor: pointer;
-}
-
-.random-article-checkbox {
-  accent-color: #5a6fd8;
-  width: 18px;
-  height: 18px;
-}
-
 .random-article-authors {
   margin-top: 4px;
   font-size: 18px;
@@ -274,7 +258,7 @@
     box-sizing: border-box;
   }
   .random-article-container {
-    padding: 0 4px !important;
+    padding: 0 12px !important;
     margin-top: 16px !important;
   }
 }
