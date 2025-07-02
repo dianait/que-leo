@@ -139,3 +139,20 @@
     display: none !important;
   }
 }
+
+@media (max-width: 430px) {
+  .app-header,
+  .header-content {
+    padding: 8px !important;
+  }
+  .header-left,
+  .header-right {
+    padding: 0 !important;
+  }
+  .header-left h1 {
+    font-size: 1.1rem !important;
+  }
+  .header-left p {
+    font-size: 0.9rem !important;
+  }
+}

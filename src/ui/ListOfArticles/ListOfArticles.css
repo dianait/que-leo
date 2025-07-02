@@ -286,3 +286,21 @@
 .share-button.linkedin:hover {
   background: #005983;
 }
+
+@media (max-width: 430px) {
+  .articles-table-container {
+    padding: 8px 2px 16px 2px !important;
+    border-radius: 8px !important;
+  }
+  .articles-table th,
+  .articles-table td {
+    padding: 6px 2px !important;
+    font-size: 0.95em !important;
+  }
+  .articles-table th {
+    padding-left: 8px !important;
+  }
+  .articles-table td:first-child {
+    padding-left: 8px !important;
+  }
+}
