@@ -25,21 +25,6 @@ export const AppSkeleton: React.FC = () => {
         </div>
         <div className="skeleton-main-button" />
       </main>
-
-      {/* Sidebar Skeleton */}
-      <aside className="skeleton-sidebar">
-        <div className="skeleton-sidebar-header">
-          <div className="skeleton-line large-title" />
-        </div>
-        <ul className="skeleton-sidebar-list">
-          {[...Array(8)].map((_, index) => (
-            <li key={index} className="skeleton-sidebar-item">
-              <div className="skeleton-line item-title" />
-              <div className="skeleton-line item-subtitle" />
-            </li>
-          ))}
-        </ul>
-      </aside>
     </div>
   );
 };

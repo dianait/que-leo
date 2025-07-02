@@ -4,7 +4,6 @@ import "./RandomArticle.css";
 import type { Article } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
-import { ChangeEvent } from "react";
 import articlesData from "../../infrastructure/data/eferro.json";
 import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 import { TelegramLinkButton } from "../TelegramLinkButton";
@@ -18,10 +17,6 @@ export function RandomArticle({
 }) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [article, setArticle] = useState<Article | null>(null);
-  const [onlyUnread, setOnlyUnread] = useState(() => {
-    const stored = localStorage.getItem("onlyUnread");
-    return stored === null ? true : stored === "true";
-  });
   const [importing, setImporting] = useState(false);
   const [importSuccess, setImportSuccess] = useState(false);
   const [importError, setImportError] = useState("");
@@ -40,21 +35,18 @@ export function RandomArticle({
   }, [user, repository, articlesVersion]);
 
   useEffect(() => {
-    let filtered = onlyUnread ? articles.filter((a) => !a.isRead) : articles;
+    // Siempre filtra solo no leídos
+    let filtered = articles.filter((a) => !a.isRead);
     if (filtered.length === 0) {
       setArticle(null);
     } else {
       const randomIndex = Math.floor(Math.random() * filtered.length);
       setArticle(filtered[randomIndex]);
     }
-  }, [articles, onlyUnread]);
-
-  useEffect(() => {
-    localStorage.setItem("onlyUnread", String(onlyUnread));
-  }, [onlyUnread]);
+  }, [articles]);
 
   const handleGetRandomArticle = () => {
-    let filtered = onlyUnread ? articles.filter((a) => !a.isRead) : articles;
+    let filtered = articles.filter((a) => !a.isRead);
     if (filtered.length === 0) {
       setArticle(null);
     } else {
@@ -73,10 +65,6 @@ export function RandomArticle({
     const searchUrl =
       "https://google.com/search?q=" + encodeURIComponent(title);
     window.open(searchUrl, "_blank", "noopener,noreferrer");
-  };
-
-  const handleSwitchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setOnlyUnread(e.target.checked);
   };
 
   const handleImportDemoArticles = async () => {
@@ -130,36 +118,6 @@ export function RandomArticle({
 
   return (
     <div className="random-article-container">
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 520,
-          margin: "0 auto 16px auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-        }}
-      >
-        <label
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            fontSize: 14,
-            fontWeight: 500,
-            color: "#5a6fd8",
-            cursor: "pointer",
-          }}
-        >
-          <input
-            type="checkbox"
-            checked={onlyUnread}
-            onChange={handleSwitchChange}
-            style={{ accentColor: "#5a6fd8", width: 18, height: 18 }}
-          />
-          Solo no leídos
-        </label>
-      </div>
       <div className="article-container">
         <div
           className={`content-card random-article-card ${
@@ -178,14 +136,7 @@ export function RandomArticle({
                   {getFlagEmoji(article.language)} {article.title}
                 </h4>
                 {article.authors && article.authors.length > 0 && (
-                  <div
-                    style={{
-                      marginTop: 4,
-                      fontSize: 18,
-                      color: "#444",
-                      fontWeight: 600,
-                    }}
-                  >
+                  <div className="random-article-authors">
                     {article.authors.join(", ")}
                   </div>
                 )}
@@ -263,19 +214,8 @@ export function RandomArticle({
                     return (
                       <span
                         key={tag}
-                        style={{
-                          background: bgColor,
-                          color: "#333",
-                          borderRadius: 16,
-                          padding: "8px 12px",
-                          fontSize: 14,
-                          fontWeight: 600,
-                          display: "inline-block",
-                          marginTop: 2,
-                          fontFamily: "inherit",
-                          border: "none",
-                          boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-                        }}
+                        className="random-article-tag"
+                        style={{ background: bgColor }}
                       >
                         {tag}
                       </span>
@@ -307,8 +247,8 @@ export function RandomArticle({
                 }}
               >
                 <span>
-                  Haz clic en el botón <strong>+ Nuevo</strong> del sidebar para
-                  añadir tu primer artículo y empezar a leer
+                  Haz clic en el botón <strong>+ Nuevo</strong> para añadir tu
+                  primer artículo y empezar a leer
                 </span>
                 <div
                   style={{
@@ -318,27 +258,9 @@ export function RandomArticle({
                     margin: "12px 0",
                   }}
                 >
-                  <hr
-                    style={{
-                      flex: 1,
-                      border: 0,
-                      borderTop: "1px solid #e0e0e0",
-                      margin: 0,
-                    }}
-                  />
-                  <span
-                    style={{ margin: "0 12px", color: "#888", fontWeight: 600 }}
-                  >
-                    o
-                  </span>
-                  <hr
-                    style={{
-                      flex: 1,
-                      border: 0,
-                      borderTop: "1px solid #e0e0e0",
-                      margin: 0,
-                    }}
-                  />
+                  <hr className="random-article-divider" />
+                  <span className="random-article-or">o</span>
+                  <hr className="random-article-divider" />
                 </div>
                 <button
                   className="app-button"
@@ -349,12 +271,12 @@ export function RandomArticle({
                   {importing ? "Importando..." : "Importar artículos de prueba"}
                 </button>
                 {importSuccess && (
-                  <div className="success-message" style={{ marginTop: 8 }}>
+                  <div className="random-article-success-message success-message">
                     ¡Artículos importados!
                   </div>
                 )}
                 {importError && (
-                  <div className="error-message" style={{ marginTop: 8 }}>
+                  <div className="random-article-error-message error-message">
                     {importError}
                   </div>
                 )}
