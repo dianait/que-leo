@@ -7,6 +7,7 @@ import { useAuth } from "../../domain/AuthContext";
 import { GetArticlesByUserPaginated } from "../../application/GetArticlesByUser";
 import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
 import { DeleteArticle } from "../../application/DeleteArticle";
+import { ArticleTableSkeleton } from "../AppSkeleton/AppSkeleton";
 
 function getFlagEmoji(language?: string) {
   if (!language) return "";
@@ -124,10 +125,12 @@ export function ArticleTable({
   const [toast, setToast] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [lastReadArticle, setLastReadArticle] = useState<Article | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!repository || !user) return;
     const fetchArticles = async () => {
+      setLoading(true);
       try {
         const useCase = new GetArticlesByUserPaginated(repository);
         const { articles, total } = await useCase.execute(
@@ -137,8 +140,10 @@ export function ArticleTable({
         );
         setArticles(articles);
         setTotal(total);
+        setLoading(false);
       } catch (error) {
         console.error("Error al cargar artículos del usuario:", error);
+        setLoading(false);
       }
     };
     fetchArticles();
@@ -196,70 +201,77 @@ export function ArticleTable({
         article={lastReadArticle}
         onClose={() => setShowShareModal(false)}
       />
-      <div className="table-responsive">
-        <table className="articles-table">
-          <thead>
-            <tr>
-              <th>
-                <span>📖 Título</span>
-              </th>
-              <th>
-                <span>🌎 Idioma</span>
-              </th>
-              <th>
-                <span>👤 Autores</span>
-              </th>
-              <th>
-                <span>⚡ Acciones</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {articles.map((article) => (
-              <tr key={article.id} className={article.isRead ? "is-read" : ""}>
-                <td>
-                  <a
-                    href={article.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {article.title}
-                  </a>
-                </td>
-                <td>{getFlagEmoji(article.language)}</td>
-                <td>{article.authors ? article.authors.join(", ") : "-"}</td>
-                <td>
-                  <div className="article-actions">
-                    <button
-                      className={`app-button status ${
-                        article.isRead ? "success" : ""
-                      }`}
-                      onClick={() => handleToggleRead(article)}
-                      title={
-                        article.isRead
-                          ? "Marcar como no leído"
-                          : "Marcar como leído"
-                      }
-                    >
-                      {article.isRead ? "✅ Leído" : "📖 No leído"}
-                    </button>
-                    <button
-                      className="app-button danger"
-                      onClick={() => {
-                        setArticleToDelete(Number(article.id));
-                        setModalOpen(true);
-                      }}
-                      title="Borrar artículo"
-                    >
-                      🗑️ Borrar
-                    </button>
-                  </div>
-                </td>
+      {loading ? (
+        <ArticleTableSkeleton />
+      ) : (
+        <div className="table-responsive">
+          <table className="articles-table">
+            <thead>
+              <tr>
+                <th>
+                  <span>📖 Título</span>
+                </th>
+                <th>
+                  <span>🌎 Idioma</span>
+                </th>
+                <th>
+                  <span>👤 Autores</span>
+                </th>
+                <th>
+                  <span>⚡ Acciones</span>
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {articles.map((article) => (
+                <tr
+                  key={article.id}
+                  className={article.isRead ? "is-read" : ""}
+                >
+                  <td>
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {article.title}
+                    </a>
+                  </td>
+                  <td>{getFlagEmoji(article.language)}</td>
+                  <td>{article.authors ? article.authors.join(", ") : "-"}</td>
+                  <td>
+                    <div className="article-actions">
+                      <button
+                        className={`app-button status ${
+                          article.isRead ? "success" : ""
+                        }`}
+                        onClick={() => handleToggleRead(article)}
+                        title={
+                          article.isRead
+                            ? "Marcar como no leído"
+                            : "Marcar como leído"
+                        }
+                      >
+                        {article.isRead ? "✅ Leído" : "📖 No leído"}
+                      </button>
+                      <button
+                        className="app-button danger"
+                        onClick={() => {
+                          setArticleToDelete(Number(article.id));
+                          setModalOpen(true);
+                        }}
+                        title="Borrar artículo"
+                      >
+                        🗑️ Borrar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       <div className="pagination-controls">
         <button
           className="app-button"

@@ -6,7 +6,8 @@ import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext"
 import { useAuth } from "../../domain/AuthContext";
 import articlesData from "../../infrastructure/data/eferro.json";
 import { GetArticlesByUser } from "../../application/GetArticlesByUser";
-import { TelegramLinkButton } from "../TelegramLinkButton";
+import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
+import { RandomArticleSkeleton } from "../AppSkeleton/AppSkeleton";
 
 export function RandomArticle({
   articlesVersion,
@@ -20,6 +21,7 @@ export function RandomArticle({
   const [importing, setImporting] = useState(false);
   const [importSuccess, setImportSuccess] = useState(false);
   const [importError, setImportError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
@@ -27,9 +29,11 @@ export function RandomArticle({
   useEffect(() => {
     if (!repository || !user) return;
     const fetchArticles = async () => {
+      setLoading(true);
       const useCase = new GetArticlesByUser(repository);
       const result = await useCase.execute(user.id);
       setArticles(result);
+      setLoading(false);
     };
     fetchArticles();
   }, [user, repository, articlesVersion]);
@@ -119,171 +123,177 @@ export function RandomArticle({
   return (
     <div className="random-article-container">
       <div className="article-container">
-        <div
-          className={`content-card random-article-card ${
-            article ? "card-animated" : ""
-          }`}
-        >
-          {article ? (
-            <>
-              {article.isRead && (
-                <div className="remember-text">
-                  <span>🎪 ¿Quieres dar otra vuelta a este artículo?</span>
-                </div>
-              )}
-              <div className="article-header">
-                <h4 className="article-title">
-                  {getFlagEmoji(article.language)} {article.title}
-                </h4>
-                {article.authors && article.authors.length > 0 && (
-                  <div className="random-article-authors">
-                    {article.authors.join(", ")}
+        {loading ? (
+          <RandomArticleSkeleton />
+        ) : (
+          <div
+            className={`content-card random-article-card ${
+              article ? "card-animated" : ""
+            }`}
+          >
+            {article ? (
+              <>
+                {article.isRead && (
+                  <div className="remember-text">
+                    <span>🎪 ¿Quieres dar otra vuelta a este artículo?</span>
                   </div>
                 )}
-              </div>
-              <div className="article-links-container">
-                {article.url === "#" ? (
-                  <>
-                    <div className="url-not-available">
-                      🚫 No URL disponible.
+                <div className="article-header">
+                  <h4 className="article-title">
+                    {getFlagEmoji(article.language)} {article.title}
+                  </h4>
+                  {article.authors && article.authors.length > 0 && (
+                    <div className="random-article-authors">
+                      {article.authors.join(", ")}
                     </div>
-                    <a
-                      href={
-                        "https://google.com/search?q=" +
-                        encodeURIComponent(article.title)
-                      }
-                      className="article-link"
-                      onClick={(e) => handleGoogleSearch(article.title, e)}
-                    >
-                      🔎 Buscar en Google
-                    </a>
-                  </>
-                ) : (
-                  <a
-                    href={article.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="article-link"
-                    onClick={(e) => handleArticleClick(article.url, e)}
-                  >
-                    🔗 Leer artículo
-                  </a>
-                )}
-              </div>
-              {article.less_15 && (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    marginTop: 4,
-                    fontSize: 15,
-                    color: "#888",
-                  }}
-                >
-                  <span role="img" aria-label="Reloj">
-                    ⏱️
-                  </span>{" "}
-                  menos de 15'
+                  )}
                 </div>
-              )}
-              {article.topics && article.topics.length > 0 && (
-                <div
-                  style={{
-                    marginTop: 18,
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 8,
-                  }}
-                >
-                  {article.topics.map((tag, idx) => {
-                    // Paleta de colores pastel
-                    const colors = [
-                      "#E0E7FF", // azul
-                      "#FDE68A", // amarillo
-                      "#FCA5A5", // rojo
-                      "#6EE7B7", // verde
-                      "#FBCFE8", // rosa
-                      "#A7F3D0", // turquesa
-                      "#F9A8D4", // fucsia
-                      "#FCD34D", // naranja
-                      "#C7D2FE", // lila
-                      "#FECACA", // coral
-                    ];
-                    const bgColor = colors[idx % colors.length];
-                    return (
-                      <span
-                        key={tag}
-                        className="random-article-tag"
-                        style={{ background: bgColor }}
+                <div className="article-links-container">
+                  {article.url === "#" ? (
+                    <>
+                      <div className="url-not-available">
+                        🚫 No URL disponible.
+                      </div>
+                      <a
+                        href={
+                          "https://google.com/search?q=" +
+                          encodeURIComponent(article.title)
+                        }
+                        className="article-link"
+                        onClick={(e) => handleGoogleSearch(article.title, e)}
                       >
-                        {tag}
-                      </span>
-                    );
-                  })}
+                        🔎 Buscar en Google
+                      </a>
+                    </>
+                  ) : (
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="article-link"
+                      onClick={(e) => handleArticleClick(article.url, e)}
+                    >
+                      🔗 Leer artículo
+                    </a>
+                  )}
                 </div>
-              )}
-              <div className="article-meta-container">
-                {isBefore(article.dateAdded, subYears(new Date(), 1)) && (
-                  <p className="article-warning">
-                    ⚠️ Este artículo podría estar desactualizado.
-                  </p>
+                {article.less_15 && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      marginTop: 4,
+                      fontSize: 15,
+                      color: "#888",
+                    }}
+                  >
+                    <span role="img" aria-label="Reloj">
+                      ⏱️
+                    </span>{" "}
+                    menos de 15'
+                  </div>
                 )}
-              </div>
-            </>
-          ) : (
-            <div className="empty-state">
-              <div className="empty-state-icon">📚</div>
-              <h3>¡Tu biblioteca está vacía!</h3>
-              <p>No tienes artículos guardados todavía.</p>
-              <div
-                className="empty-state-cta"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 8,
-                  width: "100%",
-                }}
-              >
-                <span>
-                  Haz clic en el botón <strong>+ Nuevo</strong> para añadir tu
-                  primer artículo y empezar a leer
-                </span>
+                {article.topics && article.topics.length > 0 && (
+                  <div
+                    style={{
+                      marginTop: 18,
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 8,
+                    }}
+                  >
+                    {article.topics.map((tag, idx) => {
+                      // Paleta de colores pastel
+                      const colors = [
+                        "#E0E7FF", // azul
+                        "#FDE68A", // amarillo
+                        "#FCA5A5", // rojo
+                        "#6EE7B7", // verde
+                        "#FBCFE8", // rosa
+                        "#A7F3D0", // turquesa
+                        "#F9A8D4", // fucsia
+                        "#FCD34D", // naranja
+                        "#C7D2FE", // lila
+                        "#FECACA", // coral
+                      ];
+                      const bgColor = colors[idx % colors.length];
+                      return (
+                        <span
+                          key={tag}
+                          className="random-article-tag"
+                          style={{ background: bgColor }}
+                        >
+                          {tag}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
+                <div className="article-meta-container">
+                  {isBefore(article.dateAdded, subYears(new Date(), 1)) && (
+                    <p className="article-warning">
+                      ⚠️ Este artículo podría estar desactualizado.
+                    </p>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="empty-state">
+                <div className="empty-state-icon">📚</div>
+                <h3>¡Tu biblioteca está vacía!</h3>
+                <p>No tienes artículos guardados todavía.</p>
                 <div
+                  className="empty-state-cta"
                   style={{
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
+                    gap: 8,
                     width: "100%",
-                    margin: "12px 0",
                   }}
                 >
-                  <hr className="random-article-divider" />
-                  <span className="random-article-or">o</span>
-                  <hr className="random-article-divider" />
+                  <span>
+                    Haz clic en el botón <strong>+ Nuevo</strong> para añadir tu
+                    primer artículo y empezar a leer
+                  </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      width: "100%",
+                      margin: "12px 0",
+                    }}
+                  >
+                    <hr className="random-article-divider" />
+                    <span className="random-article-or">o</span>
+                    <hr className="random-article-divider" />
+                  </div>
+                  <button
+                    className="app-button"
+                    onClick={handleImportDemoArticles}
+                    disabled={importing}
+                    style={{ marginTop: 4 }}
+                  >
+                    {importing
+                      ? "Importando..."
+                      : "Importar artículos de prueba"}
+                  </button>
+                  {importSuccess && (
+                    <div className="random-article-success-message success-message">
+                      ¡Artículos importados!
+                    </div>
+                  )}
+                  {importError && (
+                    <div className="random-article-error-message error-message">
+                      {importError}
+                    </div>
+                  )}
                 </div>
-                <button
-                  className="app-button"
-                  onClick={handleImportDemoArticles}
-                  disabled={importing}
-                  style={{ marginTop: 4 }}
-                >
-                  {importing ? "Importando..." : "Importar artículos de prueba"}
-                </button>
-                {importSuccess && (
-                  <div className="random-article-success-message success-message">
-                    ¡Artículos importados!
-                  </div>
-                )}
-                {importError && (
-                  <div className="random-article-error-message error-message">
-                    {importError}
-                  </div>
-                )}
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
       <button
         onClick={handleGetRandomArticle}
@@ -298,8 +308,7 @@ export function RandomArticle({
             width: "100%",
             maxWidth: 520,
             margin: "16px auto 0 auto",
-            display: "flex",
-            justifyContent: "center",
+            display: "block",
           }}
         >
           <TelegramLinkButton userId={user.id} />

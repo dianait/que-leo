@@ -3,7 +3,7 @@ import { Header } from "./ui/Header/Header";
 import { RandomArticle } from "./ui/RandomArticle/RandomArticle";
 import { Routes, Route } from "react-router-dom";
 import { ArticleTable } from "./ui/ListOfArticles/ArticleTable";
-import { Footer } from "./ui/Footer";
+import { Footer } from "./ui/Footer/Footer";
 
 export function App() {
   const [articlesVersion, setArticlesVersion] = useState(0);
