@@ -7,6 +7,7 @@
   justify-content: center;
   border-top: none;
   margin-top: 40px;
+  position: relative;
 }
 
 .footer-content {
@@ -16,11 +17,13 @@
   justify-content: space-between;
   padding: 0 2rem;
   font-size: 1rem;
+  position: relative;
 }
 
 .footer-title {
   font-weight: 700;
   letter-spacing: 0.5px;
+  flex: 0 0 auto;
 }
 
 .footer-link {
@@ -41,10 +44,29 @@
   display: flex;
   align-items: center;
   gap: 0.3em;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .footer-heart {
   color: #ffb3b3;
   font-size: 1.1em;
   margin: 0 0.2em;
+}
+
+.footer-github-icon {
+  vertical-align: middle;
+  margin-right: 0.4em;
+  transform: translateY(-2px);
+}
+
+.footer-link-dianait {
+  font-weight: 700;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.app-footer {
+  position: relative;
 }
