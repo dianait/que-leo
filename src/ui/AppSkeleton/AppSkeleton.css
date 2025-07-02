@@ -161,13 +161,4 @@
   .skeleton-articles-table td {
     padding: 8px 4px;
   }
-  .skeleton-table-responsive {
-    overflow-x: hidden !important;
-  }
-  .skeleton-articles-table {
-    width: 100vw !important;
-    min-width: 0 !important;
-    max-width: 100vw !important;
-    table-layout: fixed;
-  }
 }
