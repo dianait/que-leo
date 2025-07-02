@@ -1,0 +1,24 @@
+.telegram-link-button {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  margin: 18px auto 0 auto;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(34, 158, 217, 0.15);
+  padding: 0.8rem 0;
+  text-decoration: none;
+  background: #229ed9;
+  color: #fff;
+  border: none;
+  transition: background 0.2s;
+}
+
+.telegram-link-button:hover {
+  background: #1479b8;
+}
+
+/* Hereda color y fondo de .button-primary y .modern-button */
