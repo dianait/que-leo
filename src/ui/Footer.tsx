@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer className="app-footer">
       <div className="footer-content">
-        <span className="footer-title">¿Qué leo?</span>
+        <span className="footer-title footer-hide-mobile">¿Qué leo?</span>
         <span className="footer-madeby">
           Hecho con <span className="footer-heart">♥</span> por
           <a
@@ -20,7 +20,7 @@ export function Footer() {
           href="https://github.com/dianait/article-reader"
           target="_blank"
           rel="noopener noreferrer"
-          className="footer-link"
+          className="footer-link footer-hide-mobile"
         >
           <svg
             width="20"

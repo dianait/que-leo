@@ -70,3 +70,9 @@
 .app-footer {
   position: relative;
 }
+
+@media (max-width: 430px) {
+  .footer-hide-mobile {
+    display: none !important;
+  }
+}
