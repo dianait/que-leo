@@ -16,17 +16,6 @@ Todos tenemos esa lista interminable de artículos técnicos que guardamos con l
 - 📊 **Gestión completa**: Añade, elimina y marca artículos como leídos
 - 🎨 **Interfaz moderna**: Diseño limpio y responsive
 
-## 🚀 Tecnologías
-
-Este proyecto es una implementación práctica de **Arquitectura Hexagonal** en el frontend, aprendida en el curso de [Codely](https://codely.com/).
-
-- **Frontend**: React + TypeScript + Vite
-- **Arquitectura**: Hexagonal Architecture (Clean Architecture)
-- **Autenticación**: Supabase Auth
-- **Base de datos**: Supabase PostgreSQL
-- **Testing**: Jest + Playwright
-- **Estilos**: CSS Modules
-
 ## 📱 Integración con Telegram
 
 ### ¿Cómo funciona?
