@@ -31,6 +31,7 @@
   max-height: 120px;
   width: auto;
   border-radius: 8px;
+  max-width: 100%; /* Asegura que nunca sobrepase el ancho */
 }
 
 .header-right {
@@ -158,21 +159,37 @@
 }
 
 @media (max-width: 430px) {
+  .app-header .header-logo {
+    max-height: 36px;
+    max-width: 100%;
+  }
   .app-header,
   .header-content {
-    padding: 8px !important;
+    padding: 4px;
+    box-sizing: border-box;
+    width: 100vw;
+    overflow-x: hidden;
   }
   .header-left,
   .header-right {
-    padding: 0 !important;
+    padding: 0;
   }
   .header-left h1 {
-    font-size: 1.1rem !important;
+    font-size: 1rem;
+    word-break: break-word;
+    max-width: 100vw;
   }
   .header-left p {
-    font-size: 0.9rem !important;
+    font-size: 0.85rem;
+    word-break: break-word;
+    max-width: 100vw;
   }
-  .header-logo {
-    max-height: 80px !important;
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
   }
+}
+
+body {
+  overflow-x: hidden;
 }
