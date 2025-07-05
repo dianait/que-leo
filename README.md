@@ -14,7 +14,6 @@ Todos tenemos esa lista interminable de artículos técnicos que guardamos con l
 - 📱 **Integración con Telegram**: Guarda artículos fácilmente desde tu móvil
 - 👤 **Autenticación con GitHub**: Login seguro y rápido
 - 📊 **Gestión completa**: Añade, elimina y marca artículos como leídos
-- 🎨 **Interfaz moderna**: Diseño limpio y responsive
 
 ## 📱 Integración con Telegram
 
