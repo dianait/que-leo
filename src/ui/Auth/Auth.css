@@ -24,6 +24,18 @@
   margin-bottom: 32px;
 }
 
+.auth-logo {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.header-logo {
+  max-width: 350px;
+  height: auto;
+  border-radius: 12px;
+}
+
 .auth-header h1 {
   font-size: 3rem;
   margin-bottom: 16px;
@@ -76,7 +88,7 @@
 }
 
 .auth-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   color: white;
   border: none;
   padding: 14px 24px;
@@ -94,9 +106,9 @@
 
 /* Botón de GitHub */
 .auth-button.github-button {
-  background-color: #24292e;
+  background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
   color: white;
-  border: 1px solid #24292e;
+  border: 1px solid #00b4d8;
   padding: 12px 24px;
   border-radius: 8px;
   font-size: 1rem;
@@ -111,9 +123,9 @@
 }
 
 .github-button:hover:not(:disabled) {
-  background-color: #333;
+  background: linear-gradient(135deg, #0099cc 0%, #005f8a 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(36, 41, 46, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 180, 216, 0.25);
 }
 
 .github-logo {
@@ -173,5 +185,8 @@
   }
   .auth-header h2 {
     font-size: 1.25rem;
+  }
+  .header-logo {
+    max-width: 280px;
   }
 }

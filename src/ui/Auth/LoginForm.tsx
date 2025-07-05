@@ -23,7 +23,9 @@ export const LoginForm: React.FC = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <h1>📚</h1>
+          <div className="auth-logo">
+            <img src="/header.png" alt="¿Qué leo? Logo" className="header-logo" />
+          </div>
           <h2>Menos decisiones, más lectura.</h2>
           <p>
             Tu biblioteca personal de artículos. Inicia sesión para descubrir tu
