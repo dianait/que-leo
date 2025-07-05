@@ -52,6 +52,7 @@ export default tseslint.config(
             "src/ui/**",
             "**/*.test.tsx",
             "**/tests/**",
+            "scripts/**",
           ],
         },
       ],
