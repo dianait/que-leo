@@ -2,6 +2,8 @@
 
 > **Descubre qué leer de tu lista interminable de artículos guardados**
 
+![¿Qué leo? Header](./screenshots/header.png)
+
 ![¿Qué leo? App](./screenshots/app.png)
 
 ## 🎯 ¿Qué resuelve?

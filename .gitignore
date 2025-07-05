@@ -44,9 +44,10 @@ telegram-bot/
 # Ignorar screenshots de debug
 debug*.png
 
-# Ignorar todos los archivos de screenshots excepto app.png
+# Ignorar todos los archivos de screenshots excepto app.png y header.png
 screenshots/*
 !screenshots/app.png
+!screenshots/header.png
 
 # Ignorar datos de usuario de Playwright (contiene tokens de OAuth)
 .playwright-user-data/
