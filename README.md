@@ -1,6 +1,6 @@
 ![¿Qué leo? Header](./public/header.png)
 
-> **Descubre qué leer de tu lista interminable de artículos guardados**
+> **Descubre qué leer de tu lista de artículos guardados**
 
 ![¿Qué leo? App](./screenshots/app.png)
 
