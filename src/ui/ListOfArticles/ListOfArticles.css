@@ -7,9 +7,6 @@
   margin: 0 auto 32px auto;
   padding: 24px 18px 32px 18px;
   background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 2px 16px rgba(90, 111, 216, 0.08);
-  border: 2px solid #e0e7ef;
 }
 
 .table-responsive {
@@ -24,8 +21,6 @@
   border-collapse: collapse;
   font-size: 1.08em;
   background: #f8f9fd;
-  border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(90, 111, 216, 0.04);
   box-sizing: border-box;
 }
 

@@ -3,8 +3,10 @@
   background: white;
   color: #2d3748;
   padding: 20px 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
   width: 100%;
+  border-bottom: 1px solid #e2e8f0;
+  position: relative;
 }
 
 .header-content {
@@ -139,7 +141,6 @@
   margin-right: 1.5rem;
   text-decoration: none;
   transition: background 0.2s, color 0.2s, border 0.2s;
-  box-shadow: 0 2px 8px rgba(90, 111, 216, 0.07);
   display: flex;
   align-items: center;
   gap: 0.5em;
