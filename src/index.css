@@ -99,14 +99,15 @@ body {
 }
 
 .button-primary {
-  background-color: #5a6fd8;
+  background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);
   color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   position: relative;
+  border: none;
+  transition: background 0.3s ease;
 }
 
 .button-primary:hover:not(:disabled) {
-  background-color: #4a58cc;
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
 }
 
 /* Loading spinner */

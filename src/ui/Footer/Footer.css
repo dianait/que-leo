@@ -1,13 +1,14 @@
 .app-footer {
   height: 60px;
-  background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
-  color: #fff;
+  background: white;
+  color: #2d3748;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-top: none;
+  border-top: 1px solid #e2e8f0;
   margin-top: 40px;
   position: relative;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .footer-content {
@@ -24,23 +25,24 @@
   font-weight: 700;
   letter-spacing: 0.5px;
   flex: 0 0 auto;
+  color: #2d3748;
 }
 
 .footer-link {
-  color: #fff;
+  color: #4a5568;
   text-decoration: none;
   font-weight: 500;
   margin: 0 1.5rem;
   transition: color 0.2s;
 }
 .footer-link:hover {
-  color: #b3e5fc;
+  color: #00b4d8;
   text-decoration: underline;
 }
 
 .footer-madeby {
   font-size: 0.98rem;
-  color: #fff;
+  color: #6a7f9e;
   display: flex;
   align-items: center;
   gap: 0.3em;
@@ -50,7 +52,7 @@
 }
 
 .footer-heart {
-  color: #ffb3b3;
+  color: #ff6b6b;
   font-size: 1.1em;
   margin: 0 0.2em;
 }

@@ -1,4 +1,4 @@
-![¿Qué leo? Header](./screenshots/header.png)
+![¿Qué leo? Header](./public/header.png)
 
 > **Descubre qué leer de tu lista interminable de artículos guardados**
 
