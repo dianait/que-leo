@@ -109,6 +109,18 @@
   max-width: 520px;
   margin: 0 auto;
   display: block;
+  height: 56px; /* Altura fija para ambos botones */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.random-article-button {
+  margin-bottom: 8px; /* Reducir separación entre botones */
+}
+
+.telegram-link-button {
+  margin-top: 8px !important; /* Reducir separación desde el botón anterior */
 }
 
 .random-article-button:disabled {
