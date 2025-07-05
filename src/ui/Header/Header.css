@@ -160,7 +160,7 @@
 
 @media (max-width: 430px) {
   .app-header .header-logo {
-    max-height: 36px;
+    max-height: 40px;
     max-width: 100%;
   }
   .app-header,
@@ -184,10 +184,7 @@
     word-break: break-word;
     max-width: 100vw;
   }
-  .header-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  /* Eliminado flex-direction: column en .header-content para mantener disposición horizontal */
 }
 
 body {

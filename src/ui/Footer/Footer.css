@@ -74,9 +74,6 @@
 }
 
 @media (max-width: 430px) {
-  .app-footer {
-    display: none;
-  }
   .footer-hide-mobile {
     display: none !important;
   }
