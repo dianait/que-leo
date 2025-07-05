@@ -46,7 +46,7 @@ debug*.png
 
 # Ignorar todos los archivos de screenshots excepto app.png
 screenshots/*
-!screenshots/app.png
+!screenshots/app.webp
 
 # Ignorar datos de usuario de Playwright (contiene tokens de OAuth)
 .playwright-user-data/
