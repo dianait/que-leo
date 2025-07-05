@@ -183,6 +183,22 @@
     font-size: 0.85rem;
     word-break: break-word;
     max-width: 100vw;
+    white-space: pre-line;
+    content: "";
+    font-size: 0;
+  }
+  .header-left p::before {
+    content: "Menos decisiones,";
+    display: block;
+    font-size: 0.85rem;
+  }
+  .header-left p::after {
+    content: "más lectura.";
+    display: block;
+    font-size: 0.85rem;
+  }
+  .logout-button {
+    padding-right: 8px;
   }
   /* Eliminado flex-direction: column en .header-content para mantener disposición horizontal */
 }
