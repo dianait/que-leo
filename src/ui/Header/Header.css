@@ -172,4 +172,7 @@
   .header-left p {
     font-size: 0.9rem !important;
   }
+  .header-logo {
+    max-height: 80px !important;
+  }
 }
