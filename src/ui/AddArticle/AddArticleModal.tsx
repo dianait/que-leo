@@ -34,7 +34,9 @@ const Modal = forwardRef<
 
 Modal.displayName = "Modal";
 
-export const AddArticle: React.FC = () => {
+export const AddArticle: React.FC<{
+  setArticlesVersion?: (v: (v: number) => number) => void;
+}> = ({ setArticlesVersion }) => {
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,6 +86,10 @@ export const AddArticle: React.FC = () => {
       setSuccess("¡Artículo añadido con éxito!");
       setTitle("");
       setUrl("");
+      // Actualizar la versión de artículos para refrescar la lista
+      if (setArticlesVersion) {
+        setArticlesVersion((v) => v + 1);
+      }
       setTimeout(() => {
         setIsModalOpen(false);
         setSuccess("");

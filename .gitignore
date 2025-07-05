@@ -12,6 +12,15 @@ dist
 dist-ssr
 *.local
 .env
+.env.test
+
+# Testing
+playwright-report/
+test-results/
+tests/e2e/auth-mock.ts
+tests/e2e/test-config.ts
+scripts/
+.env.test
 
 # Editor directories and files
 .vscode/*
@@ -28,3 +37,9 @@ dist-ssr
 extension/
 
 telegram-bot/
+
+# Ignorar resultados de tests de Playwright y otras carpetas de resultados
+/test-results*/
+
+# Ignorar screenshots de debug
+debug*.png

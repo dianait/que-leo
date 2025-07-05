@@ -9,6 +9,11 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest --config jest.config.cjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:auth": "dotenv -e .env.test -- playwright test tests/e2e/real-auth-test.spec.ts",
+    "test:setup": "chmod +x scripts/setup-test-env.sh && ./scripts/setup-test-env.sh",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -25,6 +30,8 @@
   },
   "devDependencies": {
     "@eslint/js": "9.25.0",
+    "@playwright/mcp": "^0.0.29",
+    "@playwright/test": "^1.53.2",
     "@supabase/supabase-js": "^2.50.1",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
@@ -33,6 +40,7 @@
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
     "@vitejs/plugin-react-swc": "3.9.0",
+    "dotenv-cli": "^8.0.0",
     "eslint": "9.25.0",
     "eslint-plugin-hexagonal-architecture": "1.0.3",
     "eslint-plugin-react-hooks": "5.2.0",

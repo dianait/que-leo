@@ -8,6 +8,7 @@ import { GetArticlesByUserPaginated } from "../../application/GetArticlesByUser"
 import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
 import { DeleteArticle } from "../../application/DeleteArticle";
 import { ArticleTableSkeleton } from "../AppSkeleton/AppSkeleton";
+import { AddArticle } from "../AddArticle/AddArticleModal";
 
 function getFlagEmoji(language?: string) {
   if (!language) return "";
@@ -154,16 +155,37 @@ export function ArticleTable({
     const newArticleState = articleToToggle.isRead
       ? markArticleAsUnread(articleToToggle)
       : markArticleAsRead(articleToToggle);
+
+    // Actualizar el estado local inmediatamente para una UI más fluida
+    setArticles((prev) =>
+      prev.map((article) =>
+        Number(article.id) === Number(articleToToggle.id)
+          ? { ...article, isRead: newArticleState.isRead }
+          : article
+      )
+    );
+
     try {
       const useCase = new MarkArticleAsRead(repository);
       await useCase.execute(Number(articleToToggle.id), newArticleState.isRead);
-      setArticlesVersion((v) => v + 1);
+
+      // Solo actualizar la versión si es necesario para otros componentes
+      // setArticlesVersion((v) => v + 1);
+
       if (!articleToToggle.isRead) {
         setLastReadArticle(articleToToggle);
         setShowShareModal(true);
       }
     } catch (error) {
       console.error("Error al marcar como leído:", error);
+      // Revertir el cambio local si falla
+      setArticles((prev) =>
+        prev.map((article) =>
+          Number(article.id) === Number(articleToToggle.id)
+            ? { ...article, isRead: articleToToggle.isRead }
+            : article
+        )
+      );
     }
   };
 
@@ -188,6 +210,19 @@ export function ArticleTable({
 
   return (
     <div className="articles-table-container">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "20px",
+        }}
+      >
+        <h2 style={{ margin: 0, color: "#333" }}>Mis artículos</h2>
+        <AddArticle
+          setArticlesVersion={setArticlesVersion}
+        />
+      </div>
       <Toast message="Artículo borrado correctamente" show={toast} />
       <ConfirmModal
         open={modalOpen}

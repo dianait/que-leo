@@ -15,4 +15,5 @@ module.exports = {
   moduleNameMapper: {
     "\\.(css|less)$": "<rootDir>/tests/__mocks__/styleMock.js",
   },
+  testPathIgnorePatterns: ["/node_modules/", "/tests/e2e/"],
 };
