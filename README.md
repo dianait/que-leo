@@ -2,7 +2,7 @@
 
 > **Descubre qué leer de tu lista interminable de artículos guardados**
 
-![¿Qué leo? App](./screenshots/app.webp)
+![¿Qué leo? App](./screenshots/app.png)
 
 ## 🎯 ¿Qué resuelve?
 
