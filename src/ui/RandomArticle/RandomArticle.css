@@ -116,11 +116,11 @@
 }
 
 .random-article-button {
-  margin-bottom: 8px; /* Reducir separación entre botones */
+  margin: 0 auto 16px auto !important; /* Gap de 16px abajo */
 }
 
 .telegram-link-button {
-  margin-top: 8px !important; /* Reducir separación desde el botón anterior */
+  margin: 0 auto !important; /* Sin margen superior */
 }
 
 .random-article-button:disabled {

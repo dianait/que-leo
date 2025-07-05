@@ -307,7 +307,7 @@ export function RandomArticle({
           style={{
             width: "100%",
             maxWidth: 520,
-            margin: "16px auto 0 auto",
+            margin: "0 auto",
             display: "block",
           }}
         >
