@@ -1,25 +1,55 @@
 # ¿Qué leo? 📚
 
-Una aplicación para gestionar y descubrir qué leer de tu lista de artículos guardados.
+> **Descubre qué leer de tu lista interminable de artículos guardados**
 
-![¿Qué leo? App](./screenshots/app.png)
+![¿Qué leo? App](./screenshots/app.webp)
 
-## Descripción
+## 🎯 ¿Qué resuelve?
 
-Todos tenemos esa lista interminable de artículos técnicos que guardamos con la intención de "leer después"... pero que nunca leemos.
-Esta aplicación resuelve ese problema sugiriéndote qué leer de tu colección.
+Todos tenemos esa lista interminable de artículos técnicos que guardamos con la intención de "leer después"... pero que nunca leemos. **¿Qué leo?** resuelve ese problema sugiriéndote qué leer de tu colección de forma aleatoria.
 
-Este proyecto es una forma de poner en práctica lo aprendido sobre Arquitectura hexagonal gracias al curso de Codely "Arquitecture Hexagonal en el front"
+### ✨ Características principales
 
-### Licencia
+- 🔄 **Selección aleatoria**: Descubre artículos olvidados en tu lista
+- 📱 **Integración con Telegram**: Guarda artículos fácilmente desde tu móvil
+- 👤 **Autenticación con GitHub**: Login seguro y rápido
+- 📊 **Gestión completa**: Añade, elimina y marca artículos como leídos
+- 🎨 **Interfaz moderna**: Diseño limpio y responsive
 
-MIT License - Siéntete libre de usar este código para tus propios proyectos de aprendizaje.
+## 🚀 Tecnologías
 
-## Vinculación con Telegram y guardado desde el móvil
+Este proyecto es una implementación práctica de **Arquitectura Hexagonal** en el frontend, aprendida en el curso de [Codely](https://codely.com/).
 
-Ahora puedes vincular tu cuenta con Telegram para guardar artículos fácilmente desde tu móvil o cualquier dispositivo donde uses Telegram.
+- **Frontend**: React + TypeScript + Vite
+- **Arquitectura**: Hexagonal Architecture (Clean Architecture)
+- **Autenticación**: Supabase Auth
+- **Base de datos**: Supabase PostgreSQL
+- **Testing**: Jest + Playwright
+- **Estilos**: CSS Modules
 
-- En la app web, haz clic en el botón "Vincular con Telegram" (debajo de "Dame otro").
-- Se abrirá un chat con el bot de Telegram, que te pedirá autorizar la vinculación.
-- Una vez vinculado, podrás enviar enlaces al bot y se guardarán automáticamente en tu lista de artículos.
-- ¡Ideal para guardar lecturas interesantes que encuentres navegando desde el móvil!
+## 📱 Integración con Telegram
+
+### ¿Cómo funciona?
+
+1. **Vincula tu cuenta**: Haz clic en "Vincular con Telegram" en la app web
+2. **Autoriza el bot**: El bot de Telegram te pedirá autorización
+3. **Envía enlaces**: Manda cualquier URL al bot y se guardará automáticamente
+4. **¡Listo!**: Tus artículos aparecerán en la app web
+
+### 💡 Casos de uso
+
+- 📖 **Lectura móvil**: Encuentras un artículo interesante navegando desde el móvil
+- 🚇 **Tiempo muerto**: Guarda artículos durante el trayecto en transporte público
+- 💬 **Compartir**: Envía enlaces desde chats de Telegram directamente a tu lista
+
+## 🤝 Contribuir
+
+¡Las Pull Requests son más que bienvenidas! 🎉
+
+Este es un proyecto de aprendizaje personal, pero si encuentras algún bug, tienes sugerencias de mejora o quieres añadir nuevas funcionalidades, ¡no dudes en abrir un issue o enviar una PR!
+
+Todas las contribuciones son valoradas y ayudan a mejorar la experiencia de todos los usuarios.
+
+---
+
+**Desarrollado con ❤️ para resolver el problema universal de la lista infinita de artículos por leer**
