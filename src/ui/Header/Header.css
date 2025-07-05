@@ -198,7 +198,7 @@
     font-size: 0.85rem;
   }
   .logout-button {
-    padding-right: 8px;
+    margin-right: 8px;
   }
   /* Eliminado flex-direction: column en .header-content para mantener disposición horizontal */
 }
