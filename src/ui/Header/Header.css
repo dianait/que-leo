@@ -107,6 +107,9 @@
   font-size: 1.1em;
   letter-spacing: 0.5px;
   transition: color 0.2s;
+  cursor: pointer;
+  display: block;
+  width: fit-content;
 }
 .header-title-link:hover {
   color: #00b4d8;
