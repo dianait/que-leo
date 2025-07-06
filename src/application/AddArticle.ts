@@ -30,15 +30,18 @@ export class AddArticle {
         featuredImage
       );
     }
-    return this.repository.addArticle(
-      title,
-      url,
-      userId,
-      language,
-      authors,
-      topics,
-      less_15,
-      featuredImage
-    );
+    if (typeof this.repository.addArticle === "function") {
+      return this.repository.addArticle(
+        title,
+        url,
+        userId,
+        language,
+        authors,
+        topics,
+        less_15,
+        featuredImage
+      );
+    }
+    throw new Error("No se encontró un método válido para añadir artículos");
   }
 }

@@ -14,7 +14,12 @@ export class GetArticlesByUser {
     ) {
       return this.repository.getArticlesByUserFromUserArticles(userId);
     }
-    return this.repository.getArticlesByUser(userId);
+    if (typeof this.repository.getArticlesByUser === "function") {
+      return this.repository.getArticlesByUser(userId);
+    }
+    throw new Error(
+      "No se encontró un método válido para obtener artículos del usuario"
+    );
   }
 }
 
@@ -36,6 +41,11 @@ export class GetArticlesByUserPaginated {
         offset
       );
     }
-    return this.repository.getArticlesByUserPaginated(userId, limit, offset);
+    if (typeof this.repository.getArticlesByUserPaginated === "function") {
+      return this.repository.getArticlesByUserPaginated(userId, limit, offset);
+    }
+    throw new Error(
+      "No se encontró un método válido para obtener artículos paginados del usuario"
+    );
   }
 }

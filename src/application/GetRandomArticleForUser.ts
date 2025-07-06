@@ -9,22 +9,37 @@ export class GetRandomArticleForUser {
   }
 
   async execute(userId: string): Promise<Article | null> {
-    const articles = await this.repository.getArticlesByUser(userId);
+    let articles: Article[];
+
+    // Intentar usar el método nuevo primero
+    if (
+      typeof this.repository.getArticlesByUserFromUserArticles === "function"
+    ) {
+      articles = await this.repository.getArticlesByUserFromUserArticles(
+        userId
+      );
+    } else if (typeof this.repository.getArticlesByUser === "function") {
+      articles = await this.repository.getArticlesByUser(userId);
+    } else {
+      throw new Error(
+        "No se encontró un método válido para obtener artículos del usuario"
+      );
+    }
+
     if (articles.length === 0) {
       return null;
     }
 
-    // Primero intentar con artículos no leídos
+    // Priorizar artículos no leídos
     const unreadArticles = articles.filter((article) => !article.isRead);
 
     if (unreadArticles.length > 0) {
-      // Si hay artículos no leídos, elegir uno aleatorio
       const randomIndex = Math.floor(Math.random() * unreadArticles.length);
       return unreadArticles[randomIndex];
-    } else {
-      // Si todos están leídos, elegir uno aleatorio de todos
-      const randomIndex = Math.floor(Math.random() * articles.length);
-      return articles[randomIndex];
     }
+
+    // Si todos están leídos, devolver uno aleatorio
+    const randomIndex = Math.floor(Math.random() * articles.length);
+    return articles[randomIndex];
   }
 }
