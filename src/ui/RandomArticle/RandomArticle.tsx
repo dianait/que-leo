@@ -4,23 +4,13 @@ import "./RandomArticle.css";
 import type { Article } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
-import articlesData from "../../infrastructure/data/eferro.json";
 import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
 import { RandomArticleSkeleton } from "../AppSkeleton/AppSkeleton";
 
-export function RandomArticle({
-  articlesVersion,
-  setArticlesVersion,
-}: {
-  articlesVersion: number;
-  setArticlesVersion: (v: (v: number) => number) => void;
-}) {
+export function RandomArticle() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [article, setArticle] = useState<Article | null>(null);
-  const [importing, setImporting] = useState(false);
-  const [importSuccess, setImportSuccess] = useState(false);
-  const [importError, setImportError] = useState("");
   const [loading, setLoading] = useState(true);
 
   const repository = useContext(ArticleRepositoryContext);
@@ -36,7 +26,7 @@ export function RandomArticle({
       setLoading(false);
     };
     fetchArticles();
-  }, [user, repository, articlesVersion]);
+  }, [user, repository]);
 
   useEffect(() => {
     // Siempre filtra solo no leídos
@@ -71,41 +61,7 @@ export function RandomArticle({
     window.open(searchUrl, "_blank", "noopener,noreferrer");
   };
 
-  const handleImportDemoArticles = async () => {
-    if (!repository || !user) return;
-    setImporting(true);
-    setImportSuccess(false);
-    setImportError("");
-    try {
-      // Seleccionar solo 1 artículo aleatorio
-      const shuffled = [...articlesData].sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, 1);
-      // Añadir el artículo
-      const addArticleMethod = repository.addArticle;
-      await addArticleMethod(
-        selected[0].Name ?? "",
-        selected[0].Url ?? "",
-        user.id,
-        selected[0].Language ?? null,
-        selected[0].Speakers_Names ?? null,
-        selected[0].Topics_Names ?? null,
-        selected[0]["Less 15"] !== undefined
-          ? Boolean(selected[0]["Less 15"])
-          : null
-      );
-      // Refrescar el estado local
-      await handleGetRandomArticle();
-      setImportSuccess(true);
-      setTimeout(() => {
-        setArticlesVersion((v) => v + 1);
-      }, 400);
-    } catch (e) {
-      setImportError("Error al añadir artículo de prueba");
-    } finally {
-      setImporting(false);
-      setTimeout(() => setImportSuccess(false), 2000);
-    }
-  };
+
 
   function getFlagEmoji(language?: string) {
     if (language === "English") return "🇬🇧";
@@ -275,34 +231,6 @@ export function RandomArticle({
                   {user && (
                     <div style={{ width: "100%", maxWidth: "320px" }}>
                       <TelegramLinkButton userId={user.id} />
-                    </div>
-                  )}
-                  <button
-                    className="app-button"
-                    onClick={handleImportDemoArticles}
-                    disabled={importing}
-                    style={{
-                      background: "none",
-                      color: "#00b4d8",
-                      border: "none",
-                      padding: "8px 16px",
-                      fontSize: "0.9rem",
-                      fontWeight: "500",
-                      cursor: "pointer",
-                      transition: "all 0.3s ease",
-                      textDecoration: "underline",
-                    }}
-                  >
-                    {importing ? "Añadiendo..." : "Añadir artículo de prueba"}
-                  </button>
-                  {importSuccess && (
-                    <div className="random-article-success-message success-message">
-                      ¡Artículo añadido!
-                    </div>
-                  )}
-                  {importError && (
-                    <div className="random-article-error-message error-message">
-                      {importError}
                     </div>
                   )}
                 </div>

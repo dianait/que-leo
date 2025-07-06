@@ -7,7 +7,7 @@ import { AuthContext } from "../src/domain/AuthContext";
 import { User } from "@supabase/supabase-js";
 
 // Mock del repositorio
-const jsonRepository: ArticleRepository = {
+const mockRepository: ArticleRepository = {
   getAllArticles: jest.fn(),
   getArticlesByUser: jest.fn().mockResolvedValue([
     {
@@ -50,8 +50,8 @@ test("RandomArticle muestra un artículo usando el caso de uso", async () => {
         loading: false,
       }}
     >
-      <ArticleRepositoryContext.Provider value={jsonRepository}>
-        <RandomArticle articlesVersion={0} setArticlesVersion={() => {}} />
+      <ArticleRepositoryContext.Provider value={mockRepository}>
+        <RandomArticle />
       </ArticleRepositoryContext.Provider>
     </AuthContext.Provider>
   );

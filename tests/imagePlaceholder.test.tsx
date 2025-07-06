@@ -64,7 +64,7 @@ describe("Imágenes en RandomArticle", () => {
         }}
       >
         <ArticleRepositoryContext.Provider value={mockRepository}>
-          <RandomArticle articlesVersion={0} setArticlesVersion={() => {}} />
+          <RandomArticle />
         </ArticleRepositoryContext.Provider>
       </AuthContext.Provider>
     );
@@ -110,7 +110,7 @@ describe("Imágenes en RandomArticle", () => {
         }}
       >
         <ArticleRepositoryContext.Provider value={mockRepository}>
-          <RandomArticle articlesVersion={0} setArticlesVersion={() => {}} />
+          <RandomArticle />
         </ArticleRepositoryContext.Provider>
       </AuthContext.Provider>
     );
@@ -156,7 +156,7 @@ describe("Imágenes en RandomArticle", () => {
         }}
       >
         <ArticleRepositoryContext.Provider value={mockRepository}>
-          <RandomArticle articlesVersion={0} setArticlesVersion={() => {}} />
+          <RandomArticle />
         </ArticleRepositoryContext.Provider>
       </AuthContext.Provider>
     );
@@ -212,7 +212,7 @@ describe("Imágenes en RandomArticle", () => {
         }}
       >
         <ArticleRepositoryContext.Provider value={mockRepository}>
-          <RandomArticle articlesVersion={0} setArticlesVersion={() => {}} />
+          <RandomArticle />
         </ArticleRepositoryContext.Provider>
       </AuthContext.Provider>
     );
@@ -257,7 +257,7 @@ describe("Imágenes en RandomArticle", () => {
         }}
       >
         <ArticleRepositoryContext.Provider value={mockRepository}>
-          <RandomArticle articlesVersion={0} setArticlesVersion={() => {}} />
+          <RandomArticle />
         </ArticleRepositoryContext.Provider>
       </AuthContext.Provider>
     );

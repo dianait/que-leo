@@ -9,10 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest --config jest.config.cjs",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:headed": "playwright test --headed",
-    "test:e2e:auth": "dotenv -e .env.test -- playwright test tests/e2e/real-auth-test.spec.ts",
+    "test:e2e": "dotenv -e .env.test -- playwright test",
     "test:setup": "chmod +x scripts/setup-test-env.sh && ./scripts/setup-test-env.sh",
     "convert-to-webp": "tsx scripts/convert-to-webp.ts",
     "prepare": "husky"
