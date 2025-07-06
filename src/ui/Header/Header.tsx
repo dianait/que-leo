@@ -1,16 +1,28 @@
 import { useAuth } from "../../domain/AuthContext";
 import "./Header.css";
 import { Link } from "react-router-dom";
+import { AvatarModal } from "./AvatarModal";
+import { useState } from "react";
 
 export const Header = () => {
   const { user, signOut } = useAuth();
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
       await signOut();
+      setIsAvatarModalOpen(false);
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
+  };
+
+  const handleAvatarClick = () => {
+    setIsAvatarModalOpen(true);
+  };
+
+  const closeAvatarModal = () => {
+    setIsAvatarModalOpen(false);
   };
 
   return (
@@ -35,24 +47,28 @@ export const Header = () => {
                 <img
                   src={user.user_metadata.avatar_url}
                   alt={user.user_metadata.user_name || "Avatar"}
-                  className="user-avatar"
+                  className="user-avatar clickable"
                   title={user.user_metadata.user_name || user.email}
+                  onClick={handleAvatarClick}
                 />
               ) : (
-                <span className="user-email">
+                <span 
+                  className="user-email clickable"
+                  onClick={handleAvatarClick}
+                >
                   {user.user_metadata.user_name || user.email}
                 </span>
               )}
-              <button
-                onClick={handleLogout}
-                className="logout-button"
-                title="Cerrar sesión"
-              >
-                🚪 Salir
-              </button>
             </div>
           </div>
         )}
+        
+        <AvatarModal
+          isOpen={isAvatarModalOpen}
+          onClose={closeAvatarModal}
+          onLogout={handleLogout}
+          userId={user?.id || ""}
+        />
       </div>
     </header>
   );

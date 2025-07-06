@@ -68,6 +68,22 @@
   object-fit: cover;
 }
 
+.user-avatar.clickable,
+.user-email.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-avatar.clickable:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-email.clickable:hover {
+  color: #00b4d8;
+  text-decoration: underline;
+}
+
 /* Botón de logout */
 .logout-button {
   background: rgba(0, 180, 216, 0.1);
