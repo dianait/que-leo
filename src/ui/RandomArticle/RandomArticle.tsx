@@ -77,30 +77,22 @@ export function RandomArticle({
     setImportSuccess(false);
     setImportError("");
     try {
-      // Seleccionar 7 artículos aleatorios
+      // Seleccionar solo 1 artículo aleatorio
       const shuffled = [...articlesData].sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, 7);
-      // Añadir todos
+      const selected = shuffled.slice(0, 1);
+      // Añadir el artículo
       const addArticleMethod = repository.addArticle;
-      const added = await Promise.all(
-        selected.map((a) =>
-          addArticleMethod(
-            a.Name ?? "",
-            a.Url ?? "",
-            user.id,
-            a.Language ?? null,
-            a.Speakers_Names ?? null,
-            a.Topics_Names ?? null,
-            a["Less 15"] !== undefined ? Boolean(a["Less 15"]) : null
-          )
-        )
+      await addArticleMethod(
+        selected[0].Name ?? "",
+        selected[0].Url ?? "",
+        user.id,
+        selected[0].Language ?? null,
+        selected[0].Speakers_Names ?? null,
+        selected[0].Topics_Names ?? null,
+        selected[0]["Less 15"] !== undefined
+          ? Boolean(selected[0]["Less 15"])
+          : null
       );
-      // Marcar 3 como leídos (elige 3 aleatorios entre los añadidos)
-      const shuffledAdded = [...added].sort(() => 0.5 - Math.random());
-      const toMarkRead = shuffledAdded.slice(0, 3);
-      for (const art of toMarkRead) {
-        await repository.markAsRead(Number(art.id), true);
-      }
       // Refrescar el estado local
       await handleGetRandomArticle();
       setImportSuccess(true);
@@ -108,7 +100,7 @@ export function RandomArticle({
         setArticlesVersion((v) => v + 1);
       }, 400);
     } catch (e) {
-      setImportError("Error al importar artículos de prueba");
+      setImportError("Error al añadir artículo de prueba");
     } finally {
       setImporting(false);
       setTimeout(() => setImportSuccess(false), 2000);
@@ -292,19 +284,30 @@ export function RandomArticle({
                     <span className="random-article-or">o</span>
                     <hr className="random-article-divider" />
                   </div>
+                  {user && <TelegramLinkButton userId={user.id} />}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      width: "100%",
+                      margin: "12px 0",
+                    }}
+                  >
+                    <hr className="random-article-divider" />
+                    <span className="random-article-or">o</span>
+                    <hr className="random-article-divider" />
+                  </div>
                   <button
                     className="app-button"
                     onClick={handleImportDemoArticles}
                     disabled={importing}
                     style={{ marginTop: 4 }}
                   >
-                    {importing
-                      ? "Importando..."
-                      : "Importar artículos de prueba"}
+                    {importing ? "Añadiendo..." : "Añadir artículo de prueba"}
                   </button>
                   {importSuccess && (
                     <div className="random-article-success-message success-message">
-                      ¡Artículos importados!
+                      ¡Artículo añadido!
                     </div>
                   )}
                   {importError && (
@@ -325,18 +328,6 @@ export function RandomArticle({
       >
         {article ? "Dame otro 🎲" : "No hay artículos"}
       </button>
-      {user && (
-        <div
-          style={{
-            width: "100%",
-            maxWidth: 520,
-            margin: "0 auto",
-            display: "block",
-          }}
-        >
-          <TelegramLinkButton userId={user.id} />
-        </div>
-      )}
     </div>
   );
 }
