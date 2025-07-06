@@ -139,6 +139,28 @@ export function RandomArticle({
                   </div>
                 )}
                 <div className="article-header">
+                  <img
+                    src={article.featuredImage || "/placeholder.webp"}
+                    alt={
+                      article.featuredImage
+                        ? "Featured Image"
+                        : "Imagen por defecto"
+                    }
+                    className={`article-featured-image ${
+                      !article.featuredImage ? "loading" : ""
+                    }`}
+                    onLoad={(e) => {
+                      // Remover clase de loading cuando la imagen carga
+                      const target = e.target as HTMLImageElement;
+                      target.classList.remove("loading");
+                    }}
+                    onError={(e) => {
+                      // Si la imagen falla al cargar, mostrar placeholder personalizado
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/placeholder.webp";
+                      target.classList.remove("loading");
+                    }}
+                  />
                   <h4 className="article-title">
                     {getFlagEmoji(article.language)} {article.title}
                   </h4>

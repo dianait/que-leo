@@ -17,11 +17,11 @@ export const Header = () => {
     <header className="app-header">
       <div className="header-content">
         <div className="header-left">
-          <Link to="/" className="header-title-link">
+            <Link to="/" className="header-title-link">
             <div className="header-logo-container">
               <img src="/header.png" alt="¿Qué leo? Logo" className="header-logo" />
             </div>
-          </Link>
+            </Link>
           <p>Menos decisiones, más lectura.</p>
         </div>
 

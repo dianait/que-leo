@@ -9,6 +9,7 @@ export interface Article {
   readonly authors?: string[];
   readonly topics?: string[];
   readonly less_15?: boolean;
+  readonly featuredImage?: string;
 }
 
 export const markArticleAsRead = (article: Article): Article => {

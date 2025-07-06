@@ -15,6 +15,7 @@ interface ArticleRow {
   authors?: string[];
   topics?: string[];
   less_15?: boolean;
+  featuredimage?: string;
 }
 
 interface SupabaseRepoOptions {
@@ -76,6 +77,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         authors: row.authors,
         topics: row.topics,
         less_15: row.less_15,
+        featuredImage: row.featuredimage,
       }));
     } catch (error) {
       console.error(
@@ -111,6 +113,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         authors: row.authors,
         topics: row.topics,
         less_15: row.less_15,
+        featuredImage: row.featuredimage,
       }));
     } catch (error) {
       console.error(
@@ -128,7 +131,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
     language?: string | null,
     authors?: string[] | null,
     topics?: string[] | null,
-    less_15?: boolean | null
+    less_15?: boolean | null,
+    featuredImage?: string | null
   ): Promise<Article> {
     try {
       const { data, error } = await this.supabase
@@ -142,6 +146,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
             authors: authors ?? null,
             topics: topics ?? null,
             less_15: less_15 ?? null,
+            featuredimage: featuredImage ?? null,
           },
         ])
         .select()
@@ -163,6 +168,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         authors: row.authors,
         topics: row.topics,
         less_15: row.less_15,
+        featuredImage: row.featuredimage,
       };
     } catch (error) {
       console.error("Error en SupabaseArticleRepository.addArticle:", error);
@@ -239,6 +245,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         authors: row.authors,
         topics: row.topics,
         less_15: row.less_15,
+        featuredImage: row.featuredimage,
       }));
       return { articles, total: count ?? 0 };
     } catch (error) {
