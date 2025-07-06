@@ -11,19 +11,15 @@ export class GetRandomArticleForUser {
   async execute(userId: string): Promise<Article | null> {
     let articles: Article[];
 
-    // Intentar usar el método nuevo primero
+    // Usar método avanzado si está disponible, sino usar el básico
     if (
       typeof this.repository.getArticlesByUserFromUserArticles === "function"
     ) {
       articles = await this.repository.getArticlesByUserFromUserArticles(
         userId
       );
-    } else if (typeof this.repository.getArticlesByUser === "function") {
-      articles = await this.repository.getArticlesByUser(userId);
     } else {
-      throw new Error(
-        "No se encontró un método válido para obtener artículos del usuario"
-      );
+      articles = await this.repository.getArticlesByUser(userId);
     }
 
     if (articles.length === 0) {

@@ -432,4 +432,133 @@ export class SupabaseArticleRepository implements ArticleRepository {
       throw error;
     }
   }
+
+  // Métodos básicos requeridos por la interfaz ArticleRepository
+  async getAllArticles(): Promise<Article[]> {
+    try {
+      const { data, error } = await this.supabase
+        .from("articles2")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        throw new Error(`Error al obtener artículos: ${error.message}`);
+      }
+
+      return (data || []).map((row: Record<string, unknown>) => ({
+        id: row.id as number,
+        title: row.title as string,
+        url: row.url as string,
+        dateAdded: new Date(row.created_at as string),
+        isRead: false, // No tenemos esta información sin user_articles
+        readAt: undefined,
+        language: row.language as string | undefined,
+        authors: row.authors as string[] | undefined,
+        topics: row.topics as string[] | undefined,
+        less_15: row.less_15 as boolean | undefined,
+        featuredImage: row.featured_image as string | undefined,
+      }));
+    } catch (error) {
+      console.error(
+        "Error en SupabaseArticleRepository.getAllArticles:",
+        error
+      );
+      throw error;
+    }
+  }
+
+  async getArticlesByUser(userId: string): Promise<Article[]> {
+    // Usar el método avanzado si está disponible, sino fallback a getAllArticles
+    if (typeof this.getArticlesByUserFromUserArticles === "function") {
+      return this.getArticlesByUserFromUserArticles(userId);
+    }
+    return this.getAllArticles();
+  }
+
+  async getArticlesByUserPaginated(
+    userId: string,
+    limit: number,
+    offset: number
+  ): Promise<{ articles: Article[]; total: number }> {
+    // Usar el método avanzado si está disponible
+    if (typeof this.getArticlesByUserFromUserArticlesPaginated === "function") {
+      return this.getArticlesByUserFromUserArticlesPaginated(
+        userId,
+        limit,
+        offset
+      );
+    }
+
+    // Fallback: obtener todos y paginar
+    const allArticles = await this.getArticlesByUser(userId);
+    return {
+      articles: allArticles.slice(offset, offset + limit),
+      total: allArticles.length,
+    };
+  }
+
+  async addArticle(
+    title: string,
+    url: string,
+    userId: string,
+    language?: string | null,
+    authors?: string[] | null,
+    topics?: string[] | null,
+    less_15?: boolean | null,
+    featuredImage?: string | null
+  ): Promise<Article> {
+    // Usar el método avanzado si está disponible
+    if (typeof this.addArticleToUser === "function") {
+      return this.addArticleToUser(
+        title,
+        url,
+        userId,
+        language,
+        authors,
+        topics,
+        less_15,
+        featuredImage
+      );
+    }
+
+    // Fallback: insertar directamente en articles2
+    try {
+      const { data, error } = await this.supabase
+        .from("articles2")
+        .insert([
+          {
+            title,
+            url,
+            language: language ?? null,
+            authors: authors ?? null,
+            topics: topics ?? null,
+            less_15: less_15 ?? null,
+            featured_image: featuredImage ?? null,
+          },
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        throw new Error(`Error al añadir artículo: ${error.message}`);
+      }
+
+      return {
+        id: data.id,
+        title: data.title,
+        url: data.url,
+        dateAdded: new Date(data.created_at),
+        isRead: false,
+        readAt: undefined,
+        language: data.language,
+        authors: data.authors,
+        topics: data.topics,
+        less_15: data.less_15,
+        featuredImage: data.featured_image,
+      };
+    } catch (error) {
+      console.error("Error en SupabaseArticleRepository.addArticle:", error);
+      throw error;
+    }
+  }
 }

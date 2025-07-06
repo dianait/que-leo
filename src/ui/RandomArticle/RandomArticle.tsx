@@ -81,9 +81,6 @@ export function RandomArticle({
       const shuffled = [...articlesData].sort(() => 0.5 - Math.random());
       const selected = shuffled.slice(0, 7);
       // Añadir todos
-      if (!repository.addArticle) {
-        throw new Error("Método addArticle no disponible en el repositorio");
-      }
       const addArticleMethod = repository.addArticle;
       const added = await Promise.all(
         selected.map((a) =>
@@ -102,9 +99,7 @@ export function RandomArticle({
       const shuffledAdded = [...added].sort(() => 0.5 - Math.random());
       const toMarkRead = shuffledAdded.slice(0, 3);
       for (const art of toMarkRead) {
-        if (repository.markAsRead) {
-          await repository.markAsRead(Number(art.id), true);
-        }
+        await repository.markAsRead(Number(art.id), true);
       }
       // Refrescar el estado local
       await handleGetRandomArticle();

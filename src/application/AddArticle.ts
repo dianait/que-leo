@@ -18,6 +18,7 @@ export class AddArticle {
     less_15?: boolean | null,
     featuredImage?: string | null
   ): Promise<Article> {
+    // Usar método avanzado si está disponible, sino usar el básico
     if (typeof this.repository.addArticleToUser === "function") {
       return this.repository.addArticleToUser(
         title,
@@ -30,18 +31,15 @@ export class AddArticle {
         featuredImage
       );
     }
-    if (typeof this.repository.addArticle === "function") {
-      return this.repository.addArticle(
-        title,
-        url,
-        userId,
-        language,
-        authors,
-        topics,
-        less_15,
-        featuredImage
-      );
-    }
-    throw new Error("No se encontró un método válido para añadir artículos");
+    return this.repository.addArticle(
+      title,
+      url,
+      userId,
+      language,
+      authors,
+      topics,
+      less_15,
+      featuredImage
+    );
   }
 }

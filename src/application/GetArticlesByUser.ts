@@ -9,17 +9,13 @@ export class GetArticlesByUser {
   }
 
   async execute(userId: string): Promise<Article[]> {
+    // Usar método avanzado si está disponible, sino usar el básico
     if (
       typeof this.repository.getArticlesByUserFromUserArticles === "function"
     ) {
       return this.repository.getArticlesByUserFromUserArticles(userId);
     }
-    if (typeof this.repository.getArticlesByUser === "function") {
-      return this.repository.getArticlesByUser(userId);
-    }
-    throw new Error(
-      "No se encontró un método válido para obtener artículos del usuario"
-    );
+    return this.repository.getArticlesByUser(userId);
   }
 }
 
@@ -31,6 +27,7 @@ export class GetArticlesByUserPaginated {
     limit: number,
     offset: number
   ): Promise<{ articles: Article[]; total: number }> {
+    // Usar método avanzado si está disponible, sino usar el básico
     if (
       typeof this.repository.getArticlesByUserFromUserArticlesPaginated ===
       "function"
@@ -41,11 +38,6 @@ export class GetArticlesByUserPaginated {
         offset
       );
     }
-    if (typeof this.repository.getArticlesByUserPaginated === "function") {
-      return this.repository.getArticlesByUserPaginated(userId, limit, offset);
-    }
-    throw new Error(
-      "No se encontró un método válido para obtener artículos paginados del usuario"
-    );
+    return this.repository.getArticlesByUserPaginated(userId, limit, offset);
   }
 }
