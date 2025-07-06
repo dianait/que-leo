@@ -135,6 +135,21 @@ export class SupabaseArticleRepository implements ArticleRepository {
     featuredImage?: string | null
   ): Promise<Article> {
     try {
+      // Intentar usar la nueva estructura si está disponible
+      if (typeof this.addArticleToUser === "function") {
+        return this.addArticleToUser(
+          title,
+          url,
+          userId,
+          language,
+          authors,
+          topics,
+          less_15,
+          featuredImage
+        );
+      }
+
+      // Fallback: usar la tabla articles antigua
       const { data, error } = await this.supabase
         .from("articles")
         .insert([
@@ -178,6 +193,18 @@ export class SupabaseArticleRepository implements ArticleRepository {
 
   async deleteArticle(articleId: number, userId: string): Promise<void> {
     try {
+      // Primero intentar eliminar la relación en user_articles (nueva estructura)
+      const { error: userArticleError } = await this.supabase
+        .from("user_articles")
+        .delete()
+        .eq("article_id", articleId)
+        .eq("user_id", userId);
+
+      if (!userArticleError) {
+        return; // Éxito con la nueva estructura
+      }
+
+      // Fallback: intentar con la tabla articles antigua
       const { error } = await this.supabase
         .from("articles")
         .delete()
@@ -195,6 +222,20 @@ export class SupabaseArticleRepository implements ArticleRepository {
 
   async markAsRead(articleId: number, isRead: boolean): Promise<void> {
     try {
+      // Primero intentar actualizar en user_articles (nueva estructura)
+      const { error: userArticleError } = await this.supabase
+        .from("user_articles")
+        .update({
+          is_read: isRead,
+          read_at: isRead ? new Date().toISOString() : null,
+        })
+        .eq("article_id", articleId);
+
+      if (!userArticleError) {
+        return; // Éxito con la nueva estructura
+      }
+
+      // Fallback: intentar con la tabla articles antigua
       const updateData = isRead
         ? { is_read: isRead, read_at: new Date().toISOString() }
         : { is_read: isRead, read_at: null };
