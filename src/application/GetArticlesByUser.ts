@@ -9,6 +9,11 @@ export class GetArticlesByUser {
   }
 
   async execute(userId: string): Promise<Article[]> {
+    if (
+      typeof this.repository.getArticlesByUserFromUserArticles === "function"
+    ) {
+      return this.repository.getArticlesByUserFromUserArticles(userId);
+    }
     return this.repository.getArticlesByUser(userId);
   }
 }
@@ -21,6 +26,16 @@ export class GetArticlesByUserPaginated {
     limit: number,
     offset: number
   ): Promise<{ articles: Article[]; total: number }> {
+    if (
+      typeof this.repository.getArticlesByUserFromUserArticlesPaginated ===
+      "function"
+    ) {
+      return this.repository.getArticlesByUserFromUserArticlesPaginated(
+        userId,
+        limit,
+        offset
+      );
+    }
     return this.repository.getArticlesByUserPaginated(userId, limit, offset);
   }
 }

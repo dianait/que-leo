@@ -256,4 +256,328 @@ export class SupabaseArticleRepository implements ArticleRepository {
       throw error;
     }
   }
+
+  /**
+   * Obtiene los artículos de un usuario usando la relación user_articles y articles2
+   * Devuelve los datos en el mismo formato Article[] que el resto de métodos
+   */
+  async getArticlesByUserFromUserArticles(userId: string): Promise<Article[]> {
+    try {
+      type UserArticleRow = {
+        is_read: boolean;
+        read_at?: string;
+        added_at?: string;
+        updated_at?: string;
+        article_id: number;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        articles2: any;
+      };
+      const { data, error } = await this.supabase
+        .from("user_articles")
+        .select(
+          `
+          is_read,
+          read_at,
+          added_at,
+          updated_at,
+          article_id,
+          articles2 (
+            id,
+            title,
+            url,
+            language,
+            authors,
+            topics,
+            less_15,
+            featured_image
+          )
+        `
+        )
+        .eq("user_id", userId)
+        .order("added_at", { ascending: false });
+
+      if (error) {
+        throw new Error(
+          `Error al obtener artículos del usuario (user_articles): ${error.message}`
+        );
+      }
+
+      return ((data as UserArticleRow[]) || [])
+        .map((row) => {
+          let art = row.articles2;
+          if (Array.isArray(art)) {
+            art = art[0];
+          }
+          if (!art) return null;
+          return {
+            id: art.id,
+            title: art.title,
+            url: art.url,
+            dateAdded: new Date(row.added_at || Date.now()),
+            isRead: row.is_read,
+            readAt: row.read_at ? new Date(row.read_at) : undefined,
+            language: art.language,
+            authors: art.authors,
+            topics: art.topics,
+            less_15: art.less_15,
+            featuredImage: art.featured_image,
+          };
+        })
+        .filter(Boolean) as Article[];
+    } catch (error) {
+      console.error(
+        "Error en SupabaseArticleRepository.getArticlesByUserFromUserArticles:",
+        error
+      );
+      throw error;
+    }
+  }
+
+  async getArticlesByUserFromUserArticlesPaginated(
+    userId: string,
+    limit: number,
+    offset: number
+  ): Promise<{ articles: Article[]; total: number }> {
+    try {
+      type UserArticleRow = {
+        is_read: boolean;
+        read_at?: string;
+        added_at?: string;
+        updated_at?: string;
+        article_id: number;
+        articles2:
+          | {
+              id: number;
+              title: string;
+              url: string;
+              language?: string;
+              authors?: string[];
+              topics?: string[];
+              less_15?: boolean;
+              featured_image?: string;
+            }
+          | null
+          | undefined
+          | Array<{
+              id: number;
+              title: string;
+              url: string;
+              language?: string;
+              authors?: string[];
+              topics?: string[];
+              less_15?: boolean;
+              featured_image?: string;
+            }>;
+      };
+      const { data, error, count } = await this.supabase
+        .from("user_articles")
+        .select(
+          `
+          is_read,
+          read_at,
+          added_at,
+          updated_at,
+          article_id,
+          articles2 (
+            id,
+            title,
+            url,
+            language,
+            authors,
+            topics,
+            less_15,
+            featured_image
+          )
+        `,
+          { count: "exact" }
+        )
+        .eq("user_id", userId)
+        .order("added_at", { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (error) {
+        throw new Error(
+          `Error al obtener artículos paginados del usuario (user_articles): ${error.message}`
+        );
+      }
+
+      const articles = ((data as UserArticleRow[]) || [])
+        .map((row) => {
+          let art = row.articles2;
+          if (Array.isArray(art)) {
+            art = art[0];
+          }
+          if (!art) return null;
+          return {
+            id: art.id,
+            title: art.title,
+            url: art.url,
+            dateAdded: new Date(row.added_at || Date.now()),
+            isRead: row.is_read,
+            readAt: row.read_at ? new Date(row.read_at) : undefined,
+            language: art.language,
+            authors: art.authors,
+            topics: art.topics,
+            less_15: art.less_15,
+            featuredImage: art.featured_image,
+          };
+        })
+        .filter(Boolean) as Article[];
+      return { articles, total: count ?? 0 };
+    } catch (error) {
+      console.error(
+        "Error en SupabaseArticleRepository.getArticlesByUserFromUserArticlesPaginated:",
+        error
+      );
+      throw error;
+    }
+  }
+
+  /**
+   * Añade un artículo a articles2 (si no existe) y lo vincula al usuario en user_articles (si no existe la relación).
+   * Devuelve el artículo completo.
+   */
+  async addArticleToUser(
+    title: string,
+    url: string,
+    userId: string,
+    language?: string | null,
+    authors?: string[] | null,
+    topics?: string[] | null,
+    less_15?: boolean | null,
+    featuredImage?: string | null
+  ): Promise<Article> {
+    type Article2Row = {
+      id: number;
+      title: string;
+      url: string;
+      language?: string;
+      authors?: string[];
+      topics?: string[];
+      less_15?: boolean;
+      featured_image?: string;
+    };
+    // 1. Buscar si el artículo ya existe en articles2 por URL
+    const { data: existing, error: findError } = await this.supabase
+      .from("articles2")
+      .select("*")
+      .eq("url", url)
+      .maybeSingle();
+    if (findError) {
+      throw new Error(`Error buscando artículo por URL: ${findError.message}`);
+    }
+    let articleId: number;
+    let articleRow: Article2Row;
+    if (existing) {
+      articleId = existing.id;
+      articleRow = existing as Article2Row;
+      // 1b. Si hay campos nuevos, actualiza el artículo
+      const needsUpdate =
+        (title && title !== existing.title) ||
+        (language && language !== existing.language) ||
+        (authors &&
+          JSON.stringify(authors) !== JSON.stringify(existing.authors)) ||
+        (topics &&
+          JSON.stringify(topics) !== JSON.stringify(existing.topics)) ||
+        (less_15 !== undefined && less_15 !== existing.less_15) ||
+        (featuredImage && featuredImage !== existing.featured_image);
+      if (needsUpdate) {
+        const { data: updated, error: updateError } = await this.supabase
+          .from("articles2")
+          .update({
+            title,
+            language,
+            authors,
+            topics,
+            less_15,
+            featured_image: featuredImage,
+          })
+          .eq("id", articleId)
+          .select()
+          .single();
+        if (updateError) {
+          throw new Error(
+            `Error actualizando artículo en articles2: ${updateError.message}`
+          );
+        }
+        articleRow = updated as Article2Row;
+      }
+    } else {
+      // 2. Insertar en articles2
+      const { data: inserted, error: insertError } = await this.supabase
+        .from("articles2")
+        .insert([
+          {
+            title,
+            url,
+            language: language ?? null,
+            authors: authors ?? null,
+            topics: topics ?? null,
+            less_15: less_15 ?? null,
+            featured_image: featuredImage ?? null,
+          },
+        ])
+        .select()
+        .single();
+      if (insertError) {
+        throw new Error(
+          `Error insertando artículo en articles2: ${insertError.message}`
+        );
+      }
+      articleId = inserted.id;
+      articleRow = inserted as Article2Row;
+    }
+    // 3. Insertar en user_articles si no existe la relación
+    type UserArticleRow = {
+      id: number;
+      user_id: string;
+      article_id: number;
+      is_read: boolean;
+      read_at?: string;
+      added_at?: string;
+      updated_at?: string;
+    };
+    const { data: userArticle, error: relError } = await this.supabase
+      .from("user_articles")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("article_id", articleId)
+      .maybeSingle();
+    if (relError) {
+      throw new Error(
+        `Error comprobando relación en user_articles: ${relError.message}`
+      );
+    }
+    if (!(userArticle as UserArticleRow | null)) {
+      const { error: insertRelError } = await this.supabase
+        .from("user_articles")
+        .insert([
+          {
+            user_id: userId,
+            article_id: articleId,
+            is_read: false,
+            read_at: null,
+          },
+        ]);
+      if (insertRelError) {
+        throw new Error(
+          `Error insertando relación en user_articles: ${insertRelError.message}`
+        );
+      }
+    }
+    // 4. Devolver el artículo en formato Article
+    return {
+      id: articleRow.id,
+      title: articleRow.title,
+      url: articleRow.url,
+      dateAdded: new Date(), // No tenemos el added_at exacto aquí
+      isRead: false,
+      readAt: undefined,
+      language: articleRow.language,
+      authors: articleRow.authors,
+      topics: articleRow.topics,
+      less_15: articleRow.less_15,
+      featuredImage: articleRow.featured_image,
+    };
+  }
 }

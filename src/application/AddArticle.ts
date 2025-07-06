@@ -9,6 +9,9 @@ export class AddArticle {
   }
 
   async execute(title: string, url: string, userId: string): Promise<Article> {
+    if (typeof this.repository.addArticleToUser === "function") {
+      return this.repository.addArticleToUser(title, url, userId);
+    }
     return this.repository.addArticle(title, url, userId);
   }
 }

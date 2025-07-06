@@ -132,18 +132,6 @@ export const AddArticle: React.FC<{
           {error && <div className="error-message">{error}</div>}
           {success && <div className="success-message">{success}</div>}
           <div className="form-group">
-            <label htmlFor="title">Título:</label>
-            <input
-              type="text"
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              placeholder="Título del artículo"
-              disabled={loading}
-            />
-          </div>
-          <div className="form-group">
             <label htmlFor="url">URL:</label>
             <input
               type="url"
