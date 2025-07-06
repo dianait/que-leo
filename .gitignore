@@ -51,3 +51,24 @@ screenshots/*
 
 # Ignorar datos de usuario de Playwright (contiene tokens de OAuth)
 .playwright-user-data/
+
+# Configuración local de git hooks y GitHub
+.husky/
+.github/
+
+# Archivos de cache y temporales
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Carpetas de documentación y scripts locales
+docs/
+scripts/
+
+# Archivos del sistema macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

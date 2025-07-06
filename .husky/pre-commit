@@ -1,2 +1,0 @@
-echo "🧪 Ejecutando tests antes de hacer commit..."
-npx lint-staged
