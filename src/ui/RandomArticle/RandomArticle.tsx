@@ -8,7 +8,11 @@ import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
 import { RandomArticleSkeleton } from "../AppSkeleton/AppSkeleton";
 
-export function RandomArticle() {
+export function RandomArticle({
+  articlesVersion,
+}: {
+  articlesVersion: number;
+}) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,7 +30,7 @@ export function RandomArticle() {
       setLoading(false);
     };
     fetchArticles();
-  }, [user, repository]);
+  }, [user, repository, articlesVersion]);
 
   useEffect(() => {
     // Siempre filtra solo no leídos
@@ -60,8 +64,6 @@ export function RandomArticle() {
       "https://google.com/search?q=" + encodeURIComponent(title);
     window.open(searchUrl, "_blank", "noopener,noreferrer");
   };
-
-
 
   function getFlagEmoji(language?: string) {
     if (language === "English") return "🇬🇧";

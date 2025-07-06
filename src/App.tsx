@@ -15,12 +15,7 @@ export function App() {
         <Routes>
           <Route
             path="/"
-            element={
-              <RandomArticle
-                articlesVersion={articlesVersion}
-                setArticlesVersion={setArticlesVersion}
-              />
-            }
+            element={<RandomArticle articlesVersion={articlesVersion} />}
           />
           <Route
             path="/articulos"

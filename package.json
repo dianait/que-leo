@@ -21,10 +21,7 @@
     ]
   },
   "dependencies": {
-    "cheerio": "^1.1.0",
     "date-fns": "^4.1.0",
-    "dotenv": "^17.0.1",
-    "node-fetch": "^3.3.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-router-dom": "^7.6.3",
@@ -41,7 +38,6 @@
     "@types/jest": "30.0.0",
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
-    "@types/sharp": "^0.31.1",
     "@vitejs/plugin-react-swc": "3.9.0",
     "dotenv-cli": "^8.0.0",
     "eslint": "9.25.0",
