@@ -41,7 +41,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
   }
 
   /**
-   * Obtiene los artículos de un usuario usando la relación user_articles y articles2
+   * Obtiene los artículos de un usuario usando la relación user_articles y articles
    * Devuelve los datos en el mismo formato Article[] que el resto de métodos
    */
   async getArticlesByUserFromUserArticles(userId: string): Promise<Article[]> {
@@ -53,7 +53,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         updated_at?: string;
         article_id: number;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        articles2: any;
+        articles: any;
       };
       const { data, error } = await this.supabase
         .from("user_articles")
@@ -64,7 +64,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
           added_at,
           updated_at,
           article_id,
-          articles2 (
+          articles (
             id,
             title,
             url,
@@ -87,7 +87,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
 
       return ((data as UserArticleRow[]) || [])
         .map((row) => {
-          let art = row.articles2;
+          let art = row.articles;
           if (Array.isArray(art)) {
             art = art[0];
           }
@@ -128,7 +128,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         added_at?: string;
         updated_at?: string;
         article_id: number;
-        articles2:
+        articles:
           | {
               id: number;
               title: string;
@@ -161,7 +161,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
           added_at,
           updated_at,
           article_id,
-          articles2 (
+          articles (
             id,
             title,
             url,
@@ -186,7 +186,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
 
       const articles = ((data as UserArticleRow[]) || [])
         .map((row) => {
-          let art = row.articles2;
+          let art = row.articles;
           if (Array.isArray(art)) {
             art = art[0];
           }
@@ -217,7 +217,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
   }
 
   /**
-   * Añade un artículo a articles2 (si no existe) y lo vincula al usuario en user_articles (si no existe la relación).
+   * Añade un artículo a articles (si no existe) y lo vincula al usuario en user_articles (si no existe la relación).
    * Devuelve el artículo completo.
    */
   async addArticleToUser(
@@ -230,7 +230,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
     less_15?: boolean | null,
     featuredImage?: string | null
   ): Promise<Article> {
-    type Article2Row = {
+    type ArticleRow = {
       id: number;
       title: string;
       url: string;
@@ -240,9 +240,9 @@ export class SupabaseArticleRepository implements ArticleRepository {
       less_15?: boolean;
       featured_image?: string;
     };
-    // 1. Buscar si el artículo ya existe en articles2 por URL
+    // 1. Buscar si el artículo ya existe en articles por URL
     const { data: existing, error: findError } = await this.supabase
-      .from("articles2")
+      .from("articles")
       .select("*")
       .eq("url", url)
       .maybeSingle();
@@ -250,10 +250,10 @@ export class SupabaseArticleRepository implements ArticleRepository {
       throw new Error(`Error buscando artículo por URL: ${findError.message}`);
     }
     let articleId: number;
-    let articleRow: Article2Row;
+    let articleRow: ArticleRow;
     if (existing) {
       articleId = existing.id;
-      articleRow = existing as Article2Row;
+      articleRow = existing as ArticleRow;
       // 1b. Si hay campos nuevos, actualiza el artículo
       const needsUpdate =
         (title && title !== existing.title) ||
@@ -266,7 +266,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         (featuredImage && featuredImage !== existing.featured_image);
       if (needsUpdate) {
         const { data: updated, error: updateError } = await this.supabase
-          .from("articles2")
+          .from("articles")
           .update({
             title,
             language,
@@ -280,15 +280,15 @@ export class SupabaseArticleRepository implements ArticleRepository {
           .single();
         if (updateError) {
           throw new Error(
-            `Error actualizando artículo en articles2: ${updateError.message}`
+            `Error actualizando artículo en articles: ${updateError.message}`
           );
         }
-        articleRow = updated as Article2Row;
+        articleRow = updated as ArticleRow;
       }
     } else {
-      // 2. Insertar en articles2
+      // 2. Insertar en articles
       const { data: inserted, error: insertError } = await this.supabase
-        .from("articles2")
+        .from("articles")
         .insert([
           {
             title,
@@ -304,11 +304,11 @@ export class SupabaseArticleRepository implements ArticleRepository {
         .single();
       if (insertError) {
         throw new Error(
-          `Error insertando artículo en articles2: ${insertError.message}`
+          `Error insertando artículo en articles: ${insertError.message}`
         );
       }
       articleId = inserted.id;
-      articleRow = inserted as Article2Row;
+      articleRow = inserted as ArticleRow;
     }
     // 3. Insertar en user_articles si no existe la relación
     type UserArticleRow = {
@@ -366,8 +366,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
 
   async markAsRead(articleId: number, isRead: boolean): Promise<void> {
     try {
-      // Actualizar en user_articles (nueva estructura)
-      const { error: userArticleError } = await this.supabase
+      const { error } = await this.supabase
         .from("user_articles")
         .update({
           is_read: isRead,
@@ -375,9 +374,9 @@ export class SupabaseArticleRepository implements ArticleRepository {
         })
         .eq("article_id", articleId);
 
-      if (userArticleError) {
+      if (error) {
         throw new Error(
-          `Error al marcar artículo como leído: ${userArticleError.message}`
+          `Error al marcar artículo como leído: ${error.message}`
         );
       }
     } catch (error) {
@@ -413,16 +412,16 @@ export class SupabaseArticleRepository implements ArticleRepository {
         return; // Ya eliminamos la relación del usuario, eso es lo importante
       }
 
-      // Si no quedan más relaciones, eliminar el artículo de articles2
+      // Si no quedan más relaciones, eliminar el artículo de articles
       if (!remainingRelations || remainingRelations.length === 0) {
         const { error: deleteArticleError } = await this.supabase
-          .from("articles2")
+          .from("articles")
           .delete()
           .eq("id", articleId);
 
         if (deleteArticleError) {
           console.warn(
-            "Error eliminando artículo huérfano de articles2:",
+            "Error eliminando artículo huérfano de articles:",
             deleteArticleError
           );
         }
@@ -437,7 +436,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
   async getAllArticles(): Promise<Article[]> {
     try {
       const { data, error } = await this.supabase
-        .from("articles2")
+        .from("articles")
         .select("*")
         .order("created_at", { ascending: false });
 
@@ -468,10 +467,15 @@ export class SupabaseArticleRepository implements ArticleRepository {
   }
 
   async getArticlesByUser(userId: string): Promise<Article[]> {
-    // Usar el método avanzado si está disponible, sino fallback a getAllArticles
+    // Usar el método avanzado si está disponible
     if (typeof this.getArticlesByUserFromUserArticles === "function") {
       return this.getArticlesByUserFromUserArticles(userId);
     }
+
+    // Fallback: devolver todos los artículos (no recomendado)
+    console.warn(
+      "SupabaseArticleRepository: getArticlesByUser no implementado correctamente"
+    );
     return this.getAllArticles();
   }
 
@@ -489,11 +493,14 @@ export class SupabaseArticleRepository implements ArticleRepository {
       );
     }
 
-    // Fallback: obtener todos y paginar
-    const allArticles = await this.getArticlesByUser(userId);
+    // Fallback: devolver todos los artículos paginados (no recomendado)
+    console.warn(
+      "SupabaseArticleRepository: getArticlesByUserPaginated no implementado correctamente"
+    );
+    const all = await this.getAllArticles();
     return {
-      articles: allArticles.slice(offset, offset + limit),
-      total: allArticles.length,
+      articles: all.slice(offset, offset + limit),
+      total: all.length,
     };
   }
 
@@ -521,10 +528,10 @@ export class SupabaseArticleRepository implements ArticleRepository {
       );
     }
 
-    // Fallback: insertar directamente en articles2
+    // Fallback: insertar directamente en articles
     try {
       const { data, error } = await this.supabase
-        .from("articles2")
+        .from("articles")
         .insert([
           {
             title,
