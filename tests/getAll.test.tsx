@@ -37,7 +37,7 @@ describe("Obtención de artículos", () => {
   });
 
   // Nuevo test para la tabla de artículos
-  test.skip("ArticleTable muestra artículos en una tabla con los encabezados y acciones correctos", async () => {
+  test("ArticleTable muestra artículos en una tabla con los encabezados y acciones correctos", async () => {
     // Importación dinámica para evitar problemas de dependencias circulares
     const { ArticleTable } = await import(
       "../src/ui/ListOfArticles/ArticleTable"
