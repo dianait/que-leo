@@ -35,7 +35,8 @@ export class JsonArticleRepository implements ArticleRepository {
     language?: string | null,
     authors?: string[] | null,
     topics?: string[] | null,
-    less_15?: boolean | null
+    less_15?: boolean | null,
+    featuredImage?: string | null
   ): Promise<Article> {
     void userId;
     const newId = Date.now().toString();
@@ -49,6 +50,7 @@ export class JsonArticleRepository implements ArticleRepository {
       authors: authors ?? undefined,
       topics: topics ?? undefined,
       less_15: less_15 ?? undefined,
+      featuredImage: featuredImage ?? undefined,
     };
     console.warn(
       "JsonArticleRepository: Los cambios no se persisten en el archivo JSON"

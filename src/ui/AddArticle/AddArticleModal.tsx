@@ -8,6 +8,10 @@ import React, {
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
 import { AddArticle as AddArticleUseCase } from "../../application/AddArticle";
+import {
+  MetadataService,
+  type ArticleMetadata,
+} from "../../infrastructure/services/MetadataService";
 import "./AddArticle.css";
 
 // Modal simple
@@ -81,8 +85,30 @@ export const AddArticle: React.FC<{
     }
 
     try {
+      // Extraer metadatos automáticamente en segundo plano
+      let metadata: ArticleMetadata | null = null;
+      try {
+        metadata = await MetadataService.extractMetadata(finalUrl);
+        // Si se extrajo el título automáticamente, usarlo si el usuario no ingresó uno
+        if (!title.trim() && metadata.title) {
+          setTitle(metadata.title);
+        }
+      } catch (metadataError) {
+        // Si falla la extracción de metadatos, continuamos sin ellos
+        console.warn("No se pudieron extraer metadatos:", metadataError);
+      }
+
       const useCase = new AddArticleUseCase(repository);
-      await useCase.execute(title, finalUrl, user.id);
+      await useCase.execute(
+        title || metadata?.title || "Sin título",
+        finalUrl,
+        user.id,
+        metadata?.language || null,
+        metadata?.authors || null,
+        metadata?.topics || null,
+        null, // less_15 - se puede calcular basado en el contenido
+        metadata?.featuredimage || null
+      );
       setSuccess("¡Artículo añadido con éxito!");
       setTitle("");
       setUrl("");
@@ -131,6 +157,7 @@ export const AddArticle: React.FC<{
           <h3>Añadir nuevo artículo</h3>
           {error && <div className="error-message">{error}</div>}
           {success && <div className="success-message">{success}</div>}
+
           <div className="form-group">
             <label htmlFor="url">URL:</label>
             <input
@@ -143,6 +170,19 @@ export const AddArticle: React.FC<{
               disabled={loading}
             />
           </div>
+
+          <div className="form-group">
+            <label htmlFor="title">Título (opcional):</label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Se extraerá automáticamente si se deja vacío"
+              disabled={loading}
+            />
+          </div>
+
           <button
             type="submit"
             className="modern-button button-primary"

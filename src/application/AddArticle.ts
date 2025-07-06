@@ -8,10 +8,37 @@ export class AddArticle {
     this.repository = repository;
   }
 
-  async execute(title: string, url: string, userId: string): Promise<Article> {
+  async execute(
+    title: string,
+    url: string,
+    userId: string,
+    language?: string | null,
+    authors?: string[] | null,
+    topics?: string[] | null,
+    less_15?: boolean | null,
+    featuredImage?: string | null
+  ): Promise<Article> {
     if (typeof this.repository.addArticleToUser === "function") {
-      return this.repository.addArticleToUser(title, url, userId);
+      return this.repository.addArticleToUser(
+        title,
+        url,
+        userId,
+        language,
+        authors,
+        topics,
+        less_15,
+        featuredImage
+      );
     }
-    return this.repository.addArticle(title, url, userId);
+    return this.repository.addArticle(
+      title,
+      url,
+      userId,
+      language,
+      authors,
+      topics,
+      less_15,
+      featuredImage
+    );
   }
 }

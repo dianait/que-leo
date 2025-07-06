@@ -15,7 +15,8 @@ export interface ArticleRepository {
     language?: string | null,
     authors?: string[] | null,
     topics?: string[] | null,
-    less_15?: boolean | null
+    less_15?: boolean | null,
+    featuredImage?: string | null
   ): Promise<Article>;
   deleteArticle(articleId: number, userId: string): Promise<void>;
   markAsRead(articleId: number, isRead: boolean): Promise<void>;
