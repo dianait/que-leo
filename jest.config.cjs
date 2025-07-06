@@ -4,6 +4,7 @@ const { createDefaultPreset } = require("ts-jest");
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
   transform: {
     "^.+\\.(ts|tsx)$": [
       "ts-jest",

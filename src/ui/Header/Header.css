@@ -84,6 +84,12 @@
   text-decoration: underline;
 }
 
+/* Contenedor del avatar para posicionar el dropdown */
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
 /* Botón de logout */
 .logout-button {
   background: rgba(0, 180, 216, 0.1);
@@ -109,6 +115,8 @@
 .logout-button:hover {
   background: rgba(0, 180, 216, 0.2);
 }
+
+
 
 .header-nav {
   margin-right: 1.5rem;
@@ -202,22 +210,24 @@
     font-size: 0.85rem;
     word-break: break-word;
     max-width: 100vw;
-    white-space: pre-line;
+    white-space: normal;
     content: "";
     font-size: 0;
   }
   .header-left p::before {
-    content: "Menos decisiones,";
-    display: block;
+    content: "Menos decisiones, más lectura.";
+    display: inline;
     font-size: 0.85rem;
   }
   .header-left p::after {
-    content: "más lectura.";
-    display: block;
-    font-size: 0.85rem;
+    content: "";
+    display: none;
   }
   .logout-button {
     margin-right: 8px;
+  }
+  .user-avatar {
+    margin-right: 12px;
   }
   /* Eliminado flex-direction: column en .header-content para mantener disposición horizontal */
 }

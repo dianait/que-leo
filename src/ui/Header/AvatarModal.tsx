@@ -18,8 +18,8 @@ export const AvatarModal: React.FC<AvatarModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="avatar-modal-overlay" onClick={onClose}>
-      <div className="avatar-modal" onClick={(e) => e.stopPropagation()}>
+    <div className="avatar-modal-overlay" onClick={onClose} data-testid="modal-overlay">
+      <div className="avatar-modal" onClick={(e) => e.stopPropagation()} data-testid="modal-content">
         <div className="avatar-modal-header">
           <h3>Opciones de usuario</h3>
           <button className="avatar-modal-close" onClick={onClose}>

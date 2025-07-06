@@ -1,0 +1,100 @@
+.avatar-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 12px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e2e8f0;
+  z-index: 1000;
+  min-width: 280px;
+  animation: dropdownFadeIn 0.2s ease-out;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  top: -6px;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-left: 1px solid #e2e8f0;
+  border-top: 1px solid #e2e8f0;
+  transform: rotate(45deg);
+}
+
+.dropdown-content {
+  padding: 12px 0;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 20px;
+  border: none;
+  background: none;
+  color: #374151;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background: #f8fafc;
+  color: #1f2937;
+}
+
+.dropdown-item:active {
+  background: #f1f5f9;
+}
+
+.dropdown-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.logout-item {
+  color: #dc2626;
+}
+
+.logout-item:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+  transform: translateX(4px);
+}
+
+.telegram-item {
+  color: #00b4d8;
+}
+
+.telegram-item:hover {
+  background: #f0f9ff;
+  color: #0099cc;
+  transform: translateX(4px);
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive - ocultar en móvil */
+@media (max-width: 900px) {
+  .avatar-dropdown {
+    display: none;
+  }
+}
