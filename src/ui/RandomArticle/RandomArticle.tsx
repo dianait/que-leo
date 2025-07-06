@@ -257,51 +257,41 @@ export function RandomArticle({
               <div className="empty-state">
                 <div className="empty-state-icon">📚</div>
                 <h3>¡Tu biblioteca está vacía!</h3>
-                <p>No tienes artículos guardados todavía.</p>
+                <p>
+                  Vincúlate con Telegram y empieza a guardar artículos para
+                  descubrir tu próxima gran lectura.
+                </p>
                 <div
                   className="empty-state-cta"
                   style={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: 8,
+                    gap: 16,
                     width: "100%",
+                    marginTop: 24,
                   }}
                 >
-                  <span>
-                    Haz clic en el botón <strong>+ Nuevo</strong> para añadir tu
-                    primer artículo y empezar a leer
-                  </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      width: "100%",
-                      margin: "12px 0",
-                    }}
-                  >
-                    <hr className="random-article-divider" />
-                    <span className="random-article-or">o</span>
-                    <hr className="random-article-divider" />
-                  </div>
-                  {user && <TelegramLinkButton userId={user.id} />}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      width: "100%",
-                      margin: "12px 0",
-                    }}
-                  >
-                    <hr className="random-article-divider" />
-                    <span className="random-article-or">o</span>
-                    <hr className="random-article-divider" />
-                  </div>
+                  {user && (
+                    <div style={{ width: "100%", maxWidth: "320px" }}>
+                      <TelegramLinkButton userId={user.id} />
+                    </div>
+                  )}
                   <button
                     className="app-button"
                     onClick={handleImportDemoArticles}
                     disabled={importing}
-                    style={{ marginTop: 4 }}
+                    style={{
+                      background: "none",
+                      color: "#00b4d8",
+                      border: "none",
+                      padding: "8px 16px",
+                      fontSize: "0.9rem",
+                      fontWeight: "500",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                      textDecoration: "underline",
+                    }}
                   >
                     {importing ? "Añadiendo..." : "Añadir artículo de prueba"}
                   </button>
@@ -321,13 +311,14 @@ export function RandomArticle({
           </div>
         )}
       </div>
-      <button
-        onClick={handleGetRandomArticle}
-        disabled={!article}
-        className="modern-button button-primary random-article-button"
-      >
-        {article ? "Dame otro 🎲" : "No hay artículos"}
-      </button>
+      {article && (
+        <button
+          onClick={handleGetRandomArticle}
+          className="modern-button button-primary random-article-button"
+        >
+          Dame otro 🎲
+        </button>
+      )}
     </div>
   );
 }

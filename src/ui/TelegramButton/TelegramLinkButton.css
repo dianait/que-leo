@@ -8,12 +8,12 @@
   font-weight: 700;
   letter-spacing: 0.5px;
   border-radius: 10px;
-  padding: 0.8rem 0;
+  padding: 0.8rem 2rem;
   text-decoration: none;
-  background: #229ed9;
+  background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
   color: #fff;
   border: none;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
   height: 56px; /* Altura fija igual al botón "Dame otro" */
   display: flex;
   align-items: center;
@@ -21,5 +21,7 @@
 }
 
 .telegram-link-button:hover {
-  background: #1479b8 !important;
+  background: linear-gradient(135deg, #0099cc 0%, #005f8a 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 180, 216, 0.25);
 }

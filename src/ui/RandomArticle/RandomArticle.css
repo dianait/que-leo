@@ -175,10 +175,6 @@
 
 .empty-state-cta {
   margin-top: 16px !important;
-  padding: 12px;
-  background: #f8f9fa;
-  border-radius: 6px;
-  border-left: 3px solid #5a6fd8;
   font-size: 0.85rem !important;
   color: #555 !important;
 }
