@@ -201,6 +201,32 @@ export class SupabaseArticleRepository implements ArticleRepository {
         .eq("user_id", userId);
 
       if (!userArticleError) {
+        // Verificar si quedan más relaciones para este artículo
+        const { data: remainingRelations, error: checkError } =
+          await this.supabase
+            .from("user_articles")
+            .select("id")
+            .eq("article_id", articleId);
+
+        if (checkError) {
+          console.warn("Error verificando relaciones restantes:", checkError);
+          return; // Ya eliminamos la relación del usuario, eso es lo importante
+        }
+
+        // Si no quedan más relaciones, eliminar el artículo de articles2
+        if (!remainingRelations || remainingRelations.length === 0) {
+          const { error: deleteArticleError } = await this.supabase
+            .from("articles2")
+            .delete()
+            .eq("id", articleId);
+
+          if (deleteArticleError) {
+            console.warn(
+              "Error eliminando artículo huérfano de articles2:",
+              deleteArticleError
+            );
+          }
+        }
         return; // Éxito con la nueva estructura
       }
 
