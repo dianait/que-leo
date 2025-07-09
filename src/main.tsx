@@ -7,6 +7,7 @@ import { createSupabaseClient } from "./infrastructure/repositories/SupabaseArti
 import { SupabaseArticleRepository } from "./infrastructure/repositories/SupabaseArticleRepository/SupabaseArticleRepository.ts";
 import { ArticleRepositoryContext } from "./domain/ArticleRepositoryContext.ts";
 import { BrowserRouter } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 
 const supabase = createSupabaseClient();
 const articleRepository = SupabaseArticleRepository.getInstance({
@@ -22,5 +23,6 @@ createRoot(document.getElementById("root")!).render(
         </BrowserRouter>
       </AuthProvider>
     </ArticleRepositoryContext.Provider>
+    <Analytics />
   </StrictMode>
 );

@@ -51,7 +51,7 @@ test("RandomArticle muestra un artículo usando el caso de uso", async () => {
       }}
     >
       <ArticleRepositoryContext.Provider value={mockRepository}>
-        <RandomArticle />
+        <RandomArticle articlesVersion={0} />
       </ArticleRepositoryContext.Provider>
     </AuthContext.Provider>
   );
