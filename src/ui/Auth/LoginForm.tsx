@@ -5,7 +5,6 @@ import "./Auth.css";
 
 export const LoginForm: React.FC = () => {
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
   const { signInWithGitHub, signInWithGoogle } = useAuth();
 
