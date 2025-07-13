@@ -20,6 +20,18 @@ export class SupabaseAuthRepository implements AuthRepository {
     }
   }
 
+  async signInWithGoogle(redirectTo?: string): Promise<void> {
+    const { error } = await this.supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: redirectTo || window.location.origin,
+      },
+    });
+    if (error) {
+      throw new Error(`Error al iniciar sesión con Google: ${error.message}`);
+    }
+  }
+
   async signOut(): Promise<void> {
     const { error } = await this.supabase.auth.signOut();
     if (error) {

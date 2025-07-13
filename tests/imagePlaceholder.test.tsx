@@ -4,7 +4,7 @@ import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
 import { ArticleRepository } from "../src/domain/ArticleRepository";
 import { AuthContext } from "../src/domain/AuthContext";
-import { User } from "@supabase/supabase-js";
+import { createMockAuthContext } from "./setup";
 
 type ArticleType = {
   id: string;
@@ -18,14 +18,6 @@ type ArticleType = {
   topics: string[];
   less_15: boolean;
   featuredImage?: string | null;
-};
-
-const mockUser: User = {
-  id: "123",
-  app_metadata: {},
-  user_metadata: {},
-  aud: "authenticated",
-  created_at: new Date().toISOString(),
 };
 
 describe("Imágenes en RandomArticle", () => {
@@ -54,15 +46,7 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
     };
     render(
-      <AuthContext.Provider
-        value={{
-          user: mockUser,
-          session: null,
-          signInWithGitHub: async () => {},
-          signOut: async () => {},
-          loading: false,
-        }}
-      >
+      <AuthContext.Provider value={createMockAuthContext()}>
         <ArticleRepositoryContext.Provider value={mockRepository}>
           <RandomArticle articlesVersion={0} />
         </ArticleRepositoryContext.Provider>
@@ -100,15 +84,7 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
     };
     render(
-      <AuthContext.Provider
-        value={{
-          user: mockUser,
-          session: null,
-          signInWithGitHub: async () => {},
-          signOut: async () => {},
-          loading: false,
-        }}
-      >
+      <AuthContext.Provider value={createMockAuthContext()}>
         <ArticleRepositoryContext.Provider value={mockRepository}>
           <RandomArticle articlesVersion={0} />
         </ArticleRepositoryContext.Provider>
@@ -146,15 +122,7 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
     };
     render(
-      <AuthContext.Provider
-        value={{
-          user: mockUser,
-          session: null,
-          signInWithGitHub: async () => {},
-          signOut: async () => {},
-          loading: false,
-        }}
-      >
+      <AuthContext.Provider value={createMockAuthContext()}>
         <ArticleRepositoryContext.Provider value={mockRepository}>
           <RandomArticle articlesVersion={0} />
         </ArticleRepositoryContext.Provider>
@@ -202,15 +170,7 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
     };
     render(
-      <AuthContext.Provider
-        value={{
-          user: mockUser,
-          session: null,
-          signInWithGitHub: async () => {},
-          signOut: async () => {},
-          loading: false,
-        }}
-      >
+      <AuthContext.Provider value={createMockAuthContext()}>
         <ArticleRepositoryContext.Provider value={mockRepository}>
           <RandomArticle articlesVersion={0} />
         </ArticleRepositoryContext.Provider>
@@ -247,15 +207,7 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
     };
     render(
-      <AuthContext.Provider
-        value={{
-          user: mockUser,
-          session: null,
-          signInWithGitHub: async () => {},
-          signOut: async () => {},
-          loading: false,
-        }}
-      >
+      <AuthContext.Provider value={createMockAuthContext()}>
         <ArticleRepositoryContext.Provider value={mockRepository}>
           <RandomArticle articlesVersion={0} />
         </ArticleRepositoryContext.Provider>

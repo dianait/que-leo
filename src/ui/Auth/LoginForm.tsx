@@ -6,16 +6,28 @@ import "./Auth.css";
 export const LoginForm: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signInWithGitHub } = useAuth();
+  const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
+  const { signInWithGitHub, signInWithGoogle } = useAuth();
 
   const handleGitHubLogin = async () => {
     setError("");
-    setLoading(true);
+    setLoadingProvider("github");
     try {
       await signInWithGitHub(AUTH_CONFIG.REDIRECT_URL);
     } catch (error: any) {
       setError(error.message);
-      setLoading(false);
+      setLoadingProvider(null);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError("");
+    setLoadingProvider("google");
+    try {
+      await signInWithGoogle(AUTH_CONFIG.REDIRECT_URL);
+    } catch (error: any) {
+      setError(error.message);
+      setLoadingProvider(null);
     }
   };
 
@@ -24,7 +36,11 @@ export const LoginForm: React.FC = () => {
       <div className="auth-card">
         <div className="auth-header">
           <div className="auth-logo">
-            <img src="/header.png" alt="¿Qué leo? Logo" className="header-logo" />
+            <img
+              src="/header.png"
+              alt="¿Qué leo? Logo"
+              className="header-logo"
+            />
           </div>
           <h2>Menos decisiones, más lectura.</h2>
           <p>
@@ -35,18 +51,54 @@ export const LoginForm: React.FC = () => {
 
         {error && <div className="error-message">{error}</div>}
 
-        <button
-          onClick={handleGitHubLogin}
-          className="auth-button github-button"
-          disabled={loading}
-        >
-          <img src="/github.svg" alt="GitHub Logo" className="github-logo" />
-          <span>{loading ? "Redirigiendo..." : "Continuar con GitHub"}</span>
-        </button>
+        <div className="auth-buttons">
+          <button
+            onClick={handleGitHubLogin}
+            className="auth-button github-button"
+            disabled={loadingProvider !== null}
+          >
+            <img src="/github.svg" alt="GitHub Logo" className="github-logo" />
+            <span>
+              {loadingProvider === "github"
+                ? "Redirigiendo..."
+                : "Continuar con GitHub"}
+            </span>
+          </button>
+
+          <button
+            onClick={handleGoogleLogin}
+            className="auth-button google-button"
+            disabled={loadingProvider !== null}
+          >
+            <svg className="google-logo" viewBox="0 0 24 24">
+              <path
+                fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              />
+              <path
+                fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+              />
+              <path
+                fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              />
+            </svg>
+            <span>
+              {loadingProvider === "google"
+                ? "Redirigiendo..."
+                : "Continuar con Google"}
+            </span>
+          </button>
+        </div>
 
         <p className="auth-footer">
-          Al continuar, aceptas que guardemos tu email y nombre de usuario de
-          GitHub.
+          Al continuar, aceptas que guardemos tu email y nombre de usuario de tu
+          proveedor de autenticación.
         </p>
       </div>
     </div>

@@ -5,6 +5,7 @@ export interface AuthContextType {
   user: User | null;
   session: Session | null;
   signInWithGitHub: (redirectTo?: string) => Promise<void>;
+  signInWithGoogle: (redirectTo?: string) => Promise<void>;
   signOut: () => Promise<void>;
   loading: boolean;
 }

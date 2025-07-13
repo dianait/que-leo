@@ -1,4 +1,5 @@
 import { SignInWithGitHub } from "../src/application/SignInWithGitHub";
+import { SignInWithGoogle } from "../src/application/SignInWithGoogle";
 import { SignOut } from "../src/application/SignOut";
 import { AuthRepositoryMock } from "./__mocks__/AuthRepositoryMock";
 
@@ -19,6 +20,17 @@ describe("Casos de Uso de Autenticación", () => {
 
     // Assert: Verificamos que el método del mock fue llamado exactamente una vez
     expect(authRepository.signInWithGitHubMock).toHaveBeenCalledTimes(1);
+  });
+
+  test("El caso de uso SignInWithGoogle debe llamar al repositorio", async () => {
+    // Arrange: Preparamos el caso de uso con el repositorio mock
+    const signInUseCase = new SignInWithGoogle(authRepository);
+
+    // Act: Ejecutamos el caso de uso
+    await signInUseCase.execute();
+
+    // Assert: Verificamos que el método del mock fue llamado exactamente una vez
+    expect(authRepository.signInWithGoogleMock).toHaveBeenCalledTimes(1);
   });
 
   test("El caso de uso SignOut debe llamar al repositorio", async () => {

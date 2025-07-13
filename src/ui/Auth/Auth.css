@@ -87,6 +87,14 @@
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
+/* Contenedor de botones */
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
 .auth-button {
   background: #667eea;
   color: white;
@@ -97,7 +105,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,6 +139,36 @@
   width: 24px;
   height: 24px;
   filter: invert(1) brightness(2);
+}
+
+/* Botón de Google */
+.auth-button.google-button {
+  background: white;
+  color: #333;
+  border: 1px solid #dadce0;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.google-button:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #c1c1c1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.google-logo {
+  width: 24px;
+  height: 24px;
 }
 
 .auth-button:disabled {

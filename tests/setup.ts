@@ -1,5 +1,7 @@
 // Polyfills para el entorno de testing
 import { TextEncoder, TextDecoder } from "util";
+import { User } from "@supabase/supabase-js";
+import { AuthContextType } from "../src/domain/AuthContext";
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder as any;
@@ -43,3 +45,23 @@ if (!global.IntersectionObserver) {
     }
   };
 }
+
+export const mockUser: User = {
+  id: "123",
+  app_metadata: {},
+  user_metadata: {},
+  aud: "authenticated",
+  created_at: new Date().toISOString(),
+};
+
+export const createMockAuthContext = (
+  overrides: Partial<AuthContextType> = {}
+): AuthContextType => ({
+  user: mockUser,
+  session: null,
+  signInWithGitHub: async () => {},
+  signInWithGoogle: async () => {},
+  signOut: async () => {},
+  loading: false,
+  ...overrides,
+});

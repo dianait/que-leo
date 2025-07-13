@@ -4,6 +4,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { AuthContext } from "../../domain/AuthContext";
 import { SupabaseAuthRepository } from "../../infrastructure/auth/SupabaseAuthRepository";
 import { SignInWithGitHub } from "../../application/SignInWithGitHub";
+import { SignInWithGoogle } from "../../application/SignInWithGoogle";
 import { SignOut } from "../../application/SignOut";
 import { LoginForm } from "./LoginForm";
 import { AppSkeleton } from "../AppSkeleton/AppSkeleton";
@@ -23,7 +24,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
   // --- Composición de la Arquitectura ---
   const authRepository = new SupabaseAuthRepository(supabase);
-  const signInUseCase = new SignInWithGitHub(authRepository);
+  const signInGitHubUseCase = new SignInWithGitHub(authRepository);
+  const signInGoogleUseCase = new SignInWithGoogle(authRepository);
   const signOutUseCase = new SignOut(authRepository);
   // ------------------------------------
 
@@ -51,7 +53,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   }, [supabase.auth]);
 
   const signInWithGitHub = async (redirectTo?: string) => {
-    await signInUseCase.execute(redirectTo);
+    await signInGitHubUseCase.execute(redirectTo);
+  };
+
+  const signInWithGoogle = async (redirectTo?: string) => {
+    await signInGoogleUseCase.execute(redirectTo);
   };
 
   const signOut = async () => {
@@ -62,6 +68,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     user,
     session,
     signInWithGitHub,
+    signInWithGoogle,
     signOut,
     loading,
   };
