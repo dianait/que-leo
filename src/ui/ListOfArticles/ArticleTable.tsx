@@ -1,5 +1,6 @@
 import "./ListOfArticles.css";
 import { useEffect, useState, useContext } from "react";
+import { useSearchParams } from "react-router-dom";
 import type { Article } from "../../domain/Article";
 import { markArticleAsRead, markArticleAsUnread } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
@@ -121,6 +122,7 @@ export function ArticleTable({
   const PAGE_SIZE = 15;
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [modalOpen, setModalOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<number | null>(null);
   const [toast, setToast] = useState(false);
@@ -133,6 +135,14 @@ export function ArticleTable({
   const filteredArticles = articles.filter((article) =>
     article.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Inicializar término de búsqueda desde la URL
+  useEffect(() => {
+    const searchFromUrl = searchParams.get("search");
+    if (searchFromUrl) {
+      setSearchTerm(searchFromUrl);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (!repository || !user) return;
