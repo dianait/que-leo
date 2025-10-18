@@ -2,9 +2,9 @@
 describe("Share Functions", () => {
   // Mock de window.open
   const mockWindowOpen = jest.fn();
-  Object.defineProperty(window, 'open', {
+  Object.defineProperty(window, "open", {
     value: mockWindowOpen,
-    writable: true
+    writable: true,
   });
 
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe("Share Functions", () => {
     dateAdded: new Date(),
     less_15: false,
     topics: ["test"],
-    featuredImage: null
+    featuredImage: null,
   };
 
   // Función simulada para LinkedIn
@@ -84,7 +84,7 @@ describe("Share Functions", () => {
     it("handles special characters in article title", () => {
       const articleWithSpecialChars = {
         ...mockArticle,
-        title: "Artículo con ñ y acentos: ¡Hola!"
+        title: "Artículo con ñ y acentos: ¡Hola!",
       };
 
       handleShareToBluesky(articleWithSpecialChars);
@@ -98,7 +98,7 @@ describe("Share Functions", () => {
     it("properly encodes URLs with query parameters", () => {
       const articleWithQueryParams = {
         ...mockArticle,
-        url: "https://example.com/article?param=value&other=test"
+        url: "https://example.com/article?param=value&other=test",
       };
 
       handleShareToLinkedIn(articleWithQueryParams);
@@ -110,13 +110,15 @@ describe("Share Functions", () => {
     it("handles URLs with fragments", () => {
       const articleWithFragment = {
         ...mockArticle,
-        url: "https://example.com/article#section"
+        url: "https://example.com/article#section",
       };
 
       handleShareToBluesky(articleWithFragment);
 
       const callArgs = mockWindowOpen.mock.calls[0][0];
-      expect(callArgs).toContain("https%3A%2F%2Fexample.com%2Farticle%23section");
+      expect(callArgs).toContain(
+        "https%3A%2F%2Fexample.com%2Farticle%23section"
+      );
     });
   });
 });

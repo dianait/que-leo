@@ -37,15 +37,17 @@ export function RandomArticle({
   }, [user, repository, articlesVersion]);
 
   useEffect(() => {
-    // Siempre filtra solo no leídos
-    let filtered = articles.filter((a) => !a.isRead);
-    if (filtered.length === 0) {
-      setArticle(null);
-    } else {
-      const randomIndex = Math.floor(Math.random() * filtered.length);
-      setArticle(filtered[randomIndex]);
+    // Solo genera un artículo si no hay uno seleccionado y hay artículos disponibles
+    if (!article && articles.length > 0) {
+      let filtered = articles.filter((a) => !a.isRead);
+      if (filtered.length === 0) {
+        setArticle(null);
+      } else {
+        const randomIndex = Math.floor(Math.random() * filtered.length);
+        setArticle(filtered[randomIndex]);
+      }
     }
-  }, [articles]);
+  }, [articles, article]);
 
   const handleGetRandomArticle = () => {
     let filtered = articles.filter((a) => !a.isRead);
