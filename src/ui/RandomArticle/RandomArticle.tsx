@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from "react";
 import { isBefore, subYears } from "date-fns";
-import { useNavigate } from "react-router-dom";
 import "./RandomArticle.css";
 import type { Article } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
@@ -24,7 +23,6 @@ export function RandomArticle({
 
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!repository || !user) return;
@@ -58,13 +56,6 @@ export function RandomArticle({
     } else {
       const randomIndex = Math.floor(Math.random() * filtered.length);
       setArticle(filtered[randomIndex]);
-    }
-  };
-
-  const handleTitleClick = () => {
-    if (article) {
-      // Navegar a la lista de artículos con el título como término de búsqueda
-      navigate(`/articulos?search=${encodeURIComponent(article.title)}`);
     }
   };
 
@@ -175,11 +166,7 @@ export function RandomArticle({
                       target.classList.remove("loading");
                     }}
                   />
-                  <h4
-                    className="article-title clickable-title"
-                    onClick={handleTitleClick}
-                    title="Hacer clic para buscar este artículo en la lista"
-                  >
+                  <h4 className="article-title">
                     {getFlagEmoji(article.language)} {article.title}
                   </h4>
                   {article.authors && article.authors.length > 0 && (

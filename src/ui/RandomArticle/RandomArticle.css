@@ -43,16 +43,6 @@
   flex: 1;
 }
 
-.clickable-title {
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.clickable-title:hover {
-  color: #5a6fd8;
-  text-decoration: underline;
-}
-
 /* Enlaces */
 .article-links-container {
   margin-bottom: 10px;

@@ -1,6 +1,5 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { BrowserRouter } from "react-router-dom";
 import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
 import { ArticleRepository } from "../src/domain/ArticleRepository";
@@ -47,13 +46,11 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
     };
     render(
-      <BrowserRouter>
-        <AuthContext.Provider value={createMockAuthContext()}>
-          <ArticleRepositoryContext.Provider value={mockRepository}>
-            <RandomArticle articlesVersion={0} />
-          </ArticleRepositoryContext.Provider>
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <AuthContext.Provider value={createMockAuthContext()}>
+        <ArticleRepositoryContext.Provider value={mockRepository}>
+          <RandomArticle articlesVersion={0} />
+        </ArticleRepositoryContext.Provider>
+      </AuthContext.Provider>
     );
     await waitFor(() => {
       const image = screen.getByAltText("Featured Image");
@@ -87,13 +84,11 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
     };
     render(
-      <BrowserRouter>
-        <AuthContext.Provider value={createMockAuthContext()}>
-          <ArticleRepositoryContext.Provider value={mockRepository}>
-            <RandomArticle articlesVersion={0} />
-          </ArticleRepositoryContext.Provider>
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <AuthContext.Provider value={createMockAuthContext()}>
+        <ArticleRepositoryContext.Provider value={mockRepository}>
+          <RandomArticle articlesVersion={0} />
+        </ArticleRepositoryContext.Provider>
+      </AuthContext.Provider>
     );
     await waitFor(() => {
       const image = screen.getByAltText("Imagen por defecto");
@@ -127,13 +122,11 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
     };
     render(
-      <BrowserRouter>
-        <AuthContext.Provider value={createMockAuthContext()}>
-          <ArticleRepositoryContext.Provider value={mockRepository}>
-            <RandomArticle articlesVersion={0} />
-          </ArticleRepositoryContext.Provider>
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <AuthContext.Provider value={createMockAuthContext()}>
+        <ArticleRepositoryContext.Provider value={mockRepository}>
+          <RandomArticle articlesVersion={0} />
+        </ArticleRepositoryContext.Provider>
+      </AuthContext.Provider>
     );
     await waitFor(() => {
       const image = screen.getByAltText("Featured Image");
@@ -177,13 +170,11 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
     };
     render(
-      <BrowserRouter>
-        <AuthContext.Provider value={createMockAuthContext()}>
-          <ArticleRepositoryContext.Provider value={mockRepository}>
-            <RandomArticle articlesVersion={0} />
-          </ArticleRepositoryContext.Provider>
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <AuthContext.Provider value={createMockAuthContext()}>
+        <ArticleRepositoryContext.Provider value={mockRepository}>
+          <RandomArticle articlesVersion={0} />
+        </ArticleRepositoryContext.Provider>
+      </AuthContext.Provider>
     );
     await waitFor(() => {
       const image = screen.getByAltText("Featured Image");
@@ -216,13 +207,11 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
     };
     render(
-      <BrowserRouter>
-        <AuthContext.Provider value={createMockAuthContext()}>
-          <ArticleRepositoryContext.Provider value={mockRepository}>
-            <RandomArticle articlesVersion={0} />
-          </ArticleRepositoryContext.Provider>
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <AuthContext.Provider value={createMockAuthContext()}>
+        <ArticleRepositoryContext.Provider value={mockRepository}>
+          <RandomArticle articlesVersion={0} />
+        </ArticleRepositoryContext.Provider>
+      </AuthContext.Provider>
     );
     await waitFor(() => {
       const image = screen.getByAltText("Imagen por defecto");

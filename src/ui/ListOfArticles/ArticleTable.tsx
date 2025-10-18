@@ -1,6 +1,5 @@
 import "./ListOfArticles.css";
 import { useEffect, useState, useContext } from "react";
-import { useSearchParams } from "react-router-dom";
 import type { Article } from "../../domain/Article";
 import { markArticleAsRead, markArticleAsUnread } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
@@ -122,7 +121,6 @@ export function ArticleTable({
   const PAGE_SIZE = 15;
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [modalOpen, setModalOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<number | null>(null);
   const [toast, setToast] = useState(false);
@@ -132,50 +130,9 @@ export function ArticleTable({
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filtrar artículos basándose en el término de búsqueda
-  const filteredArticles = articles.filter((article) => {
-    if (!searchTerm.trim()) return true;
-    
-    const searchLower = searchTerm.toLowerCase().trim();
-    const titleLower = article.title.toLowerCase();
-    
-    console.log("Searching for:", searchLower);
-    console.log("In title:", titleLower);
-    
-    // Búsqueda exacta primero
-    if (titleLower.includes(searchLower)) {
-      console.log("Found exact match!");
-      return true;
-    }
-    
-    // Búsqueda por palabras clave (divide el término de búsqueda en palabras)
-    const searchWords = searchLower.split(/\s+/).filter(word => word.length > 2);
-    if (searchWords.length > 0) {
-      const keywordMatch = searchWords.every(word => titleLower.includes(word));
-      console.log("Keyword match:", keywordMatch, "for words:", searchWords);
-      return keywordMatch;
-    }
-    
-    // Búsqueda más flexible: si el término de búsqueda es muy largo, buscar solo las primeras palabras
-    if (searchLower.length > 50) {
-      const firstWords = searchLower.split(/\s+/).slice(0, 5).join(' ');
-      console.log("Trying first words:", firstWords);
-      if (titleLower.includes(firstWords)) {
-        console.log("Found match with first words!");
-        return true;
-      }
-    }
-    
-    return false;
-  });
-
-  // Inicializar término de búsqueda desde la URL
-  useEffect(() => {
-    const searchFromUrl = searchParams.get("search");
-    if (searchFromUrl) {
-      console.log("Search term from URL:", searchFromUrl);
-      setSearchTerm(searchFromUrl);
-    }
-  }, [searchParams]);
+  const filteredArticles = articles.filter((article) =>
+    article.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   useEffect(() => {
     if (!repository || !user) return;
