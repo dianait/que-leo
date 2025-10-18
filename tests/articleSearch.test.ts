@@ -54,7 +54,7 @@ describe("Article Search Functionality", () => {
   describe("Article Filtering", () => {
     it("should filter articles by title (case insensitive)", () => {
       const searchTerm = "react";
-      const filteredArticles = mockArticles.filter(article =>
+      const filteredArticles = mockArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
@@ -64,18 +64,22 @@ describe("Article Search Functionality", () => {
 
     it("should filter articles by partial title match", () => {
       const searchTerm = "script";
-      const filteredArticles = mockArticles.filter(article =>
+      const filteredArticles = mockArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
       expect(filteredArticles).toHaveLength(2);
-      expect(filteredArticles.map(a => a.title)).toContain("TypeScript Best Practices");
-      expect(filteredArticles.map(a => a.title)).toContain("JavaScript Async/Await");
+      expect(filteredArticles.map((a) => a.title)).toContain(
+        "TypeScript Best Practices"
+      );
+      expect(filteredArticles.map((a) => a.title)).toContain(
+        "JavaScript Async/Await"
+      );
     });
 
     it("should return all articles when search term is empty", () => {
       const searchTerm = "";
-      const filteredArticles = mockArticles.filter(article =>
+      const filteredArticles = mockArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
@@ -85,7 +89,7 @@ describe("Article Search Functionality", () => {
 
     it("should return empty array when no articles match", () => {
       const searchTerm = "python";
-      const filteredArticles = mockArticles.filter(article =>
+      const filteredArticles = mockArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
@@ -94,7 +98,7 @@ describe("Article Search Functionality", () => {
 
     it("should handle special characters in search", () => {
       const searchTerm = "css grid";
-      const filteredArticles = mockArticles.filter(article =>
+      const filteredArticles = mockArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
@@ -120,7 +124,7 @@ describe("Article Search Functionality", () => {
       ];
 
       const searchTerm = "programación";
-      const filteredArticles = articlesWithAccents.filter(article =>
+      const filteredArticles = articlesWithAccents.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
@@ -162,7 +166,7 @@ describe("Article Search Functionality", () => {
   describe("Search Results Display", () => {
     it("should show correct count of filtered articles", () => {
       const searchTerm = "javascript";
-      const filteredArticles = mockArticles.filter(article =>
+      const filteredArticles = mockArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
@@ -171,7 +175,7 @@ describe("Article Search Functionality", () => {
 
     it("should show plural form for multiple results", () => {
       const searchTerm = "script";
-      const filteredArticles = mockArticles.filter(article =>
+      const filteredArticles = mockArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
@@ -180,7 +184,7 @@ describe("Article Search Functionality", () => {
 
     it("should show singular form for single result", () => {
       const searchTerm = "react";
-      const filteredArticles = mockArticles.filter(article =>
+      const filteredArticles = mockArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
@@ -192,7 +196,7 @@ describe("Article Search Functionality", () => {
     it("should handle empty articles array", () => {
       const emptyArticles: typeof mockArticles = [];
       const searchTerm = "test";
-      const filteredArticles = emptyArticles.filter(article =>
+      const filteredArticles = emptyArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
@@ -201,7 +205,7 @@ describe("Article Search Functionality", () => {
 
     it("should handle very long search terms", () => {
       const longSearchTerm = "a".repeat(1000);
-      const filteredArticles = mockArticles.filter(article =>
+      const filteredArticles = mockArticles.filter((article) =>
         article.title.toLowerCase().includes(longSearchTerm.toLowerCase())
       );
 
@@ -210,7 +214,7 @@ describe("Article Search Functionality", () => {
 
     it("should handle search terms with only spaces", () => {
       const searchTerm = "   ";
-      const filteredArticles = mockArticles.filter(article =>
+      const filteredArticles = mockArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 

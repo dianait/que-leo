@@ -130,7 +130,7 @@ export function ArticleTable({
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filtrar artículos basándose en el término de búsqueda
-  const filteredArticles = articles.filter(article =>
+  const filteredArticles = articles.filter((article) =>
     article.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -225,17 +225,15 @@ export function ArticleTable({
         }}
       >
         <h2 style={{ margin: 0, color: "#333" }}>Mis artículos</h2>
-        <AddArticle
-          setArticlesVersion={setArticlesVersion}
-        />
+        <AddArticle setArticlesVersion={setArticlesVersion} />
       </div>
-      
+
       {/* Campo de búsqueda */}
       <div style={{ marginBottom: "20px" }}>
         <div style={{ position: "relative", maxWidth: "400px" }}>
           <input
             type="text"
-            placeholder="🔍 Buscar por título..."
+            placeholder="Buscar por título..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
@@ -271,7 +269,9 @@ export function ArticleTable({
         </div>
         {searchTerm && (
           <div style={{ marginTop: "8px", fontSize: "14px", color: "#6c757d" }}>
-            {filteredArticles.length} artículo{filteredArticles.length !== 1 ? 's' : ''} encontrado{filteredArticles.length !== 1 ? 's' : ''}
+            {filteredArticles.length} artículo
+            {filteredArticles.length !== 1 ? "s" : ""} encontrado
+            {filteredArticles.length !== 1 ? "s" : ""}
           </div>
         )}
       </div>
@@ -357,19 +357,23 @@ export function ArticleTable({
               ))}
             </tbody>
           </table>
-          
+
           {/* Mensaje cuando no hay resultados de búsqueda */}
           {searchTerm && filteredArticles.length === 0 && (
-            <div style={{
-              textAlign: "center",
-              padding: "40px 20px",
-              color: "#6c757d",
-              backgroundColor: "#f8f9fa",
-              borderRadius: "8px",
-              marginTop: "20px",
-            }}>
+            <div
+              style={{
+                textAlign: "center",
+                padding: "40px 20px",
+                color: "#6c757d",
+                backgroundColor: "#f8f9fa",
+                borderRadius: "8px",
+                marginTop: "20px",
+              }}
+            >
               <div style={{ fontSize: "48px", marginBottom: "16px" }}>🔍</div>
-              <h3 style={{ margin: "0 0 8px 0", color: "#495057" }}>No se encontraron artículos</h3>
+              <h3 style={{ margin: "0 0 8px 0", color: "#495057" }}>
+                No se encontraron artículos
+              </h3>
               <p style={{ margin: 0 }}>
                 No hay artículos que coincidan con "{searchTerm}"
               </p>
