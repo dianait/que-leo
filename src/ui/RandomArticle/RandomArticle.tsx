@@ -5,6 +5,7 @@ import type { Article } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
 import { GetArticlesByUser } from "../../application/GetArticlesByUser";
+import { DeleteArticle } from "../../application/DeleteArticle";
 import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
 import { RandomArticleSkeleton } from "../AppSkeleton/AppSkeleton";
 
@@ -16,6 +17,9 @@ export function RandomArticle({
   const [articles, setArticles] = useState<Article[]>([]);
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [articleToDelete, setArticleToDelete] = useState<number | null>(null);
+  const [toast, setToast] = useState(false);
 
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
@@ -63,6 +67,54 @@ export function RandomArticle({
     const searchUrl =
       "https://google.com/search?q=" + encodeURIComponent(title);
     window.open(searchUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const handleDelete = async (articleId: number) => {
+    if (!repository || !user) return;
+    setModalOpen(false);
+    console.log("Intentando borrar artículo", { articleId, userId: user.id });
+    try {
+      const useCase = new DeleteArticle(repository);
+      await useCase.execute(Number(articleId), user.id);
+      console.log("Artículo borrado correctamente", articleId);
+
+      // Actualizar la lista de artículos localmente
+      setArticles((prev) =>
+        prev.filter((a) => Number(a.id) !== Number(articleId))
+      );
+
+      // Si el artículo eliminado era el que se mostraba, obtener uno nuevo
+      if (article && Number(article.id) === Number(articleId)) {
+        const remainingArticles = articles.filter(
+          (a) => Number(a.id) !== Number(articleId)
+        );
+        const filtered = remainingArticles.filter((a) => !a.isRead);
+        if (filtered.length === 0) {
+          setArticle(null);
+        } else {
+          const randomIndex = Math.floor(Math.random() * filtered.length);
+          setArticle(filtered[randomIndex]);
+        }
+      }
+
+      setToast(true);
+      setTimeout(() => setToast(false), 3000);
+    } catch (error) {
+      console.error("Error al borrar artículo:", error);
+    }
+  };
+
+  const handleShareToLinkedIn = (article: Article) => {
+    const url = encodeURIComponent(article.url);
+    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+    window.open(linkedinUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const handleShareToBluesky = (article: Article) => {
+    const shareText = encodeURIComponent(`¡He leído: ${article.title}!`);
+    const url = encodeURIComponent(article.url);
+    const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
+    window.open(blueskyUrl, "_blank", "noopener,noreferrer");
   };
 
   function getFlagEmoji(language?: string) {
@@ -149,6 +201,32 @@ export function RandomArticle({
                       🔗 Leer artículo
                     </a>
                   )}
+                </div>
+                <div className="article-actions-container">
+                  <ActionButton
+                    emoji="💼"
+                    text="LinkedIn"
+                    onClick={() => handleShareToLinkedIn(article)}
+                    title="Compartir en LinkedIn"
+                    type="linkedin"
+                  />
+                  <ActionButton
+                    emoji="🦋"
+                    text="Bluesky"
+                    onClick={() => handleShareToBluesky(article)}
+                    title="Compartir en Bluesky"
+                    type="bluesky"
+                  />
+                  <ActionButton
+                    emoji="🗑️"
+                    text="Eliminar"
+                    onClick={() => {
+                      setArticleToDelete(Number(article.id));
+                      setModalOpen(true);
+                    }}
+                    title="Borrar artículo"
+                    type="danger"
+                  />
                 </div>
                 {article.less_15 && (
                   <div
@@ -249,6 +327,76 @@ export function RandomArticle({
           Dame otro 🎲
         </button>
       )}
+
+      <Toast message="Artículo borrado correctamente" show={toast} />
+      <ConfirmModal
+        open={modalOpen}
+        onCancel={() => setModalOpen(false)}
+        onConfirm={() => {
+          if (articleToDelete !== null) handleDelete(articleToDelete);
+        }}
+      />
     </div>
   );
+}
+
+function ActionButton({
+  emoji,
+  text,
+  onClick,
+  title,
+  type,
+}: {
+  emoji: string;
+  text: string;
+  onClick: () => void;
+  title: string;
+  type: "linkedin" | "bluesky" | "danger";
+}) {
+  return (
+    <button
+      className={`app-button action-button ${type}`}
+      onClick={onClick}
+      title={title}
+    >
+      <span className="button-emoji">{emoji}</span>
+      <span className="button-text">{text}</span>
+    </button>
+  );
+}
+
+function ConfirmModal({
+  open,
+  onConfirm,
+  onCancel,
+}: {
+  open: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  if (!open) return null;
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>¿Borrar artículo?</h2>
+        <p>
+          ¿Seguro que quieres borrar este artículo? <br />
+          <strong>Esta acción no se puede deshacer.</strong>
+        </p>
+        <div className="modal-actions">
+          <button className="app-button" onClick={onCancel}>
+            Cancelar
+          </button>
+          <button className="app-button danger" onClick={onConfirm}>
+            Borrar definitivamente
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Toast({ message, show }: { message: string; show: boolean }) {
+  if (!show) return null;
+  return <div className="toast-notification">{message}</div>;
 }

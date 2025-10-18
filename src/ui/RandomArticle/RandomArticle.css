@@ -52,6 +52,66 @@
   align-items: center;
 }
 
+/* Contenedor de acciones */
+.article-actions-container {
+  margin-top: 16px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.article-actions-container .app-button.action-button {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 100px;
+  justify-content: center;
+  height: 40px;
+}
+
+.article-actions-container .action-button.linkedin {
+  background: rgba(0, 119, 181, 0.1);
+  color: #0077b5;
+  border: 1px solid rgba(0, 119, 181, 0.2);
+}
+
+.article-actions-container .action-button.linkedin:hover {
+  background: rgba(0, 119, 181, 0.2);
+  transform: translateY(-1px);
+}
+
+.article-actions-container .action-button.bluesky {
+  background: rgba(0, 123, 191, 0.1);
+  color: #007bbf;
+  border: 1px solid rgba(0, 123, 191, 0.2);
+}
+
+.article-actions-container .action-button.bluesky:hover {
+  background: rgba(0, 123, 191, 0.2);
+  transform: translateY(-1px);
+}
+
+.article-actions-container .action-button.danger {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.article-actions-container .action-button.danger:hover {
+  background: rgba(220, 53, 69, 0.2);
+  transform: translateY(-1px);
+}
+
 .url-not-available {
   padding: 12px;
   text-align: center;
@@ -345,5 +405,17 @@
   }
   .app-footer {
     display: none !important;
+  }
+
+  /* Estilos responsivos para botones de acción */
+  .article-actions-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .article-actions-container .app-button {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px;
   }
 }
