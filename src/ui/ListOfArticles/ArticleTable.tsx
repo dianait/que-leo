@@ -127,6 +127,12 @@ export function ArticleTable({
   const [showShareModal, setShowShareModal] = useState(false);
   const [lastReadArticle, setLastReadArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filtrar artículos basándose en el término de búsqueda
+  const filteredArticles = articles.filter(article =>
+    article.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   useEffect(() => {
     if (!repository || !user) return;
@@ -223,6 +229,52 @@ export function ArticleTable({
           setArticlesVersion={setArticlesVersion}
         />
       </div>
+      
+      {/* Campo de búsqueda */}
+      <div style={{ marginBottom: "20px" }}>
+        <div style={{ position: "relative", maxWidth: "400px" }}>
+          <input
+            type="text"
+            placeholder="🔍 Buscar por título..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "12px 16px",
+              paddingLeft: "40px",
+              border: "2px solid #e1e5e9",
+              borderRadius: "8px",
+              fontSize: "16px",
+              outline: "none",
+              transition: "border-color 0.2s ease",
+              backgroundColor: "#fff",
+            }}
+            onFocus={(e) => {
+              e.target.style.borderColor = "#5a6fd8";
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = "#e1e5e9";
+            }}
+          />
+          <span
+            style={{
+              position: "absolute",
+              left: "12px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              fontSize: "18px",
+              color: "#6c757d",
+            }}
+          >
+            🔍
+          </span>
+        </div>
+        {searchTerm && (
+          <div style={{ marginTop: "8px", fontSize: "14px", color: "#6c757d" }}>
+            {filteredArticles.length} artículo{filteredArticles.length !== 1 ? 's' : ''} encontrado{filteredArticles.length !== 1 ? 's' : ''}
+          </div>
+        )}
+      </div>
       <Toast message="Artículo borrado correctamente" show={toast} />
       <ConfirmModal
         open={modalOpen}
@@ -258,7 +310,7 @@ export function ArticleTable({
               </tr>
             </thead>
             <tbody>
-              {articles.map((article) => (
+              {filteredArticles.map((article) => (
                 <tr
                   key={article.id}
                   className={article.isRead ? "is-read" : ""}
@@ -305,6 +357,39 @@ export function ArticleTable({
               ))}
             </tbody>
           </table>
+          
+          {/* Mensaje cuando no hay resultados de búsqueda */}
+          {searchTerm && filteredArticles.length === 0 && (
+            <div style={{
+              textAlign: "center",
+              padding: "40px 20px",
+              color: "#6c757d",
+              backgroundColor: "#f8f9fa",
+              borderRadius: "8px",
+              marginTop: "20px",
+            }}>
+              <div style={{ fontSize: "48px", marginBottom: "16px" }}>🔍</div>
+              <h3 style={{ margin: "0 0 8px 0", color: "#495057" }}>No se encontraron artículos</h3>
+              <p style={{ margin: 0 }}>
+                No hay artículos que coincidan con "{searchTerm}"
+              </p>
+              <button
+                onClick={() => setSearchTerm("")}
+                style={{
+                  marginTop: "16px",
+                  padding: "8px 16px",
+                  backgroundColor: "#5a6fd8",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                }}
+              >
+                Limpiar búsqueda
+              </button>
+            </div>
+          )}
         </div>
       )}
       <div className="pagination-controls">
