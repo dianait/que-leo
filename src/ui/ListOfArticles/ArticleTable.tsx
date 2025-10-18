@@ -138,13 +138,31 @@ export function ArticleTable({
     const searchLower = searchTerm.toLowerCase().trim();
     const titleLower = article.title.toLowerCase();
     
+    console.log("Searching for:", searchLower);
+    console.log("In title:", titleLower);
+    
     // Búsqueda exacta primero
-    if (titleLower.includes(searchLower)) return true;
+    if (titleLower.includes(searchLower)) {
+      console.log("Found exact match!");
+      return true;
+    }
     
     // Búsqueda por palabras clave (divide el término de búsqueda en palabras)
     const searchWords = searchLower.split(/\s+/).filter(word => word.length > 2);
     if (searchWords.length > 0) {
-      return searchWords.every(word => titleLower.includes(word));
+      const keywordMatch = searchWords.every(word => titleLower.includes(word));
+      console.log("Keyword match:", keywordMatch, "for words:", searchWords);
+      return keywordMatch;
+    }
+    
+    // Búsqueda más flexible: si el término de búsqueda es muy largo, buscar solo las primeras palabras
+    if (searchLower.length > 50) {
+      const firstWords = searchLower.split(/\s+/).slice(0, 5).join(' ');
+      console.log("Trying first words:", firstWords);
+      if (titleLower.includes(firstWords)) {
+        console.log("Found match with first words!");
+        return true;
+      }
     }
     
     return false;
@@ -154,6 +172,7 @@ export function ArticleTable({
   useEffect(() => {
     const searchFromUrl = searchParams.get("search");
     if (searchFromUrl) {
+      console.log("Search term from URL:", searchFromUrl);
       setSearchTerm(searchFromUrl);
     }
   }, [searchParams]);
