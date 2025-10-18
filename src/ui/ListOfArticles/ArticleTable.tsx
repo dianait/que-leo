@@ -132,9 +132,23 @@ export function ArticleTable({
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filtrar artículos basándose en el término de búsqueda
-  const filteredArticles = articles.filter((article) =>
-    article.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredArticles = articles.filter((article) => {
+    if (!searchTerm.trim()) return true;
+    
+    const searchLower = searchTerm.toLowerCase().trim();
+    const titleLower = article.title.toLowerCase();
+    
+    // Búsqueda exacta primero
+    if (titleLower.includes(searchLower)) return true;
+    
+    // Búsqueda por palabras clave (divide el término de búsqueda en palabras)
+    const searchWords = searchLower.split(/\s+/).filter(word => word.length > 2);
+    if (searchWords.length > 0) {
+      return searchWords.every(word => titleLower.includes(word));
+    }
+    
+    return false;
+  });
 
   // Inicializar término de búsqueda desde la URL
   useEffect(() => {

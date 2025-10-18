@@ -175,7 +175,7 @@ export function RandomArticle({
                       target.classList.remove("loading");
                     }}
                   />
-                  <h4 
+                  <h4
                     className="article-title clickable-title"
                     onClick={handleTitleClick}
                     title="Hacer clic para buscar este artículo en la lista"
