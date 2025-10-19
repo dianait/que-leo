@@ -128,11 +128,30 @@ export function ArticleTable({
   const [lastReadArticle, setLastReadArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [allArticles, setAllArticles] = useState<Article[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   // Filtrar artículos basándose en el término de búsqueda
-  const filteredArticles = articles.filter((article) =>
-    article.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredArticles = searchTerm 
+    ? allArticles.filter((article) =>
+        article.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : articles;
+
+  // Función para cargar todos los artículos (para búsqueda)
+  const fetchAllArticles = async () => {
+    if (!repository || !user) return;
+    setIsSearching(true);
+    try {
+      const useCase = new GetArticlesByUserPaginated(repository);
+      const { articles } = await useCase.execute(user.id, 1000, 0); // Cargar hasta 1000 artículos
+      setAllArticles(articles);
+    } catch (error) {
+      console.error("Error al cargar todos los artículos:", error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   useEffect(() => {
     if (!repository || !user) return;
@@ -155,6 +174,13 @@ export function ArticleTable({
     };
     fetchArticles();
   }, [user, repository, articlesVersion, page]);
+
+  // Cargar todos los artículos cuando hay un término de búsqueda
+  useEffect(() => {
+    if (searchTerm && allArticles.length === 0) {
+      fetchAllArticles();
+    }
+  }, [searchTerm]);
 
   const handleToggleRead = async (articleToToggle: Article) => {
     if (!repository) return;
@@ -269,9 +295,20 @@ export function ArticleTable({
         </div>
         {searchTerm && (
           <div style={{ marginTop: "8px", fontSize: "14px", color: "#6c757d" }}>
-            {filteredArticles.length} artículo
-            {filteredArticles.length !== 1 ? "s" : ""} encontrado
-            {filteredArticles.length !== 1 ? "s" : ""}
+            {isSearching ? (
+              "🔍 Buscando en todos los artículos..."
+            ) : (
+              <>
+                {filteredArticles.length} artículo
+                {filteredArticles.length !== 1 ? "s" : ""} encontrado
+                {filteredArticles.length !== 1 ? "s" : ""}
+                {allArticles.length > 0 && (
+                  <span style={{ marginLeft: "8px", opacity: 0.7 }}>
+                    (de {allArticles.length} total)
+                  </span>
+                )}
+              </>
+            )}
           </div>
         )}
       </div>
@@ -378,7 +415,10 @@ export function ArticleTable({
                 No hay artículos que coincidan con "{searchTerm}"
               </p>
               <button
-                onClick={() => setSearchTerm("")}
+                onClick={() => {
+                  setSearchTerm("");
+                  setAllArticles([]);
+                }}
                 style={{
                   marginTop: "16px",
                   padding: "8px 16px",
