@@ -26,7 +26,7 @@ export class GetRandomArticleForUser {
       return null;
     }
 
-    // Priorizar artículos no leídos
+    // Prioritize unread articles
     const unreadArticles = articles.filter((article) => !article.isRead);
 
     if (unreadArticles.length > 0) {
@@ -34,7 +34,7 @@ export class GetRandomArticleForUser {
       return unreadArticles[randomIndex];
     }
 
-    // Si todos están leídos, devolver uno aleatorio
+    // If everything is read, return a random one
     const randomIndex = Math.floor(Math.random() * articles.length);
     return articles[randomIndex];
   }

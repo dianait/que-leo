@@ -92,7 +92,7 @@
   }
 }
 
-/* Responsive - ocultar en móvil */
+/* Responsive - hide on mobile */
 @media (max-width: 900px) {
   .avatar-dropdown {
     display: none;

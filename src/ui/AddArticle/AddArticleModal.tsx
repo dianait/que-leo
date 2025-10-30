@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
-import { AddArticle as AddArticleUseCase } from "../../application/AddArticle";
+import { ArticleService } from "../../application/ArticleService";
 import {
   MetadataService,
   type ArticleMetadata,
@@ -98,17 +98,17 @@ export const AddArticle: React.FC<{
         console.warn("No se pudieron extraer metadatos:", metadataError);
       }
 
-      const useCase = new AddArticleUseCase(repository);
-      await useCase.execute(
-        title || metadata?.title || "Sin título",
-        finalUrl,
-        user.id,
-        metadata?.language || null,
-        metadata?.authors || null,
-        metadata?.topics || null,
-        null, // less_15 - se puede calcular basado en el contenido
-        metadata?.featuredimage || null
-      );
+      const svc = new ArticleService(repository);
+      await svc.add({
+        title: title || metadata?.title || "Sin título",
+        url: finalUrl,
+        userId: user.id,
+        language: metadata?.language || null,
+        authors: metadata?.authors || null,
+        topics: metadata?.topics || null,
+        less_15: null,
+        featuredImage: metadata?.featuredimage || null,
+      });
       setSuccess("¡Artículo añadido con éxito!");
       setTitle("");
       setUrl("");

@@ -15,7 +15,7 @@
   align-items: center;
 }
 
-/* Tarjeta del artículo */
+/* Article card */
 .content-card.random-article-card {
   width: 520px;
   /* height: 280px; */
@@ -100,12 +100,12 @@
   transform: translateY(-1px);
 }
 
-/* Nuevo: botón éxito (Marcar como leído) con verde de la paleta */
+/* Success action (Mark as read) using palette green */
 .article-actions-container .action-button.success {
   background: rgba(40, 167, 69, 0.1);
   color: #28a745;
   border: 1px solid rgba(40, 167, 69, 0.2);
-  width: var(--action-primary-width); /* igual que Leer artículo */
+  width: var(--action-primary-width); /* same width as "Leer artículo" */
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -520,7 +520,7 @@
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100vw !important;
-    padding: 1rem 0.5rem 0.5rem 0.5rem !important; /* más padding arriba en móvil */
+    padding: 1rem 0.5rem 0.5rem 0.5rem !important; /* more top padding on mobile */
     box-sizing: border-box;
   }
   .random-article-container {

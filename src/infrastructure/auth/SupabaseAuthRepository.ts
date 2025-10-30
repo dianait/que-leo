@@ -35,7 +35,7 @@ export class SupabaseAuthRepository implements AuthRepository {
   async signOut(): Promise<void> {
     const { error } = await this.supabase.auth.signOut();
     if (error) {
-      throw new Error(`Error al cerrar sesión: ${error.message}`);
+      throw new Error(`Sign out failed: ${error.message}`);
     }
   }
 }

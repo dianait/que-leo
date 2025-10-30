@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useAuth } from "../../domain/AuthContext";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
-import { GetArticlesByUser } from "../../application/GetArticlesByUser";
+import { ArticleService } from "../../application/ArticleService";
 import type { Article } from "../../domain/Article";
 
 export const useUserArticles = () => {
@@ -22,12 +22,12 @@ export const useUserArticles = () => {
     const fetchArticles = async () => {
       try {
         setLoading(true);
-        const useCase = new GetArticlesByUser(repository);
-        const userArticles = await useCase.execute(user.id);
+        const svc = new ArticleService(repository);
+        const userArticles = await svc.getByUser(user.id);
         setArticles(userArticles);
         setHasArticles(userArticles.length > 0);
       } catch (error) {
-        console.error("Error al obtener artículos del usuario:", error);
+        console.error("Error fetching user articles:", error);
         setHasArticles(false);
       } finally {
         setLoading(false);

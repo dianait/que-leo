@@ -4,9 +4,7 @@ import type { Article } from "../../domain/Article";
 import { markArticleAsRead, markArticleAsUnread } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
-import { GetArticlesByUserPaginated } from "../../application/GetArticlesByUser";
-import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
-import { DeleteArticle } from "../../application/DeleteArticle";
+import { ArticleService } from "../../application/ArticleService";
 import { ArticleTableSkeleton } from "../AppSkeleton/AppSkeleton";
 import { AddArticle } from "../AddArticle/AddArticleModal";
 
@@ -134,7 +132,7 @@ export function ArticleTable({
     "all"
   );
 
-  // Construir base según búsqueda y aplicar filtro de lectura
+  // Build base set from search and then apply read filter
   const base = searchTerm
     ? allArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -146,7 +144,7 @@ export function ArticleTable({
     return article.isRead;
   });
 
-  // Ordenar por fecha de lectura cuando el filtro es "read"
+  // Sort by read date when filter is "read"
   const displayedArticles =
     readFilter === "read"
       ? [...filteredArticles].sort((a, b) => {
@@ -156,13 +154,13 @@ export function ArticleTable({
         })
       : filteredArticles;
 
-  // Función para cargar todos los artículos (para búsqueda)
+  // Load all articles for search purposes
   const fetchAllArticles = async () => {
     if (!repository || !user) return;
     setIsSearching(true);
     try {
-      const useCase = new GetArticlesByUserPaginated(repository);
-      const { articles } = await useCase.execute(user.id, 1000, 0); // Cargar hasta 1000 artículos
+      const svc = new ArticleService(repository);
+      const { articles } = await svc.getByUserPaginated(user.id, 1000, 0); // Load up to 1000 articles
       setAllArticles(articles);
     } catch (error) {
       console.error("Error al cargar todos los artículos:", error);
@@ -176,8 +174,8 @@ export function ArticleTable({
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const useCase = new GetArticlesByUserPaginated(repository);
-        const { articles, total } = await useCase.execute(
+        const svc = new ArticleService(repository);
+        const { articles, total } = await svc.getByUserPaginated(
           user.id,
           PAGE_SIZE,
           (page - 1) * PAGE_SIZE
@@ -186,14 +184,14 @@ export function ArticleTable({
         setTotal(total);
         setLoading(false);
       } catch (error) {
-        console.error("Error al cargar artículos del usuario:", error);
+        console.error("Error loading user articles:", error);
         setLoading(false);
       }
     };
     fetchArticles();
   }, [user, repository, articlesVersion, page]);
 
-  // Cargar todos los artículos cuando hay un término de búsqueda
+  // Load all articles when there is a search term
   useEffect(() => {
     if (searchTerm && allArticles.length === 0) {
       fetchAllArticles();
@@ -206,7 +204,7 @@ export function ArticleTable({
       ? markArticleAsUnread(articleToToggle)
       : markArticleAsRead(articleToToggle);
 
-    // Actualizar el estado local inmediatamente para una UI más fluida
+    // Update local state immediately for a snappier UI
     setArticles((prev) =>
       prev.map((article) =>
         Number(article.id) === Number(articleToToggle.id)
@@ -216,10 +214,10 @@ export function ArticleTable({
     );
 
     try {
-      const useCase = new MarkArticleAsRead(repository);
-      await useCase.execute(Number(articleToToggle.id), newArticleState.isRead);
+      const svc = new ArticleService(repository);
+      await svc.markRead(Number(articleToToggle.id), newArticleState.isRead);
 
-      // Solo actualizar la versión si es necesario para otros componentes
+      // Only update version if needed elsewhere
       // setArticlesVersion((v) => v + 1);
 
       if (!articleToToggle.isRead) {
@@ -227,8 +225,8 @@ export function ArticleTable({
         setShowShareModal(true);
       }
     } catch (error) {
-      console.error("Error al marcar como leído:", error);
-      // Revertir el cambio local si falla
+      console.error("Error marking as read:", error);
+      // Revert local change if it fails
       setArticles((prev) =>
         prev.map((article) =>
           Number(article.id) === Number(articleToToggle.id)
@@ -242,11 +240,11 @@ export function ArticleTable({
   const handleDelete = async (articleId: number) => {
     if (!repository || !user) return;
     setModalOpen(false);
-    console.log("Intentando borrar artículo", { articleId, userId: user.id });
+    console.log("Attempting to delete article", { articleId, userId: user.id });
     try {
-      const useCase = new DeleteArticle(repository);
-      await useCase.execute(Number(articleId), user.id);
-      console.log("Artículo borrado correctamente", articleId);
+      const svc = new ArticleService(repository);
+      await svc.delete(Number(articleId), user.id);
+      console.log("Article deleted successfully", articleId);
       setArticles((prev) =>
         prev.filter((a) => Number(a.id) !== Number(articleId))
       );

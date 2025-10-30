@@ -232,7 +232,7 @@
   font-size: 0.95em;
 }
 
-/* Controles de búsqueda y filtro */
+/* Search and filter controls */
 .search-controls {
   margin-bottom: 24px;
   display: flex;
@@ -381,7 +381,7 @@
   .articles-table td:first-child {
     padding-left: 8px !important;
   }
-  /* Ocultar columnas Idioma (2) y Autores (3) en móvil */
+  /* Hide Language (2) and Authors (3) columns on mobile */
   .articles-table th:nth-child(2),
   .articles-table td:nth-child(2),
   .articles-table th:nth-child(3),
@@ -396,7 +396,7 @@
     min-width: 96px;
     text-align: right;
   }
-  /* Truncar título a 2 líneas para no ocupar todo el ancho */
+  /* Truncate title to 2 lines so it doesn't take full width */
   .articles-table td:first-child .article-title-link {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -406,7 +406,7 @@
     color: #1d4ed8;
     text-decoration: underline;
   }
-  /* Iconos-only en botones: ocultar texto en móvil */
+  /* Icon-only on buttons: hide text on mobile */
   .article-actions .btn-text {
     display: none;
   }
@@ -421,14 +421,14 @@
     min-width: 40px;
     max-width: none;
   }
-  /* Ocultar botón "+ Nuevo" en móvil */
+  /* Hide "+ Nuevo" button on mobile */
   .new-button {
     display: none !important;
   }
 }
 
 @media (max-width: 480px) {
-  /* En pantallas muy pequeñas, iconos-only en acciones */
+  /* On very small screens, icon-only actions */
   .article-actions .btn-text { display: none; }
   .articles-table th:last-child,
   .articles-table td:last-child {
@@ -436,7 +436,7 @@
     min-width: 72px;
     text-align: right;
   }
-  /* En muy pequeño, truncar el título a 1 línea */
+  /* On very small screens, truncate title to 1 line */
   .articles-table td:first-child .article-title-link {
     -webkit-line-clamp: 1;
   }

@@ -4,11 +4,9 @@ import "./RandomArticle.css";
 import type { Article } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
-import { GetArticlesByUser } from "../../application/GetArticlesByUser";
-import { DeleteArticle } from "../../application/DeleteArticle";
+import { ArticleService } from "../../application/ArticleService";
 import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
 import { RandomArticleSkeleton } from "../AppSkeleton/AppSkeleton";
-import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
 
 export function RandomArticle({
   articlesVersion,
@@ -31,8 +29,8 @@ export function RandomArticle({
     if (!repository || !user) return;
     const fetchArticles = async () => {
       setLoading(true);
-      const useCase = new GetArticlesByUser(repository);
-      const result = await useCase.execute(user.id);
+      const svc = new ArticleService(repository);
+      const result = await svc.getByUser(user.id);
       setArticles(result);
       setLoading(false);
     };
@@ -40,7 +38,7 @@ export function RandomArticle({
   }, [user, repository, articlesVersion]);
 
   useEffect(() => {
-    // Solo genera un artículo si no hay uno seleccionado y hay artículos disponibles
+    // Only pick a random article when none is selected and there are items available
     if (!article && articles.length > 0) {
       let filtered = articles.filter((a) => !a.isRead);
       if (filtered.length === 0) {
@@ -77,18 +75,18 @@ export function RandomArticle({
   const handleDelete = async (articleId: number) => {
     if (!repository || !user) return;
     setModalOpen(false);
-    console.log("Intentando borrar artículo", { articleId, userId: user.id });
+    console.log("Attempting to delete article", { articleId, userId: user.id });
     try {
-      const useCase = new DeleteArticle(repository);
-      await useCase.execute(Number(articleId), user.id);
-      console.log("Artículo borrado correctamente", articleId);
+      const svc = new ArticleService(repository);
+      await svc.delete(Number(articleId), user.id);
+      console.log("Article deleted successfully", articleId);
 
-      // Actualizar la lista de artículos localmente
+      // Update local articles list
       setArticles((prev) =>
         prev.filter((a) => Number(a.id) !== Number(articleId))
       );
 
-      // Si el artículo eliminado era el que se mostraba, obtener uno nuevo
+      // If the deleted article was being displayed, pick a new one
       if (article && Number(article.id) === Number(articleId)) {
         const remainingArticles = articles.filter(
           (a) => Number(a.id) !== Number(articleId)
@@ -109,16 +107,16 @@ export function RandomArticle({
     }
   };
 
-  // compartir se maneja desde ShareModal
+  // Sharing is handled via ShareModal
 
   const handleMarkAsRead = async () => {
     if (!repository || !article) return;
     setLoadingRead(true);
     try {
-      // Actualizar en backend
-      const useCase = new MarkArticleAsRead(repository);
-      await useCase.execute(Number(article.id), true);
-      // Actualizar en frontend (estado local)
+      // Update in backend
+      const svc = new ArticleService(repository);
+      await svc.markRead(Number(article.id), true);
+      // Update in frontend (local state)
       setArticle({ ...article, isRead: true, readAt: new Date() });
       setArticles((prev) =>
         prev.map((a) =>
@@ -129,7 +127,7 @@ export function RandomArticle({
       );
       setToast(true);
       setTimeout(() => setToast(false), 2000);
-      // Igual que en la tabla: abrir modal de compartir al marcar como leído
+      // Open share modal after marking as read (same behavior as table)
       setShareOpen(true);
     } catch (e) {
       alert("Error al marcar como leído");
@@ -204,12 +202,12 @@ export function RandomArticle({
                       !article.featuredImage ? "loading" : ""
                     }`}
                     onLoad={(e) => {
-                      // Remover clase de loading cuando la imagen carga
+                      // Remove loading class when the image is loaded
                       const target = e.target as HTMLImageElement;
                       target.classList.remove("loading");
                     }}
                     onError={(e) => {
-                      // Si la imagen falla al cargar, mostrar placeholder personalizado
+                      // If the image fails to load, fallback to custom placeholder
                       const target = e.target as HTMLImageElement;
                       target.src = "/placeholder.webp";
                       target.classList.remove("loading");

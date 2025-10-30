@@ -24,7 +24,7 @@ export const Header = () => {
   };
 
   const handleAvatarClick = () => {
-    // En móvil abre el modal, en desktop abre el dropdown
+    // On mobile open modal; on desktop toggle dropdown
     if (window.innerWidth <= 900) {
       setIsAvatarModalOpen(true);
     } else {
@@ -61,7 +61,7 @@ export const Header = () => {
                 </Link>
               )}
               
-              {/* Avatar clickeable con dropdown en desktop y modal en móvil */}
+              {/* Clickable avatar: dropdown on desktop, modal on mobile */}
               <div className="avatar-container" style={{ position: 'relative' }}>
                 {user.user_metadata.avatar_url ? (
                   <img
@@ -82,7 +82,7 @@ export const Header = () => {
                   </span>
                 )}
                 
-                {/* Dropdown para desktop */}
+                {/* Desktop dropdown */}
                 <AvatarDropdown
                   isOpen={isDropdownOpen}
                   onClose={closeDropdown}

@@ -41,7 +41,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
   }
 
   /**
-   * Obtiene los artículos de un usuario usando la relación user_articles y articles
+  * Fetch user articles using the user_articles <-> articles relationship
    * Devuelve los datos en el mismo formato Article[] que el resto de métodos
    */
   async getArticlesByUserFromUserArticles(userId: string): Promise<Article[]> {
@@ -217,8 +217,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
   }
 
   /**
-   * Añade un artículo a articles (si no existe) y lo vincula al usuario en user_articles (si no existe la relación).
-   * Devuelve el artículo completo.
+  * Insert article into articles (if it does not exist) and link it to the user in user_articles (if the relation does not exist).
+  * Returns the full article entity.
    */
   async addArticleToUser(
     title: string,
@@ -240,7 +240,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
       less_15?: boolean;
       featured_image?: string;
     };
-    // 1. Buscar si el artículo ya existe en articles por URL
+    // 1) Look up article by URL in articles
     const { data: existing, error: findError } = await this.supabase
       .from("articles")
       .select("*")
@@ -254,7 +254,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
     if (existing) {
       articleId = existing.id;
       articleRow = existing as ArticleRow;
-      // 1b. Si hay campos nuevos, actualiza el artículo
+      // 1b) If there are new fields, update the existing article
       const needsUpdate =
         (title && title !== existing.title) ||
         (language && language !== existing.language) ||
@@ -348,7 +348,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         );
       }
     }
-    // 4. Devolver el artículo en formato Article
+    // 4) Return article as domain entity
     return {
       id: articleRow.id,
       title: articleRow.title,
@@ -400,7 +400,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         );
       }
 
-      // Verificar si quedan más relaciones para este artículo
+      // Check if any relations remain for this article
       const { data: remainingRelations, error: checkError } =
         await this.supabase
           .from("user_articles")
@@ -412,7 +412,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         return; // Ya eliminamos la relación del usuario, eso es lo importante
       }
 
-      // Si no quedan más relaciones, eliminar el artículo de articles
+      // If no relations remain, delete the orphaned article from articles
       if (!remainingRelations || remainingRelations.length === 0) {
         const { error: deleteArticleError } = await this.supabase
           .from("articles")
@@ -472,7 +472,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
       return this.getArticlesByUserFromUserArticles(userId);
     }
 
-    // Fallback: devolver todos los artículos (no recomendado)
+    // Fallback: return all articles (not recommended)
     console.warn(
       "SupabaseArticleRepository: getArticlesByUser no implementado correctamente"
     );
@@ -493,7 +493,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
       );
     }
 
-    // Fallback: devolver todos los artículos paginados (no recomendado)
+    // Fallback: return all paginated articles (not recommended)
     console.warn(
       "SupabaseArticleRepository: getArticlesByUserPaginated no implementado correctamente"
     );
