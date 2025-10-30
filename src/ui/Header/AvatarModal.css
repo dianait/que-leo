@@ -77,6 +77,31 @@
   width: 100%;
 }
 
+.avatar-modal-link-button {
+  width: 100%;
+  background: #5a6fd8;
+  color: white;
+  border: 1px solid #4a58cc;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.avatar-modal-link-button:hover {
+  background: #4a58cc;
+  border-color: #3e4db6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(90, 111, 216, 0.3);
+}
+
 .avatar-modal-logout-button {
   width: 100%;
   background: #f8f9fa;

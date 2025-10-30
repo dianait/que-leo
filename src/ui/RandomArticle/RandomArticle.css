@@ -22,7 +22,7 @@
   min-height: 180px;
   max-width: 100%;
   margin-bottom: 2rem;
-  padding: 1rem;
+  padding: 2rem;
   border: 1px solid #e3e8f0;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -54,7 +54,7 @@
 
 /* Contenedor de acciones */
 .article-actions-container {
-  margin-top: 16px;
+  margin-top: 8px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -520,7 +520,7 @@
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100vw !important;
-    padding: 0.5rem !important;
+    padding: 1rem 0.5rem 0.5rem 0.5rem !important; /* más padding arriba en móvil */
     box-sizing: border-box;
   }
   .random-article-container {
@@ -533,8 +533,11 @@
 
   /* Estilos responsivos para botones de acción */
   .article-actions-container {
-    flex-direction: column;
+    flex-direction: row;
     gap: 8px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    justify-content: flex-end;
   }
 
   .article-actions-container .app-button {
@@ -544,9 +547,31 @@
   }
 
   /* Botones principales ocupan 100% y sin desplazamiento lateral */
-  .article-link,
-  .article-actions-container .action-button.success {
+  .article-link {
     width: 100%;
     margin-left: 0;
+  }
+
+  /* En la barra de acciones, los tres en una línea; el success no ocupa todo */
+  .article-actions-container .action-button.success {
+    width: auto;
+    max-width: 70%;
+    white-space: nowrap;
+  }
+
+  /* Iconos-only para acciones secundarias (compartir y eliminar) */
+  .article-actions-container .action-button.share,
+  .article-actions-container .action-button.danger {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .article-actions-container .action-button.share .button-text,
+  .article-actions-container .action-button.danger .button-text {
+    display: none;
   }
 }

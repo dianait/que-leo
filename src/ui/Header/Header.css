@@ -183,6 +183,7 @@
   .header-link-nav {
     display: none !important;
   }
+  .header-link-my-articles { display: none !important; }
 }
 
 @media (max-width: 430px) {
@@ -194,7 +195,7 @@
   .header-content {
     padding: 4px;
     box-sizing: border-box;
-    width: 100vw;
+    width: 100%;
     overflow-x: hidden;
   }
   .header-left,

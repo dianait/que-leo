@@ -56,7 +56,7 @@ export const Header = () => {
           <div className="header-right">
             <div className="user-info">
               {hasArticles && (
-                <Link to="/articulos" className="header-link-nav">
+                <Link to="/articulos" className="header-link-nav header-link-my-articles" aria-label="Mis artículos">
                   Mis artículos
                 </Link>
               )}

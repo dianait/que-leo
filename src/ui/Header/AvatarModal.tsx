@@ -28,6 +28,16 @@ export const AvatarModal: React.FC<AvatarModalProps> = ({
         </div>
         <div className="avatar-modal-content">
           <div className="avatar-modal-option">
+            <a
+              href="/articulos"
+              className="avatar-modal-link-button"
+              onClick={onClose}
+              aria-label="Ir a Mis artículos"
+            >
+              📚 Mis artículos
+            </a>
+          </div>
+          <div className="avatar-modal-option">
             <TelegramLinkButton userId={userId} />
           </div>
           <div className="avatar-modal-option">

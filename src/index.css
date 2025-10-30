@@ -14,6 +14,14 @@ body {
   line-height: 1.6;
 }
 
+/* Margen general en móvil */
+@media (max-width: 430px) {
+  body {
+    margin: 0;
+    padding: 8px; /* margen interior uniforme sin cortar el ancho */
+  }
+}
+
 #root {
   min-height: 100vh;
   display: flex;

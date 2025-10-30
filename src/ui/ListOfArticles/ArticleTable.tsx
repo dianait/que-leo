@@ -146,6 +146,16 @@ export function ArticleTable({
     return article.isRead;
   });
 
+  // Ordenar por fecha de lectura cuando el filtro es "read"
+  const displayedArticles =
+    readFilter === "read"
+      ? [...filteredArticles].sort((a, b) => {
+          const aTime = a.readAt ? new Date(a.readAt).getTime() : 0;
+          const bTime = b.readAt ? new Date(b.readAt).getTime() : 0;
+          return bTime - aTime; // descendente: más reciente primero
+        })
+      : filteredArticles;
+
   // Función para cargar todos los artículos (para búsqueda)
   const fetchAllArticles = async () => {
     if (!repository || !user) return;
@@ -283,7 +293,7 @@ export function ArticleTable({
         {/* Filtro por estado de lectura */}
         <div className="read-filter-group">
           <button
-            className={`app-button filter-button ${
+            className={`app-button filter-button filter-all ${
               readFilter === "all" ? "active" : ""
             }`}
             onClick={() => setReadFilter("all")}
@@ -292,7 +302,7 @@ export function ArticleTable({
             📚 Todos
           </button>
           <button
-            className={`app-button filter-button ${
+            className={`app-button filter-button filter-unread ${
               readFilter === "unread" ? "active" : ""
             }`}
             onClick={() => setReadFilter("unread")}
@@ -301,7 +311,7 @@ export function ArticleTable({
             📄 No leídos
           </button>
           <button
-            className={`app-button filter-button ${
+            className={`app-button filter-button filter-read ${
               readFilter === "read" ? "active" : ""
             }`}
             onClick={() => setReadFilter("read")}
@@ -364,7 +374,7 @@ export function ArticleTable({
               </tr>
             </thead>
             <tbody>
-              {filteredArticles.map((article) => (
+              {displayedArticles.map((article) => (
                 <tr
                   key={article.id}
                   className={article.isRead ? "is-read" : ""}
@@ -374,6 +384,8 @@ export function ArticleTable({
                       href={article.url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className="article-title-link"
+                      title={article.title}
                     >
                       {article.title}
                     </a>
@@ -393,7 +405,10 @@ export function ArticleTable({
                             : "Marcar como leído"
                         }
                       >
-                        {article.isRead ? "✅ Leído" : "📖 No leído"}
+                        {article.isRead ? "✅" : "📖"}
+                        <span className="btn-text">
+                          {article.isRead ? " Leído" : " No leído"}
+                        </span>
                       </button>
                       <button
                         className="app-button danger"
@@ -403,7 +418,7 @@ export function ArticleTable({
                         }}
                         title="Borrar artículo"
                       >
-                        🗑️ Borrar
+                        🗑️<span className="btn-text"> Borrar</span>
                       </button>
                     </div>
                   </td>

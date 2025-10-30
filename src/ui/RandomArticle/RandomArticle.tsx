@@ -162,6 +162,36 @@ export function RandomArticle({
                     <span>🎪 ¿Quieres dar otra vuelta a este artículo?</span>
                   </div>
                 )}
+                {/* Barra de acciones arriba de la imagen/título */}
+                <div className="article-actions-container">
+                  {!article.isRead && (
+                    <ActionButton
+                      emoji="✅"
+                      text={loadingRead ? "Marcando..." : "Marcar como leído"}
+                      onClick={handleMarkAsRead}
+                      title="Marcar como leído"
+                      type="success"
+                    />
+                  )}
+                  <ActionButton
+                    emoji="📣"
+                    text="Compartir"
+                    onClick={() => setShareOpen(true)}
+                    title="Abrir opciones para compartir"
+                    type="share"
+                  />
+                  <ActionButton
+                    emoji="🗑️"
+                    text="Eliminar"
+                    onClick={() => {
+                      setArticleToDelete(Number(article.id));
+                      setModalOpen(true);
+                    }}
+                    title="Borrar artículo"
+                    type="danger"
+                  />
+                </div>
+
                 <div className="article-header">
                   <img
                     src={article.featuredImage || "/placeholder.webp"}
@@ -223,34 +253,7 @@ export function RandomArticle({
                     </a>
                   )}
                 </div>
-                <div className="article-actions-container">
-                  <ActionButton
-                    emoji="🔗"
-                    text="Compartir"
-                    onClick={() => setShareOpen(true)}
-                    title="Abrir opciones para compartir"
-                    type="share"
-                  />
-                  {!article.isRead && (
-                    <ActionButton
-                      emoji="✅"
-                      text={loadingRead ? "Marcando..." : "Marcar como leído"}
-                      onClick={handleMarkAsRead}
-                      title="Marcar como leído"
-                      type="success"
-                    />
-                  )}
-                  <ActionButton
-                    emoji="🗑️"
-                    text="Eliminar"
-                    onClick={() => {
-                      setArticleToDelete(Number(article.id));
-                      setModalOpen(true);
-                    }}
-                    title="Borrar artículo"
-                    type="danger"
-                  />
-                </div>
+                
                 {article.less_15 && (
                   <div
                     style={{
@@ -386,6 +389,7 @@ function ActionButton({
       className={`app-button action-button ${type}`}
       onClick={onClick}
       title={title}
+      aria-label={title}
     >
       <span className="button-emoji">{emoji}</span>
       <span className="button-text">{text}</span>
