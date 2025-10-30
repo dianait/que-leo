@@ -18,7 +18,6 @@ export function RandomArticle({
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<number | null>(null);
-  const [toast, setToast] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [loadingRead, setLoadingRead] = useState(false);
 
@@ -100,8 +99,7 @@ export function RandomArticle({
         }
       }
 
-      setToast(true);
-      setTimeout(() => setToast(false), 3000);
+      // no toast
     } catch (error) {
       console.error("Error al borrar artículo:", error);
     }
@@ -109,28 +107,25 @@ export function RandomArticle({
 
   // Sharing is handled via ShareModal
 
-  const handleMarkAsRead = async () => {
+  const handleToggleRead = async () => {
     if (!repository || !article) return;
     setLoadingRead(true);
     try {
-      // Update in backend
+      const nextIsRead = !article.isRead;
       const svc = new ArticleService(repository);
-      await svc.markRead(Number(article.id), true);
-      // Update in frontend (local state)
-      setArticle({ ...article, isRead: true, readAt: new Date() });
+      await svc.markRead(Number(article.id), nextIsRead);
+      const nextArticle = {
+        ...article,
+        isRead: nextIsRead,
+        readAt: nextIsRead ? new Date() : undefined,
+      } as Article;
+      setArticle(nextArticle);
       setArticles((prev) =>
-        prev.map((a) =>
-          Number(a.id) === Number(article.id)
-            ? { ...a, isRead: true, readAt: new Date() }
-            : a
-        )
+        prev.map((a) => (Number(a.id) === Number(article.id) ? nextArticle : a))
       );
-      setToast(true);
-      setTimeout(() => setToast(false), 2000);
-      // Open share modal after marking as read (same behavior as table)
-      setShareOpen(true);
+      // No toast on toggle read in card view
     } catch (e) {
-      alert("Error al marcar como leído");
+      alert("Error al actualizar estado de lectura");
     } finally {
       setLoadingRead(false);
     }
@@ -155,22 +150,25 @@ export function RandomArticle({
           >
             {article ? (
               <>
-                {article.isRead && (
-                  <div className="remember-text">
-                    <span>🎪 ¿Quieres dar otra vuelta a este artículo?</span>
-                  </div>
-                )}
-                {/* Barra de acciones arriba de la imagen/título */}
+                {/* Actions bar above image/title */}
                 <div className="article-actions-container">
-                  {!article.isRead && (
-                    <ActionButton
-                      emoji="✅"
-                      text={loadingRead ? "Marcando..." : "Marcar como leído"}
-                      onClick={handleMarkAsRead}
-                      title="Marcar como leído"
-                      type="success"
-                    />
-                  )}
+                  <ActionButton
+                    emoji={article.isRead ? "✅" : "📖"}
+                    text={
+                      loadingRead
+                        ? "Marcando..."
+                        : article.isRead
+                        ? "Leído"
+                        : "No leído"
+                    }
+                    onClick={handleToggleRead}
+                    title={
+                      article.isRead
+                        ? "Marcar como no leído"
+                        : "Marcar como leído"
+                    }
+                    type={article.isRead ? "success" : undefined}
+                  />
                   <ActionButton
                     emoji="📣"
                     text="Compartir"
@@ -251,7 +249,7 @@ export function RandomArticle({
                     </a>
                   )}
                 </div>
-                
+
                 {article.less_15 && (
                   <div
                     style={{
@@ -352,7 +350,7 @@ export function RandomArticle({
         </button>
       )}
 
-      <Toast message="Artículo borrado correctamente" show={toast} />
+      {/* toast removed */}
       <ConfirmModal
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
@@ -380,11 +378,11 @@ function ActionButton({
   text: string;
   onClick: () => void;
   title: string;
-  type: "linkedin" | "bluesky" | "danger" | "share" | "success";
+  type?: "linkedin" | "bluesky" | "danger" | "share" | "success";
 }) {
   return (
     <button
-      className={`app-button action-button ${type}`}
+      className={`app-button action-button ${type ? type : ""}`}
       onClick={onClick}
       title={title}
       aria-label={title}
@@ -426,10 +424,7 @@ function ConfirmModal({
   );
 }
 
-function Toast({ message, show }: { message: string; show: boolean }) {
-  if (!show) return null;
-  return <div className="toast-notification">{message}</div>;
-}
+// Toast removed
 
 function ShareModal({
   open,

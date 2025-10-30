@@ -57,10 +57,10 @@
   margin-top: 8px;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end; /* align actions to the right */
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* keep buttons in the same row */
 }
 
 .article-actions-container .app-button.action-button {
@@ -69,13 +69,15 @@
   border-radius: 6px;
   font-weight: 500;
   transition: all 0.2s ease;
-  border: none;
+  border: 1px solid #e5e7eb; /* default neutral border */
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 4px;
   justify-content: center;
   height: 40px;
+  background: #f3f4f6; /* default neutral background so it never flashes transparent */
+  color: #374151;
 }
 
 .article-actions-container .action-button.linkedin {
@@ -105,10 +107,11 @@
   background: rgba(40, 167, 69, 0.1);
   color: #28a745;
   border: 1px solid rgba(40, 167, 69, 0.2);
-  width: var(--action-primary-width); /* same width as "Leer artículo" */
-  max-width: 100%;
-  box-sizing: border-box;
 }
+
+/* Keep natural width; container alignment keeps position */
+
+/* When not read, keep neutral style (base .action-button); when read, success overrides to green */
 
 .article-actions-container .action-button.success:hover {
   background: rgba(40, 167, 69, 0.2);
@@ -541,7 +544,7 @@
   }
 
   .article-actions-container .app-button {
-    width: 100%;
+    width: auto; /* keep only necessary width */
     justify-content: center;
     padding: 10px 16px;
   }
@@ -553,11 +556,7 @@
   }
 
   /* En la barra de acciones, los tres en una línea; el success no ocupa todo */
-  .article-actions-container .action-button.success {
-    width: auto;
-    max-width: 70%;
-    white-space: nowrap;
-  }
+  /* Keep success width auto like default */
 
   /* Iconos-only para acciones secundarias (compartir y eliminar) */
   .article-actions-container .action-button.share,
