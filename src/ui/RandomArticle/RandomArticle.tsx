@@ -8,6 +8,7 @@ import { GetArticlesByUser } from "../../application/GetArticlesByUser";
 import { DeleteArticle } from "../../application/DeleteArticle";
 import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
 import { RandomArticleSkeleton } from "../AppSkeleton/AppSkeleton";
+import { MarkArticleAsRead } from "../../application/MarkArticleAsRead";
 
 export function RandomArticle({
   articlesVersion,
@@ -20,6 +21,8 @@ export function RandomArticle({
   const [modalOpen, setModalOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<number | null>(null);
   const [toast, setToast] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [loadingRead, setLoadingRead] = useState(false);
 
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
@@ -106,17 +109,33 @@ export function RandomArticle({
     }
   };
 
-  const handleShareToLinkedIn = (article: Article) => {
-    const url = encodeURIComponent(article.url);
-    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-    window.open(linkedinUrl, "_blank", "noopener,noreferrer");
-  };
+  // compartir se maneja desde ShareModal
 
-  const handleShareToBluesky = (article: Article) => {
-    const shareText = encodeURIComponent(`¡He leído: ${article.title}!`);
-    const url = encodeURIComponent(article.url);
-    const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
-    window.open(blueskyUrl, "_blank", "noopener,noreferrer");
+  const handleMarkAsRead = async () => {
+    if (!repository || !article) return;
+    setLoadingRead(true);
+    try {
+      // Actualizar en backend
+      const useCase = new MarkArticleAsRead(repository);
+      await useCase.execute(Number(article.id), true);
+      // Actualizar en frontend (estado local)
+      setArticle({ ...article, isRead: true, readAt: new Date() });
+      setArticles((prev) =>
+        prev.map((a) =>
+          Number(a.id) === Number(article.id)
+            ? { ...a, isRead: true, readAt: new Date() }
+            : a
+        )
+      );
+      setToast(true);
+      setTimeout(() => setToast(false), 2000);
+      // Igual que en la tabla: abrir modal de compartir al marcar como leído
+      setShareOpen(true);
+    } catch (e) {
+      alert("Error al marcar como leído");
+    } finally {
+      setLoadingRead(false);
+    }
   };
 
   function getFlagEmoji(language?: string) {
@@ -206,19 +225,21 @@ export function RandomArticle({
                 </div>
                 <div className="article-actions-container">
                   <ActionButton
-                    emoji="💼"
-                    text="LinkedIn"
-                    onClick={() => handleShareToLinkedIn(article)}
-                    title="Compartir en LinkedIn"
-                    type="linkedin"
+                    emoji="🔗"
+                    text="Compartir"
+                    onClick={() => setShareOpen(true)}
+                    title="Abrir opciones para compartir"
+                    type="share"
                   />
-                  <ActionButton
-                    emoji="🦋"
-                    text="Bluesky"
-                    onClick={() => handleShareToBluesky(article)}
-                    title="Compartir en Bluesky"
-                    type="bluesky"
-                  />
+                  {!article.isRead && (
+                    <ActionButton
+                      emoji="✅"
+                      text={loadingRead ? "Marcando..." : "Marcar como leído"}
+                      onClick={handleMarkAsRead}
+                      title="Marcar como leído"
+                      type="success"
+                    />
+                  )}
                   <ActionButton
                     emoji="🗑️"
                     text="Eliminar"
@@ -338,6 +359,11 @@ export function RandomArticle({
           if (articleToDelete !== null) handleDelete(articleToDelete);
         }}
       />
+      <ShareModal
+        open={shareOpen}
+        article={article}
+        onClose={() => setShareOpen(false)}
+      />
     </div>
   );
 }
@@ -353,7 +379,7 @@ function ActionButton({
   text: string;
   onClick: () => void;
   title: string;
-  type: "linkedin" | "bluesky" | "danger";
+  type: "linkedin" | "bluesky" | "danger" | "share" | "success";
 }) {
   return (
     <button
@@ -401,4 +427,53 @@ function ConfirmModal({
 function Toast({ message, show }: { message: string; show: boolean }) {
   if (!show) return null;
   return <div className="toast-notification">{message}</div>;
+}
+
+function ShareModal({
+  open,
+  article,
+  onClose,
+}: {
+  open: boolean;
+  article: Article | null;
+  onClose: () => void;
+}) {
+  if (!open || !article) return null;
+  const shareText = encodeURIComponent(`¡He leído: ${article.title}!`);
+  const url = encodeURIComponent(article.url);
+  const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content" style={{ position: "relative" }}>
+        <button className="modal-close" onClick={onClose} title="Cerrar">
+          <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>
+            ×
+          </span>
+        </button>
+        <h2>Comparte este artículo</h2>
+        <p>Elige una red para compartirlo:</p>
+        <div className="share-buttons-row">
+          <a
+            href={blueskyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="share-button bluesky"
+          >
+            <img src="/blusky.svg" alt="Bluesky" className="share-icon" />
+            Bluesky
+          </a>
+          <a
+            href={linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="share-button linkedin"
+          >
+            <img src="/linkedin.svg" alt="LinkedIn" className="share-icon" />
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -74,7 +74,6 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  min-width: 100px;
   justify-content: center;
   height: 40px;
 }
@@ -101,6 +100,23 @@
   transform: translateY(-1px);
 }
 
+/* Nuevo: botón éxito (Marcar como leído) con verde de la paleta */
+.article-actions-container .action-button.success {
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+  border: 1px solid rgba(40, 167, 69, 0.2);
+  width: var(--action-primary-width); /* igual que Leer artículo */
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.article-actions-container .action-button.success:hover {
+  background: rgba(40, 167, 69, 0.2);
+  color: #1f8a3a;
+  border-color: #1f8a3a;
+  transform: translateY(-1px);
+}
+
 .article-actions-container .action-button.danger {
   background: rgba(220, 53, 69, 0.1);
   color: #dc3545;
@@ -109,6 +125,19 @@
 
 .article-actions-container .action-button.danger:hover {
   background: rgba(220, 53, 69, 0.2);
+  transform: translateY(-1px);
+}
+
+.article-actions-container .action-button.share {
+  background: rgba(52, 144, 220, 0.09); /* azul clarito */
+  color: #2983cc;
+  border: 1px solid rgba(96, 165, 250, 0.25);
+}
+
+.article-actions-container .action-button.share:hover {
+  background: rgba(52, 144, 220, 0.2);
+  color: #186499;
+  border-color: rgba(24, 100, 153, 0.45);
   transform: translateY(-1px);
 }
 
@@ -127,8 +156,15 @@
   border-radius: 5px;
   cursor: pointer;
   text-align: center;
-  display: inline-block;
+  display: flex; /* alinear como botón */
+  align-items: center;
+  justify-content: center;
+  width: var(--action-primary-width); /* ancho unificado */
+  max-width: 100%;
+  height: 40px; /* misma altura que los action-button */
+  box-sizing: border-box; /* incluir padding/borde en el ancho */
   margin-top: 8px;
+  margin-left: 10px;
 }
 
 .article-link:hover {
@@ -389,6 +425,94 @@
   color: #6c757d;
 }
 
+/* Modal de compartir */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 14px;
+  padding: 32px 28px;
+  box-shadow: 0 4px 32px rgba(90, 111, 216, 0.18);
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.3em;
+  color: #888;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.share-buttons-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 18px 0;
+}
+
+.share-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  text-decoration: none;
+  color: #fff;
+  background: #888;
+  border: none;
+  transition: background 0.18s;
+  min-width: 140px;
+  min-height: 44px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+}
+
+.share-button .share-icon {
+  width: 26px;
+  height: 26px;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+
+.share-button.bluesky {
+  background: #0072ff;
+}
+.share-button.bluesky:hover {
+  background: #005bb5;
+}
+
+.share-button.linkedin {
+  background: #0077b5;
+}
+.share-button.linkedin:hover {
+  background: #005983;
+}
+
+/* Variable para controlar el ancho de acciones principales */
+:root {
+  --action-primary-width: 240px;
+}
+
 @media (max-width: 430px) {
   .content-card.random-article-card,
   .random-article-button,
@@ -417,5 +541,12 @@
     width: 100%;
     justify-content: center;
     padding: 10px 16px;
+  }
+
+  /* Botones principales ocupan 100% y sin desplazamiento lateral */
+  .article-link,
+  .article-actions-container .action-button.success {
+    width: 100%;
+    margin-left: 0;
   }
 }

@@ -130,13 +130,21 @@ export function ArticleTable({
   const [searchTerm, setSearchTerm] = useState("");
   const [allArticles, setAllArticles] = useState<Article[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [readFilter, setReadFilter] = useState<"all" | "unread" | "read">(
+    "all"
+  );
 
-  // Filtrar artículos basándose en el término de búsqueda
-  const filteredArticles = searchTerm 
+  // Construir base según búsqueda y aplicar filtro de lectura
+  const base = searchTerm
     ? allArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : articles;
+  const filteredArticles = base.filter((article) => {
+    if (readFilter === "all") return true;
+    if (readFilter === "unread") return !article.isRead;
+    return article.isRead;
+  });
 
   // Función para cargar todos los artículos (para búsqueda)
   const fetchAllArticles = async () => {
@@ -254,25 +262,15 @@ export function ArticleTable({
         <AddArticle setArticlesVersion={setArticlesVersion} />
       </div>
 
-      {/* Campo de búsqueda */}
-      <div style={{ marginBottom: "20px" }}>
-        <div style={{ position: "relative", maxWidth: "400px" }}>
+      {/* Búsqueda y filtros */}
+      <div className="search-controls">
+        <div className="search-input">
           <input
             type="text"
             placeholder="Buscar por título..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px 16px",
-              paddingLeft: "40px",
-              border: "2px solid #e1e5e9",
-              borderRadius: "8px",
-              fontSize: "16px",
-              outline: "none",
-              transition: "border-color 0.2s ease",
-              backgroundColor: "#fff",
-            }}
+            className="search-input-field"
             onFocus={(e) => {
               e.target.style.borderColor = "#5a6fd8";
             }}
@@ -280,18 +278,37 @@ export function ArticleTable({
               e.target.style.borderColor = "#e1e5e9";
             }}
           />
-          <span
-            style={{
-              position: "absolute",
-              left: "12px",
-              top: "50%",
-              transform: "translateY(-50%)",
-              fontSize: "18px",
-              color: "#6c757d",
-            }}
+          <span className="search-input-icon">🔍</span>
+        </div>
+        {/* Filtro por estado de lectura */}
+        <div className="read-filter-group">
+          <button
+            className={`app-button filter-button ${
+              readFilter === "all" ? "active" : ""
+            }`}
+            onClick={() => setReadFilter("all")}
+            title="Mostrar todos"
           >
-            🔍
-          </span>
+            📚 Todos
+          </button>
+          <button
+            className={`app-button filter-button ${
+              readFilter === "unread" ? "active" : ""
+            }`}
+            onClick={() => setReadFilter("unread")}
+            title="Solo no leídos"
+          >
+            📄 No leídos
+          </button>
+          <button
+            className={`app-button filter-button ${
+              readFilter === "read" ? "active" : ""
+            }`}
+            onClick={() => setReadFilter("read")}
+            title="Solo leídos"
+          >
+            ✅ Leídos
+          </button>
         </div>
         {searchTerm && (
           <div style={{ marginTop: "8px", fontSize: "14px", color: "#6c757d" }}>

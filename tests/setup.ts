@@ -1,5 +1,6 @@
 // Polyfills para el entorno de testing
 import { TextEncoder, TextDecoder } from "util";
+import "@testing-library/jest-dom";
 import { User } from "@supabase/supabase-js";
 import { AuthContextType } from "../src/domain/AuthContext";
 
