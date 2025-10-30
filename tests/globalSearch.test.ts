@@ -1,4 +1,4 @@
-// Test para la funcionalidad de búsqueda global en ArticleTable
+// Test for global search functionality in ArticleTable
 describe("Búsqueda Global en ArticleTable", () => {
   const mockArticles = [
     {
@@ -52,10 +52,10 @@ describe("Búsqueda Global en ArticleTable", () => {
 
     it("debería usar artículos paginados cuando no hay término de búsqueda", () => {
       const searchTerm = "";
-      const paginatedArticles = mockArticles.slice(0, 2); // Simular paginación
+      const paginatedArticles = mockArticles.slice(0, 2); // Simulate pagination
       
-      // Simular la lógica del componente: si hay término de búsqueda, usar todos los artículos
-      // Si no hay término, usar artículos paginados
+      // Component logic: if there's a search term, use all articles
+      // Otherwise, use paginated articles
       const filteredArticles = searchTerm.trim() !== ""
         ? mockArticles.filter((article) =>
             article.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -69,7 +69,7 @@ describe("Búsqueda Global en ArticleTable", () => {
 
     it("debería buscar en todos los artículos cuando hay término de búsqueda", () => {
       const searchTerm = "script";
-      const allArticles = mockArticles; // Todos los artículos cargados
+      const allArticles = mockArticles; // All loaded articles
       const filteredArticles = allArticles.filter((article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -85,7 +85,7 @@ describe("Búsqueda Global en ArticleTable", () => {
       let isSearching = true;
       let allArticles: typeof mockArticles = [];
       
-      // Simular estado inicial de búsqueda
+      // Simulate initial search state
       expect(isSearching).toBe(true);
       expect(allArticles).toHaveLength(0);
       
@@ -101,7 +101,7 @@ describe("Búsqueda Global en ArticleTable", () => {
       let searchTerm = "JavaScript";
       let allArticles = mockArticles;
       
-      // Simular limpiar búsqueda
+      // Simulate clearing search
       searchTerm = "";
       allArticles = [];
       

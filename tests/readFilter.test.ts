@@ -1,4 +1,4 @@
-// Tests para la lógica de filtrado por estado de lectura
+// Tests for read-state filtering logic
 
 type TestArticle = {
   id: number;

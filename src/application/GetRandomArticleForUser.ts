@@ -11,7 +11,7 @@ export class GetRandomArticleForUser {
   async execute(userId: string): Promise<Article | null> {
     let articles: Article[];
 
-    // Usar método avanzado si está disponible, sino usar el básico
+    // Use advanced method if available, otherwise the basic one
     if (
       typeof this.repository.getArticlesByUserFromUserArticles === "function"
     ) {

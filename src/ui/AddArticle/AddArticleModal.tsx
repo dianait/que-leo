@@ -14,7 +14,7 @@ import {
 } from "../../infrastructure/services/MetadataService";
 import "./AddArticle.css";
 
-// Modal simple
+// Simple modal
 const Modal = forwardRef<
   HTMLDivElement,
   {
@@ -85,16 +85,16 @@ export const AddArticle: React.FC<{
     }
 
     try {
-      // Extraer metadatos automáticamente en segundo plano
+      // Extract metadata in the background
       let metadata: ArticleMetadata | null = null;
       try {
         metadata = await MetadataService.extractMetadata(finalUrl);
-        // Si se extrajo el título automáticamente, usarlo si el usuario no ingresó uno
+        // If the title was extracted automatically, use it when empty
         if (!title.trim() && metadata.title) {
           setTitle(metadata.title);
         }
       } catch (metadataError) {
-        // Si falla la extracción de metadatos, continuamos sin ellos
+        // If metadata extraction fails, proceed without it
         console.warn("No se pudieron extraer metadatos:", metadataError);
       }
 
@@ -112,7 +112,7 @@ export const AddArticle: React.FC<{
       setSuccess("¡Artículo añadido con éxito!");
       setTitle("");
       setUrl("");
-      // Actualizar la versión de artículos para refrescar la lista
+      // Update article list version to refresh the table
       if (setArticlesVersion) {
         setArticlesVersion((v) => v + 1);
       }

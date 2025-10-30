@@ -13,7 +13,7 @@ test.describe("Filtro de lectura en Artículos (E2E)", () => {
     await expect(page).toHaveURL(/articulos/);
     await expect(page.locator(".articles-table-container")).toBeVisible();
 
-    // Asegurar que están los botones
+    // Ensure buttons are visible
     const todosBtn = page.getByRole("button", { name: /📚 Todos/ });
     const unreadBtn = page.getByRole("button", { name: /📄 No leídos/ });
     const readBtn = page.getByRole("button", { name: /✅ Leídos/ });
@@ -21,12 +21,12 @@ test.describe("Filtro de lectura en Artículos (E2E)", () => {
     await expect(unreadBtn).toBeVisible();
     await expect(readBtn).toBeVisible();
 
-    // Cambiar a no leídos
+    // Switch to unread
     await unreadBtn.click();
-    // Ver que al menos hay filas y contienen "No leído" o que el filtro cambió el estado del botón activo
+    // Expect rows or button active state to reflect filter
     await expect(unreadBtn).toHaveClass(/active|success/);
 
-    // Cambiar a leídos
+    // Switch to read
     await readBtn.click();
     await expect(readBtn).toHaveClass(/active|success/);
 

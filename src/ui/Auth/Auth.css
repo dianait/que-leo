@@ -111,7 +111,7 @@
   gap: 10px;
 }
 
-/* Botón de GitHub */
+/* GitHub button */
 .auth-button.github-button {
   background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
   color: white;
@@ -141,7 +141,7 @@
   filter: invert(1) brightness(2);
 }
 
-/* Botón de Google */
+/* Google button */
 .auth-button.google-button {
   background: white;
   color: #333;

@@ -1,4 +1,4 @@
-// Test para la funcionalidad de búsqueda en ArticleTable
+// Test for search functionality in ArticleTable
 describe("Article Search Functionality", () => {
   const mockArticles = [
     {

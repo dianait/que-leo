@@ -8,7 +8,7 @@ export async function loginWithGitHub(
   await page.goto("/");
   await page.getByText(/Continuar con GitHub/).click();
 
-  // Espera a la página de GitHub
+  // Wait for GitHub login page
   await page.waitForURL(/github.com\/login/);
 
   // Completa el formulario de GitHub
@@ -16,7 +16,7 @@ export async function loginWithGitHub(
   await page.fill('input[name="password"]', password);
   await page.click('input[name="commit"]');
 
-  // Espera a que aparezca el botón de Authorize si es necesario
+  // Wait for Authorize button if present
   const authorizeButton = page.locator('button[name="authorize"]');
   if (await authorizeButton.isVisible({ timeout: 4000 }).catch(() => false)) {
     await authorizeButton.click();

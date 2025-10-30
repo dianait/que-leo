@@ -150,7 +150,7 @@ export function ArticleTable({
       ? [...filteredArticles].sort((a, b) => {
           const aTime = a.readAt ? new Date(a.readAt).getTime() : 0;
           const bTime = b.readAt ? new Date(b.readAt).getTime() : 0;
-          return bTime - aTime; // descendente: más reciente primero
+          return bTime - aTime; // descending: most recent first
         })
       : filteredArticles;
 
@@ -270,7 +270,7 @@ export function ArticleTable({
         <AddArticle setArticlesVersion={setArticlesVersion} />
       </div>
 
-      {/* Búsqueda y filtros */}
+      {/* Search and filters */}
       <div className="search-controls">
         <div className="search-input">
           <input
@@ -425,7 +425,7 @@ export function ArticleTable({
             </tbody>
           </table>
 
-          {/* Mensaje cuando no hay resultados de búsqueda */}
+          {/* Message when there are no search results */}
           {searchTerm && filteredArticles.length === 0 && (
             <div
               style={{

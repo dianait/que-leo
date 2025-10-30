@@ -1,14 +1,13 @@
 import { createContext, useContext } from "react";
 import type { ArticleRepository } from "./ArticleRepository";
 
-// Creamos el Context con un valor por defecto nulo.
+// Create the Context with a null default value.
 export const ArticleRepositoryContext = createContext<ArticleRepository | null>(
   null
 );
 
-// Hook personalizado para usar el contexto.
-// Lanza un error si se intenta usar fuera de un proveedor,
-// lo que previene errores por no tener un repositorio configurado.
+// Custom hook to use the context.
+// Throws if used outside a provider, preventing misconfiguration.
 export const useArticleRepository = (): ArticleRepository => {
   const context = useContext(ArticleRepositoryContext);
   if (!context) {

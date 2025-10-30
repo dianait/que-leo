@@ -91,7 +91,7 @@ body {
   font-weight: 600;
 }
 
-/* Botón principal */
+/* Primary button */
 .modern-button {
   margin: 1rem 0 0 0;
   padding: 0.8rem 1.2rem;
@@ -136,7 +136,7 @@ body {
   }
 }
 
-/* Área reservada para contenido dinámico */
+/* Reserved area for dynamic content */
 .dynamic-content-area {
   min-height: 300px;
   display: flex;

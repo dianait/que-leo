@@ -245,7 +245,7 @@ export function RandomArticle({
                       className="article-link"
                       onClick={(e) => handleArticleClick(article.url, e)}
                     >
-                      🔗 Leer artículo
+                      🔗 Leer
                     </a>
                   )}
                 </div>
@@ -277,17 +277,17 @@ export function RandomArticle({
                     }}
                   >
                     {article.topics.map((tag, idx) => {
-                      // Paleta de colores pastel
+                      // Pastel color palette
                       const colors = [
-                        "#E0E7FF", // azul
-                        "#FDE68A", // amarillo
-                        "#FCA5A5", // rojo
-                        "#6EE7B7", // verde
-                        "#FBCFE8", // rosa
-                        "#A7F3D0", // turquesa
-                        "#F9A8D4", // fucsia
-                        "#FCD34D", // naranja
-                        "#C7D2FE", // lila
+                        "#E0E7FF", // blue
+                        "#FDE68A", // yellow
+                        "#FCA5A5", // red
+                        "#6EE7B7", // green
+                        "#FBCFE8", // pink
+                        "#A7F3D0", // turquoise
+                        "#F9A8D4", // fuchsia
+                        "#FCD34D", // orange
+                        "#C7D2FE", // lilac
                         "#FECACA", // coral
                       ];
                       const bgColor = colors[idx % colors.length];

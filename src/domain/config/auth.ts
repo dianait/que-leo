@@ -1,28 +1,28 @@
-// Configuración de URLs de autenticación
+// Auth URL configuration
 export const AUTH_CONFIG = {
-  // URL de redirección después del login exitoso
-  // Detecta automáticamente el entorno
+  // Redirect URL after successful login
+  // Auto-detect environment
   REDIRECT_URL: (() => {
-    // Si hay una variable de entorno específica, úsala
+    // If a specific env var exists, use it
     if (import.meta.env.VITE_AUTH_REDIRECT_URL) {
       return import.meta.env.VITE_AUTH_REDIRECT_URL;
     }
 
-    // En desarrollo local, siempre usa localhost
+    // In local development always use localhost
     if (import.meta.env.DEV || window.location.hostname === 'localhost') {
       return window.location.origin;
     }
 
-    // En producción, usa la URL de producción
+    // In production, use production URL
     return "https://que-leo.vercel.app";
   })(),
 
-  // URLs permitidas para redirección (configurar en Supabase Dashboard)
+  // Allowed redirect URLs (configure in Supabase Dashboard)
   ALLOWED_REDIRECT_URLS: [
-    "http://localhost:5173", // Desarrollo local
-    "http://localhost:5174", // Puerto alternativo
-    "http://localhost:5175", // Puerto alternativo
-    "http://localhost:3000", // Puerto alternativo
-    "https://que-leo.vercel.app", // Tu dominio de producción
+    "http://localhost:5173", // local dev
+    "http://localhost:5174", // alternate port
+    "http://localhost:5175", // alternate port
+    "http://localhost:3000", // alternate port
+    "https://que-leo.vercel.app", // production domain
   ],
 };

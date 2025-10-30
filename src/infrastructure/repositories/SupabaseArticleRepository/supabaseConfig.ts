@@ -6,7 +6,7 @@ export const createSupabaseClient = (
   supabaseUrl?: string,
   supabaseKey?: string
 ): SupabaseClient => {
-  // Si ya existe una instancia, la retornamos
+  // If an instance already exists, return it
   if (supabaseClient) {
     return supabaseClient;
   }
@@ -24,7 +24,7 @@ export const createSupabaseClient = (
   return supabaseClient;
 };
 
-// Función para resetear el cliente (útil para tests)
+// Function to reset the client (useful for tests)
 export const resetSupabaseClient = () => {
   supabaseClient = null;
 };

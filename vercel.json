@@ -4,6 +4,9 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "regions": ["cdg1"],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
   "env": {
     "NODE_ENV": "production"
   }

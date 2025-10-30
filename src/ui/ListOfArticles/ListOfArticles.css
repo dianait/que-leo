@@ -242,7 +242,7 @@
 .search-input {
   position: relative;
   max-width: 400px;
-  flex: 0 0 400px; /* queda en una línea con el filtro */
+  flex: 0 0 400px; /* stays on one line with the filter */
 }
 .search-input-field {
   width: 100%;
@@ -284,7 +284,7 @@
   border-color: #cfd6e1;
 }
 .filter-button.active {
-  background: #dfe4ff; /* más intenso */
+  background: #dfe4ff; /* more intense */
   color: #2d3fb7;
   border-color: #5a6fd8;
   box-shadow: 0 3px 12px rgba(90, 111, 216, 0.28);
@@ -372,7 +372,7 @@
   }
   .articles-table th,
   .articles-table td {
-    padding: 10px 6px !important; /* más aire vertical */
+    padding: 10px 6px !important; /* more vertical spacing */
     font-size: 0.95em !important;
   }
   .articles-table th {
@@ -388,7 +388,7 @@
   .articles-table td:nth-child(3) {
     display: none;
   }
-  /* Asegurar que la columna de Acciones (última) siempre se muestre */
+  /* Ensure last column (Actions) is always visible */
   .articles-table th:last-child,
   .articles-table td:last-child {
     display: table-cell;

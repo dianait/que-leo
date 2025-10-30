@@ -24,14 +24,14 @@ describe("Share Functions", () => {
     featuredImage: null,
   };
 
-  // Función simulada para LinkedIn
+  // Mock function for LinkedIn
   const handleShareToLinkedIn = (article: typeof mockArticle) => {
     const url = encodeURIComponent(article.url);
     const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
     window.open(linkedinUrl, "_blank", "noopener,noreferrer");
   };
 
-  // Función simulada para Bluesky
+  // Mock function for Bluesky
   const handleShareToBluesky = (article: typeof mockArticle) => {
     const shareText = encodeURIComponent(`¡He leído: ${article.title}!`);
     const url = encodeURIComponent(article.url);

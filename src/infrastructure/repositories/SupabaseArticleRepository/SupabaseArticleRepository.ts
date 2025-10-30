@@ -35,7 +35,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
     return SupabaseArticleRepository.instance;
   }
 
-  // Método para resetear la instancia (útil para tests)
+  // Method to reset the instance (useful for tests)
   public static resetInstance(): void {
     SupabaseArticleRepository.instance = null;
   }
@@ -286,7 +286,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         articleRow = updated as ArticleRow;
       }
     } else {
-      // 2. Insertar en articles
+      // 2) Insert into articles
       const { data: inserted, error: insertError } = await this.supabase
         .from("articles")
         .insert([
@@ -310,7 +310,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
       articleId = inserted.id;
       articleRow = inserted as ArticleRow;
     }
-    // 3. Insertar en user_articles si no existe la relación
+    // 3) Insert into user_articles if the relation doesn't exist
     type UserArticleRow = {
       id: number;
       user_id: string;
@@ -353,7 +353,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
       id: articleRow.id,
       title: articleRow.title,
       url: articleRow.url,
-      dateAdded: new Date(), // No tenemos el added_at exacto aquí
+      dateAdded: new Date(), // Not the exact added_at here
       isRead: false,
       readAt: undefined,
       language: articleRow.language,
@@ -387,7 +387,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
 
   async deleteArticle(articleId: number, userId: string): Promise<void> {
     try {
-      // Eliminar la relación en user_articles (nueva estructura)
+      // Delete relation in user_articles (new structure)
       const { error: userArticleError } = await this.supabase
         .from("user_articles")
         .delete()
@@ -409,7 +409,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
 
       if (checkError) {
         console.warn("Error verificando relaciones restantes:", checkError);
-        return; // Ya eliminamos la relación del usuario, eso es lo importante
+        return; // User relation already removed; that's what matters
       }
 
       // If no relations remain, delete the orphaned article from articles
@@ -432,7 +432,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
     }
   }
 
-  // Métodos básicos requeridos por la interfaz ArticleRepository
+  // Basic methods required by ArticleRepository
   async getAllArticles(): Promise<Article[]> {
     try {
       const { data, error } = await this.supabase
@@ -449,7 +449,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         title: row.title as string,
         url: row.url as string,
         dateAdded: new Date(row.created_at as string),
-        isRead: false, // No tenemos esta información sin user_articles
+        isRead: false, // Not available without user_articles
         readAt: undefined,
         language: row.language as string | undefined,
         authors: row.authors as string[] | undefined,
@@ -467,7 +467,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
   }
 
   async getArticlesByUser(userId: string): Promise<Article[]> {
-    // Usar el método avanzado si está disponible
+    // Use advanced method when available
     if (typeof this.getArticlesByUserFromUserArticles === "function") {
       return this.getArticlesByUserFromUserArticles(userId);
     }
@@ -484,7 +484,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
     limit: number,
     offset: number
   ): Promise<{ articles: Article[]; total: number }> {
-    // Usar el método avanzado si está disponible
+    // Use advanced method when available
     if (typeof this.getArticlesByUserFromUserArticlesPaginated === "function") {
       return this.getArticlesByUserFromUserArticlesPaginated(
         userId,
@@ -514,7 +514,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
     less_15?: boolean | null,
     featuredImage?: string | null
   ): Promise<Article> {
-    // Usar el método avanzado si está disponible
+    // Use advanced method when available
     if (typeof this.addArticleToUser === "function") {
       return this.addArticleToUser(
         title,
@@ -528,7 +528,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
       );
     }
 
-    // Fallback: insertar directamente en articles
+    // Fallback: insert directly into articles
     try {
       const { data, error } = await this.supabase
         .from("articles")

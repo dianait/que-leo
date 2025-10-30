@@ -7,7 +7,7 @@ import { AuthContextType } from "../src/domain/AuthContext";
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder as any;
 
-// Mock de ResizeObserver si no está disponible
+// Mock ResizeObserver if it's not available
 if (!global.ResizeObserver) {
   global.ResizeObserver = class ResizeObserver {
     observe() {}
@@ -16,7 +16,7 @@ if (!global.ResizeObserver) {
   };
 }
 
-// Mock de IntersectionObserver si no está disponible
+// Mock IntersectionObserver if it's not available
 if (!global.IntersectionObserver) {
   global.IntersectionObserver = class IntersectionObserver {
     root: Element | null = null;

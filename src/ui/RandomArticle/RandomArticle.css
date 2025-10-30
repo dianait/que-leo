@@ -22,7 +22,7 @@
   min-height: 180px;
   max-width: 100%;
   margin-bottom: 2rem;
-  padding: 2rem;
+  padding: 1.25rem; /* slightly tighter on desktop */
   border: 1px solid #e3e8f0;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -61,6 +61,7 @@
   align-items: center;
   gap: 8px;
   flex-wrap: nowrap; /* keep buttons in the same row */
+  margin-bottom: 12px; /* give some air from the image on desktop */
 }
 
 .article-actions-container .app-button.action-button {
@@ -159,7 +160,7 @@
   border-radius: 5px;
   cursor: pointer;
   text-align: center;
-  display: flex; /* alinear como botón */
+  display: flex; /* align like a button */
   align-items: center;
   justify-content: center;
   width: var(--action-primary-width); /* ancho unificado */
@@ -201,7 +202,7 @@
   display: inline-block;
 }
 
-/* Botón */
+/* Primary button */
 .random-article-button,
 .telegram-link-button {
   width: 100%;
@@ -278,7 +279,7 @@
   color: #555 !important;
 }
 
-/* Elementos específicos */
+/* Specific elements */
 .article-header {
   width: 100%;
   margin-bottom: 16px;
@@ -534,7 +535,7 @@
     display: none !important;
   }
 
-  /* Estilos responsivos para botones de acción */
+  /* Responsive styles for action buttons */
   .article-actions-container {
     flex-direction: row;
     gap: 8px;
@@ -555,7 +556,6 @@
     margin-left: 0;
   }
 
-  /* En la barra de acciones, los tres en una línea; el success no ocupa todo */
   /* Keep success width auto like default */
 
   /* Iconos-only para acciones secundarias (compartir y eliminar) */

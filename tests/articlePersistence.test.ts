@@ -1,4 +1,4 @@
-// Test para verificar el comportamiento persistente del artículo
+// Test to verify persistent behavior of the selected article
 describe("Article Persistence Behavior", () => {
 
   const mockArticles = [
@@ -46,11 +46,11 @@ describe("Article Persistence Behavior", () => {
 
   describe("Article Selection Logic", () => {
     it("should only select an article when none is currently selected", () => {
-      // Simular la lógica del useEffect
+      // Simulate useEffect logic
       let currentArticle: typeof mockArticles[0] | null = null;
       const articles = mockArticles;
 
-      // Primera vez: no hay artículo seleccionado
+      // First time: no article selected
       if (!currentArticle && articles.length > 0) {
         const filtered = articles.filter((a) => !a.isRead);
         if (filtered.length > 0) {
@@ -63,7 +63,7 @@ describe("Article Persistence Behavior", () => {
       expect(currentArticle).toHaveProperty("id");
       expect(currentArticle).toHaveProperty("title");
 
-      // Segunda vez: ya hay artículo seleccionado, no debería cambiar
+      // Second time: already selected, should not change
       const previousArticle = currentArticle;
       if (!currentArticle && articles.length > 0) {
         const filtered = articles.filter((a) => !a.isRead);
@@ -73,7 +73,7 @@ describe("Article Persistence Behavior", () => {
         }
       }
 
-      // El artículo debería seguir siendo el mismo
+      // Article should remain the same
       expect(currentArticle).toBe(previousArticle);
     });
 
@@ -81,21 +81,21 @@ describe("Article Persistence Behavior", () => {
       let currentArticle: typeof mockArticles[0] | null = null;
       let articles: typeof mockArticles = [mockArticles[0]];
 
-      // Seleccionar artículo inicial
+      // Select initial article
       if (!currentArticle && articles.length > 0) {
         const filtered = articles.filter((a) => !a.isRead);
         if (filtered.length > 0) {
-          currentArticle = filtered[0]; // Seleccionar el primer artículo
+          currentArticle = filtered[0]; // Select first article
         }
       }
 
       const initialArticle = currentArticle;
       expect(initialArticle).toBeTruthy();
 
-      // Simular actualización de artículos (nuevos artículos agregados)
+      // Simulate article updates (new ones added)
       articles = [...mockArticles];
 
-      // Verificar que el artículo no cambia automáticamente
+      // Verify article does not change automatically
       if (!currentArticle && articles.length > 0) {
         const filtered = articles.filter((a) => !a.isRead);
         if (filtered.length > 0) {
@@ -104,7 +104,7 @@ describe("Article Persistence Behavior", () => {
         }
       }
 
-      // El artículo debería seguir siendo el mismo
+      // Article should remain the same
       expect(currentArticle).toBe(initialArticle);
     });
 
@@ -112,24 +112,24 @@ describe("Article Persistence Behavior", () => {
       let currentArticle: typeof mockArticles[0] | null = null;
       const articles = mockArticles;
 
-      // Seleccionar artículo inicial
+      // Select initial article
       if (!currentArticle && articles.length > 0) {
         const filtered = articles.filter((a) => !a.isRead);
         if (filtered.length > 0) {
-          currentArticle = filtered[0]; // Seleccionar el primer artículo
+          currentArticle = filtered[0]; // Select first article
         }
       }
 
       const initialArticle = currentArticle;
       expect(initialArticle).toBeTruthy();
 
-      // Simular clic en "Dame otro" (función handleGetRandomArticle)
+      // Simulate click on "Dame otro" (handleGetRandomArticle)
       const handleGetRandomArticle = () => {
         const filtered = articles.filter((a) => !a.isRead);
         if (filtered.length === 0) {
           currentArticle = null;
         } else {
-          // Forzar selección de un artículo diferente
+          // Force selecting a different article
           const availableArticles = filtered.filter(a => a.id !== currentArticle?.id);
           if (availableArticles.length > 0) {
             const randomIndex = Math.floor(Math.random() * availableArticles.length);
@@ -138,10 +138,10 @@ describe("Article Persistence Behavior", () => {
         }
       };
 
-      // Ejecutar la función
+      // Execute function
       handleGetRandomArticle();
 
-      // Ahora el artículo debería haber cambiado (si hay más de un artículo)
+      // Now the article should change (if more than one article)
       expect(currentArticle).toBeTruthy();
       if (articles.length > 1) {
         expect(currentArticle).not.toBe(initialArticle);
@@ -151,25 +151,25 @@ describe("Article Persistence Behavior", () => {
 
   describe("Article Deletion Behavior", () => {
     it("should only generate new article when current article is deleted", () => {
-      let currentArticle: typeof mockArticles[0] | null = mockArticles[0]; // Artículo actual
+      let currentArticle: typeof mockArticles[0] | null = mockArticles[0]; // Current article
       let articles: typeof mockArticles = [...mockArticles];
 
       const initialArticle = currentArticle;
 
-      // Simular eliminación de un artículo diferente al actual
+      // Simulate deletion of a different article
       const articleToDelete = mockArticles[1];
       articles = articles.filter((a) => a.id !== articleToDelete.id);
 
-      // Verificar que el artículo actual no cambia
+      // Verify current article doesn't change
       expect(currentArticle).toBe(initialArticle);
 
-      // Simular eliminación del artículo actual
+      // Simulate deletion of current article
       if (currentArticle) {
         const articleIdToDelete = currentArticle.id;
         articles = articles.filter((a) => a.id !== articleIdToDelete);
       }
       
-      // Ahora debería generar un nuevo artículo
+      // Now it should generate a new article
       if (articles.length > 0) {
         const filtered = articles.filter((a) => !a.isRead);
         if (filtered.length > 0) {
@@ -186,10 +186,10 @@ describe("Article Persistence Behavior", () => {
       let currentArticle: typeof mockArticles[0] | null = mockArticles[0];
       let articles: typeof mockArticles = [...mockArticles];
 
-      // Eliminar todos los artículos
+      // Remove all articles
       articles = [];
 
-      // Simular la lógica de eliminación
+      // Simulate deletion logic
       if (articles.length === 0) {
         currentArticle = null;
       }
@@ -235,7 +235,7 @@ describe("Article Persistence Behavior", () => {
       let currentArticle: typeof mockArticles[0] | null = null;
       let articles: typeof mockArticles = [...mockArticles];
 
-      // Seleccionar artículo inicial
+      // Select initial article
       if (!currentArticle && articles.length > 0) {
         const filtered = articles.filter((a) => !a.isRead);
         if (filtered.length > 0) {
@@ -245,11 +245,11 @@ describe("Article Persistence Behavior", () => {
 
       const initialArticle = currentArticle;
 
-      // Simular múltiples operaciones que no deberían cambiar el artículo
-      articles = [...articles, { ...mockArticles[0], id: 4 }]; // Agregar artículo
-      articles = articles.filter(a => a.id !== 2); // Eliminar artículo diferente
+      // Simulate multiple operations that shouldn't change the article
+      articles = [...articles, { ...mockArticles[0], id: 4 }]; // Add article
+      articles = articles.filter(a => a.id !== 2); // Remove different article
 
-      // Verificar que el artículo sigue siendo el mismo
+      // Verify article remains the same
       expect(currentArticle).toBe(initialArticle);
     });
   });

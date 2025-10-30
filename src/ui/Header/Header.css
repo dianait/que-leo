@@ -54,7 +54,7 @@
   padding-left: 16px;
 }
 
-/* Información del usuario */
+/* User info */
 .user-info {
   display: flex;
   align-items: center;
@@ -90,7 +90,7 @@
   display: inline-block;
 }
 
-/* Botón de logout */
+/* Logout button */
 .logout-button {
   background: rgba(0, 180, 216, 0.1);
   color: #00b4d8;
@@ -230,7 +230,7 @@
   .user-avatar {
     margin-right: 12px;
   }
-  /* Eliminado flex-direction: column en .header-content para mantener disposición horizontal */
+  /* Keep horizontal layout in .header-content */
 }
 
 body {

@@ -1,7 +1,7 @@
 import type { Article } from "./Article";
 
 export interface ArticleRepository {
-  // Métodos básicos - deben ser implementados por todos los repositorios
+  // Basic methods - must be implemented by all repositories
   getAllArticles(): Promise<Article[]>;
   getArticlesByUser(userId: string): Promise<Article[]>;
   getArticlesByUserPaginated(
@@ -22,7 +22,7 @@ export interface ArticleRepository {
   deleteArticle(articleId: number, userId: string): Promise<void>;
   markAsRead(articleId: number, isRead: boolean): Promise<void>;
 
-  // Métodos avanzados - opcionales, para repositorios que soporten estructura relacional
+  // Advanced methods - optional, for repositories that support relational structure
   getArticlesByUserFromUserArticles?(userId: string): Promise<Article[]>;
   getArticlesByUserFromUserArticlesPaginated?(
     userId: string,
