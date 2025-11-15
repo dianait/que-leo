@@ -44,6 +44,7 @@ describe("Imágenes en RandomArticle", () => {
       addArticle: jest.fn(),
       deleteArticle: jest.fn(),
       markAsRead: jest.fn(),
+      markAsFavorite: jest.fn(),
     };
     render(
       <AuthContext.Provider value={createMockAuthContext()}>
@@ -82,6 +83,7 @@ describe("Imágenes en RandomArticle", () => {
       addArticle: jest.fn(),
       deleteArticle: jest.fn(),
       markAsRead: jest.fn(),
+      markAsFavorite: jest.fn(),
     };
     render(
       <AuthContext.Provider value={createMockAuthContext()}>
@@ -120,6 +122,7 @@ describe("Imágenes en RandomArticle", () => {
       addArticle: jest.fn(),
       deleteArticle: jest.fn(),
       markAsRead: jest.fn(),
+      markAsFavorite: jest.fn(),
     };
     render(
       <AuthContext.Provider value={createMockAuthContext()}>
@@ -168,6 +171,7 @@ describe("Imágenes en RandomArticle", () => {
       addArticle: jest.fn(),
       deleteArticle: jest.fn(),
       markAsRead: jest.fn(),
+      markAsFavorite: jest.fn(),
     };
     render(
       <AuthContext.Provider value={createMockAuthContext()}>
@@ -205,6 +209,7 @@ describe("Imágenes en RandomArticle", () => {
       addArticle: jest.fn(),
       deleteArticle: jest.fn(),
       markAsRead: jest.fn(),
+      markAsFavorite: jest.fn(),
     };
     render(
       <AuthContext.Provider value={createMockAuthContext()}>

@@ -29,6 +29,7 @@ const mockRepository: ArticleRepository = {
   addArticle: jest.fn(),
   deleteArticle: jest.fn(),
   markAsRead: jest.fn(),
+  markAsFavorite: jest.fn(),
 };
 
 test("RandomArticle muestra un artículo usando el caso de uso", async () => {

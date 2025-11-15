@@ -87,9 +87,9 @@ describe("Favorite Functionality", () => {
     const favoriteButtons = screen.getAllByTitle(/favorito/i);
     expect(favoriteButtons.length).toBeGreaterThan(0);
 
-    // Verificar que hay al menos una estrella vacía (☆)
+    // Verificar que hay al menos una estrella vacía (imagen star_unfilled.png)
     const emptyStars = favoriteButtons.filter((btn) =>
-      btn.textContent?.includes("☆")
+      btn.querySelector('img[src="/star_unfilled.png"]')
     );
     expect(emptyStars.length).toBeGreaterThan(0);
   });
@@ -207,8 +207,8 @@ describe("Favorite Functionality", () => {
     expect(favoriteButtons.length).toBeGreaterThan(0);
     const firstFavoriteBtn = favoriteButtons[0];
 
-    // Verificar que inicialmente muestra estrella vacía
-    expect(firstFavoriteBtn.textContent).toContain("☆");
+    // Verificar que inicialmente muestra estrella vacía (imagen)
+    expect(firstFavoriteBtn.querySelector('img[src="/star_unfilled.png"]')).toBeInTheDocument();
 
     // Hacer clic
     fireEvent.click(firstFavoriteBtn);

@@ -51,6 +51,7 @@ beforeEach(() => {
     addArticle: jest.fn(),
     deleteArticle: jest.fn(),
     markAsRead: jest.fn(),
+    markAsFavorite: jest.fn(),
     addArticleToUser: jest.fn(),
     getArticlesByUserFromUserArticles: jest.fn(),
     getArticlesByUserFromUserArticlesPaginated: jest.fn(),
