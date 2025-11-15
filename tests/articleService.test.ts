@@ -34,6 +34,18 @@ describe("ArticleService", () => {
     expect(repo.markAsRead).toHaveBeenCalledWith(1, true);
     expect(repo.deleteArticle).toHaveBeenCalledWith(1, "u");
   });
+
+  it("delegates markFavorite to repository", async () => {
+    const repo = {
+      markAsFavorite: jest.fn().mockResolvedValue(undefined),
+    } as any;
+    const svc = new ArticleService(repo);
+    await svc.markFavorite(1, true);
+    expect(repo.markAsFavorite).toHaveBeenCalledWith(1, true);
+    
+    await svc.markFavorite(2, false);
+    expect(repo.markAsFavorite).toHaveBeenCalledWith(2, false);
+  });
 });
 
 

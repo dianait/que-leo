@@ -21,6 +21,7 @@ export interface ArticleRepository {
   ): Promise<Article>;
   deleteArticle(articleId: number, userId: string): Promise<void>;
   markAsRead(articleId: number, isRead: boolean): Promise<void>;
+  markAsFavorite(articleId: number, isFavorite: boolean): Promise<void>;
 
   // Advanced methods - optional, for repositories that support relational structure
   getArticlesByUserFromUserArticles?(userId: string): Promise<Article[]>;

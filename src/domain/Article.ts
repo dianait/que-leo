@@ -5,6 +5,7 @@ export interface Article {
   readonly dateAdded: Date;
   readonly isRead: boolean;
   readonly readAt?: Date;
+  readonly isFavorite?: boolean;
   readonly language?: string;
   readonly authors?: string[];
   readonly topics?: string[];
@@ -25,5 +26,19 @@ export const markArticleAsUnread = (article: Article): Article => {
     ...article,
     isRead: false,
     readAt: undefined,
+  };
+};
+
+export const markArticleAsFavorite = (article: Article): Article => {
+  return {
+    ...article,
+    isFavorite: true,
+  };
+};
+
+export const markArticleAsUnfavorite = (article: Article): Article => {
+  return {
+    ...article,
+    isFavorite: false,
   };
 };

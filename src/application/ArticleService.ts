@@ -70,6 +70,10 @@ export class ArticleService {
     return this.repository.markAsRead(articleId, isRead);
   }
 
+  async markFavorite(articleId: number, isFavorite: boolean): Promise<void> {
+    return this.repository.markAsFavorite(articleId, isFavorite);
+  }
+
   async delete(articleId: number, userId: string): Promise<void> {
     return this.repository.deleteArticle(articleId, userId);
   }

@@ -125,14 +125,75 @@
   border-color: #047857;
 }
 
-.app-button.status {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+/* Botones solo con icono - tamaño consistente */
+.app-button.icon-only {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  box-sizing: border-box;
+}
+
+.app-button.icon-only span {
+  display: inline-block;
+  width: 1.2em;
+  text-align: center;
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+/* Tooltips para todos los botones con icono */
+.app-button.icon-only {
+  position: relative;
+}
+
+.app-button.icon-only:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 6px 12px;
+  background: #333;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 0.85em;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.app-button.icon-only:hover::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 2px;
+  border: 6px solid transparent;
+  border-top-color: #333;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Mantener estilos específicos para estados */
+.app-button.status.success {
+  color: #059669;
+  border-color: #34d399;
+}
+
+.app-button.status.success:hover {
+  background: #d1fae5;
+  color: #047857;
+  border-color: #047857;
 }
 
 .modal-overlay {
@@ -381,11 +442,9 @@
   .articles-table td:first-child {
     padding-left: 8px !important;
   }
-  /* Hide Language (2) and Authors (3) columns on mobile */
+  /* Hide Authors (2) column on mobile */
   .articles-table th:nth-child(2),
-  .articles-table td:nth-child(2),
-  .articles-table th:nth-child(3),
-  .articles-table td:nth-child(3) {
+  .articles-table td:nth-child(2) {
     display: none;
   }
   /* Ensure last column (Actions) is always visible */

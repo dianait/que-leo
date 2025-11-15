@@ -2,6 +2,10 @@ import { useState, useEffect, useContext } from "react";
 import { isBefore, subYears } from "date-fns";
 import "./RandomArticle.css";
 import type { Article } from "../../domain/Article";
+import {
+  markArticleAsFavorite,
+  markArticleAsUnfavorite,
+} from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
 import { ArticleService } from "../../application/ArticleService";
@@ -19,7 +23,9 @@ export function RandomArticle({
   const [modalOpen, setModalOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<number | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
+  const [favoriteModalOpen, setFavoriteModalOpen] = useState(false);
   const [loadingRead, setLoadingRead] = useState(false);
+  const [loadingFavorite, setLoadingFavorite] = useState(false);
 
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
@@ -131,6 +137,61 @@ export function RandomArticle({
     }
   };
 
+  const handleToggleFavorite = async () => {
+    if (!repository || !article) return;
+    
+    // Si ya es favorito, simplemente quitar sin modal
+    if (article.isFavorite) {
+      setLoadingFavorite(true);
+      try {
+        const newArticleState = markArticleAsUnfavorite(article);
+        const svc = new ArticleService(repository);
+        await svc.markFavorite(
+          Number(article.id),
+          newArticleState.isFavorite ?? false
+        );
+        const nextArticle = {
+          ...article,
+          isFavorite: newArticleState.isFavorite,
+        } as Article;
+        setArticle(nextArticle);
+        setArticles((prev) =>
+          prev.map((a) => (Number(a.id) === Number(article.id) ? nextArticle : a))
+        );
+      } catch (e) {
+        alert("Error al actualizar estado de favorito");
+      } finally {
+        setLoadingFavorite(false);
+      }
+      return;
+    }
+
+    // Si no es favorito, marcar como favorito y mostrar modal
+    setLoadingFavorite(true);
+    try {
+      const newArticleState = markArticleAsFavorite(article);
+      const svc = new ArticleService(repository);
+      await svc.markFavorite(
+        Number(article.id),
+        newArticleState.isFavorite ?? false
+      );
+      const nextArticle = {
+        ...article,
+        isFavorite: newArticleState.isFavorite,
+      } as Article;
+      setArticle(nextArticle);
+      setArticles((prev) =>
+        prev.map((a) => (Number(a.id) === Number(article.id) ? nextArticle : a))
+      );
+      // Mostrar modal de favorito
+      setFavoriteModalOpen(true);
+    } catch (e) {
+      alert("Error al actualizar estado de favorito");
+    } finally {
+      setLoadingFavorite(false);
+    }
+  };
+
   function getFlagEmoji(language?: string) {
     if (language === "English") return "🇬🇧";
     if (language === "Spanish") return "🇪🇸";
@@ -153,38 +214,56 @@ export function RandomArticle({
                 {/* Actions bar above image/title */}
                 <div className="article-actions-container">
                   <ActionButton
-                    emoji={article.isRead ? "✅" : "📖"}
-                    text={
+                    emoji={loadingRead ? "⏳" : article.isRead ? "✅" : "📖"}
+                    text=""
+                    onClick={handleToggleRead}
+                    title={
                       loadingRead
                         ? "Marcando..."
                         : article.isRead
-                        ? "Leído"
-                        : "No leído"
-                    }
-                    onClick={handleToggleRead}
-                    title={
-                      article.isRead
                         ? "Marcar como no leído"
                         : "Marcar como leído"
                     }
                     type={article.isRead ? "success" : undefined}
+                    iconOnly={true}
+                  />
+                  <ActionButton
+                    emoji={loadingFavorite ? "⏳" : article.isFavorite ? "⭐" : ""}
+                    text=""
+                    onClick={handleToggleFavorite}
+                    title={
+                      loadingFavorite
+                        ? "Marcando..."
+                        : article.isFavorite
+                        ? "Quitar de favoritos"
+                        : "Añadir a favoritos"
+                    }
+                    type={article.isFavorite ? "favorite" : undefined}
+                    iconOnly={true}
+                    customIcon={
+                      !loadingFavorite && !article.isFavorite
+                        ? "/star_unfilled.png"
+                        : undefined
+                    }
                   />
                   <ActionButton
                     emoji="📣"
-                    text="Compartir"
+                    text=""
                     onClick={() => setShareOpen(true)}
                     title="Abrir opciones para compartir"
                     type="share"
+                    iconOnly={true}
                   />
                   <ActionButton
                     emoji="🗑️"
-                    text="Eliminar"
+                    text=""
                     onClick={() => {
                       setArticleToDelete(Number(article.id));
                       setModalOpen(true);
                     }}
                     title="Borrar artículo"
                     type="danger"
+                    iconOnly={true}
                   />
                 </div>
 
@@ -363,6 +442,11 @@ export function RandomArticle({
         article={article}
         onClose={() => setShareOpen(false)}
       />
+      <FavoriteModal
+        open={favoriteModalOpen}
+        article={article}
+        onClose={() => setFavoriteModalOpen(false)}
+      />
     </div>
   );
 }
@@ -373,22 +457,37 @@ function ActionButton({
   onClick,
   title,
   type,
+  iconOnly = false,
+  customIcon,
 }: {
   emoji: string;
   text: string;
   onClick: () => void;
   title: string;
-  type?: "linkedin" | "bluesky" | "danger" | "share" | "success";
+  type?: "linkedin" | "bluesky" | "danger" | "share" | "success" | "favorite";
+  iconOnly?: boolean;
+  customIcon?: string;
 }) {
   return (
     <button
-      className={`app-button action-button ${type ? type : ""}`}
+      className={`app-button action-button ${type ? type : ""} ${
+        iconOnly ? "icon-only" : ""
+      }`}
       onClick={onClick}
       title={title}
       aria-label={title}
     >
-      <span className="button-emoji">{emoji}</span>
-      <span className="button-text">{text}</span>
+      {customIcon ? (
+        <img
+          src={customIcon}
+          alt=""
+          className="button-custom-icon"
+          style={{ width: "1.5em", height: "1.5em" }}
+        />
+      ) : (
+        <span className="button-emoji">{emoji}</span>
+      )}
+      {!iconOnly && <span className="button-text">{text}</span>}
     </button>
   );
 }
@@ -450,6 +549,59 @@ function ShareModal({
         </button>
         <h2>Comparte este artículo</h2>
         <p>Elige una red para compartirlo:</p>
+        <div className="share-buttons-row">
+          <a
+            href={blueskyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="share-button bluesky"
+          >
+            <img src="/blusky.svg" alt="Bluesky" className="share-icon" />
+            Bluesky
+          </a>
+          <a
+            href={linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="share-button linkedin"
+          >
+            <img src="/linkedin.svg" alt="LinkedIn" className="share-icon" />
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FavoriteModal({
+  open,
+  article,
+  onClose,
+}: {
+  open: boolean;
+  article: Article | null;
+  onClose: () => void;
+}) {
+  if (!open || !article) return null;
+  const shareText = encodeURIComponent(`¡He guardado como favorito: ${article.title}!`);
+  const url = encodeURIComponent(article.url);
+  const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content" style={{ position: "relative" }}>
+        <button className="modal-close" onClick={onClose} title="Cerrar">
+          <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>
+            ×
+          </span>
+        </button>
+        <h2>¡Genial! ⭐</h2>
+        <p>
+          Has guardado este artículo como favorito.
+          <br />
+          ¿Quieres compartirlo en tus redes?
+        </p>
         <div className="share-buttons-row">
           <a
             href={blueskyUrl}

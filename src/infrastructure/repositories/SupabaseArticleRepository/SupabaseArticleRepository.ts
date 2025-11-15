@@ -52,6 +52,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         added_at?: string;
         updated_at?: string;
         article_id: number;
+        is_favorite?: boolean;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         articles: any;
       };
@@ -64,6 +65,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
           added_at,
           updated_at,
           article_id,
+          is_favorite,
           articles (
             id,
             title,
@@ -99,6 +101,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
             dateAdded: new Date(row.added_at || Date.now()),
             isRead: row.is_read,
             readAt: row.read_at ? new Date(row.read_at) : undefined,
+            isFavorite: row.is_favorite ?? false,
             language: art.language,
             authors: art.authors,
             topics: art.topics,
@@ -128,6 +131,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         added_at?: string;
         updated_at?: string;
         article_id: number;
+        is_favorite?: boolean;
         articles:
           | {
               id: number;
@@ -161,6 +165,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
           added_at,
           updated_at,
           article_id,
+          is_favorite,
           articles (
             id,
             title,
@@ -198,6 +203,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
             dateAdded: new Date(row.added_at || Date.now()),
             isRead: row.is_read,
             readAt: row.read_at ? new Date(row.read_at) : undefined,
+            isFavorite: row.is_favorite ?? false,
             language: art.language,
             authors: art.authors,
             topics: art.topics,
@@ -340,6 +346,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
             article_id: articleId,
             is_read: false,
             read_at: null,
+            is_favorite: false,
           },
         ]);
       if (insertRelError) {
@@ -356,6 +363,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
       dateAdded: new Date(), // Not the exact added_at here
       isRead: false,
       readAt: undefined,
+      isFavorite: false,
       language: articleRow.language,
       authors: articleRow.authors,
       topics: articleRow.topics,
@@ -381,6 +389,26 @@ export class SupabaseArticleRepository implements ArticleRepository {
       }
     } catch (error) {
       console.error("Error en SupabaseArticleRepository.markAsRead:", error);
+      throw error;
+    }
+  }
+
+  async markAsFavorite(articleId: number, isFavorite: boolean): Promise<void> {
+    try {
+      const { error } = await this.supabase
+        .from("user_articles")
+        .update({
+          is_favorite: isFavorite,
+        })
+        .eq("article_id", articleId);
+
+      if (error) {
+        throw new Error(
+          `Error al marcar artículo como favorito: ${error.message}`
+        );
+      }
+    } catch (error) {
+      console.error("Error en SupabaseArticleRepository.markAsFavorite:", error);
       throw error;
     }
   }
@@ -451,6 +479,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         dateAdded: new Date(row.created_at as string),
         isRead: false, // Not available without user_articles
         readAt: undefined,
+        isFavorite: false, // Not available without user_articles
         language: row.language as string | undefined,
         authors: row.authors as string[] | undefined,
         topics: row.topics as string[] | undefined,
@@ -557,6 +586,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         dateAdded: new Date(data.created_at),
         isRead: false,
         readAt: undefined,
+        isFavorite: false,
         language: data.language,
         authors: data.authors,
         topics: data.topics,
