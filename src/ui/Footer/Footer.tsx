@@ -5,6 +5,7 @@ export function Footer() {
     <footer className="app-footer">
       <div className="footer-content">
         <span className="footer-title footer-hide-mobile">¿Qué leo?</span>
+
         <span className="footer-madeby">
           Hecho con <span className="footer-heart">♥</span> por
           <a
@@ -15,7 +16,16 @@ export function Footer() {
           >
             Dianait
           </a>
+<a
+  href="https://www.buymeacoffee.com/TU_USUARIO"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="bmc-button"
+>
+   <img src="/buymeacoffe.webp" alt="Buy me a coffee" width="90" />
+</a>
         </span>
+
         <a
           href="https://github.com/dianait/article-reader"
           target="_blank"

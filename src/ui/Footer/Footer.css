@@ -73,6 +73,32 @@
   position: relative;
 }
 
+.bmc-button {
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  background: #ffffff;
+  border: 1px solid #e1e1e1;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  color: #333;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+  margin-left: 0.5rem;
+  opacity: 0.9;
+    background-color: #F6F4EE;
+    cursor: pointer;
+}
+
+.bmc-button:hover {
+  opacity: 1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
 @media (max-width: 430px) {
   .footer-hide-mobile {
     display: none !important;
