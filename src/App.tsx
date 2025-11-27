@@ -28,6 +28,14 @@ export function App() {
           />
         </Routes>
       </main>
+         <a
+        href="https://www.buymeacoffee.com/dianait"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bmc-floating"
+      >
+        <img src="/buymeacoffe.webp" alt="Buy me a coffee" />
+      </a>
       <Footer />
     </div>
   );
