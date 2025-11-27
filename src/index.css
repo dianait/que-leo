@@ -168,7 +168,7 @@ body {
   display: block;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 400px) {
   .bmc-floating {
     display: none;
   }
