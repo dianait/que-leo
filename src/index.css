@@ -168,8 +168,8 @@ body {
   display: block;
 }
 
-@media (min-width: 400px) {
+@media (min-width: 431px) {
   .bmc-floating {
-    display: none;
+    bottom: 90px; /* Por encima del footer (60px altura + 30px margen) */
   }
 }
