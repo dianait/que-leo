@@ -17,7 +17,7 @@ export function Footer() {
             Dianait
           </a>
 <a
-  href="https://www.buymeacoffee.com/TU_USUARIO"
+  href="https://www.buymeacoffee.com/dianait"
   target="_blank"
   rel="noopener noreferrer"
   className="bmc-button"
