@@ -1,9 +1,20 @@
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import { Header } from "./ui/Header/Header";
-import { RandomArticle } from "./ui/RandomArticle/RandomArticle";
 import { Routes, Route } from "react-router-dom";
-import { ArticleTable } from "./ui/ListOfArticles/ArticleTable";
 import { Footer } from "./ui/Footer/Footer";
+import { AppSkeleton } from "./ui/AppSkeleton/AppSkeleton";
+
+const RandomArticle = lazy(() =>
+  import("./ui/RandomArticle/RandomArticle").then((module) => ({
+    default: module.RandomArticle,
+  }))
+);
+
+const ArticleTable = lazy(() =>
+  import("./ui/ListOfArticles/ArticleTable").then((module) => ({
+    default: module.ArticleTable,
+  }))
+);
 
 export function App() {
   const [articlesVersion, setArticlesVersion] = useState(0);
@@ -12,23 +23,25 @@ export function App() {
     <div className="app-container">
       <Header />
       <main className="app-main-content">
-        <Routes>
-          <Route
-            path="/"
-            element={<RandomArticle articlesVersion={articlesVersion} />}
-          />
-          <Route
-            path="/articulos"
-            element={
-              <ArticleTable
-                articlesVersion={articlesVersion}
-                setArticlesVersion={setArticlesVersion}
-              />
-            }
-          />
-        </Routes>
+        <Suspense fallback={<AppSkeleton />}>
+          <Routes>
+            <Route
+              path="/"
+              element={<RandomArticle articlesVersion={articlesVersion} />}
+            />
+            <Route
+              path="/articulos"
+              element={
+                <ArticleTable
+                  articlesVersion={articlesVersion}
+                  setArticlesVersion={setArticlesVersion}
+                />
+              }
+            />
+          </Routes>
+        </Suspense>
       </main>
-         <a
+      <a
         href="https://www.buymeacoffee.com/dianait"
         target="_blank"
         rel="noopener noreferrer"
