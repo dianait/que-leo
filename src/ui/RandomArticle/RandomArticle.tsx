@@ -1,4 +1,43 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback, createContext, useContext as useReactContext } from "react";
+// Modal context and provider
+type ModalState = {
+  confirm: boolean;
+  share: boolean;
+  favorite: boolean;
+  articleToDelete: number | null;
+};
+type ModalActions = {
+  openConfirm: (articleId: number) => void;
+  closeConfirm: () => void;
+  openShare: () => void;
+  closeShare: () => void;
+  openFavorite: () => void;
+  closeFavorite: () => void;
+};
+const ModalContext = createContext<{ state: ModalState; actions: ModalActions } | undefined>(undefined);
+
+function ModalProvider({ children }: { children: React.ReactNode }) {
+  const [state, setState] = useState<ModalState>({
+    confirm: false,
+    share: false,
+    favorite: false,
+    articleToDelete: null,
+  });
+  const actions: ModalActions = {
+    openConfirm: (articleId) => setState((s) => ({ ...s, confirm: true, articleToDelete: articleId })),
+    closeConfirm: () => setState((s) => ({ ...s, confirm: false, articleToDelete: null })),
+    openShare: () => setState((s) => ({ ...s, share: true })),
+    closeShare: () => setState((s) => ({ ...s, share: false })),
+    openFavorite: () => setState((s) => ({ ...s, favorite: true })),
+    closeFavorite: () => setState((s) => ({ ...s, favorite: false })),
+  };
+  return <ModalContext.Provider value={{ state, actions }}>{children}</ModalContext.Provider>;
+}
+function useModals() {
+  const ctx = useReactContext(ModalContext);
+  if (!ctx) throw new Error("useModals must be used within ModalProvider");
+  return ctx;
+}
 import { isBefore, subYears } from "date-fns";
 import "./RandomArticle.css";
 import type { Article } from "../../domain/Article";
@@ -12,18 +51,19 @@ import { ArticleService } from "../../application/ArticleService";
 import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
 import { RandomArticleSkeleton } from "../AppSkeleton/AppSkeleton";
 
-export function RandomArticle({
-  articlesVersion,
-}: {
-  articlesVersion: number;
-}) {
+export function RandomArticle({ articlesVersion }: { articlesVersion: number }) {
+  return (
+    <ModalProvider>
+      <RandomArticleInner articlesVersion={articlesVersion} />
+    </ModalProvider>
+  );
+}
+
+function RandomArticleInner({ articlesVersion }: { articlesVersion: number }) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [articleToDelete, setArticleToDelete] = useState<number | null>(null);
-  const [shareOpen, setShareOpen] = useState(false);
-  const [favoriteModalOpen, setFavoriteModalOpen] = useState(false);
+  const { state: modalState, actions: modalActions } = useModals();
   const [loadingRead, setLoadingRead] = useState(false);
   const [loadingFavorite, setLoadingFavorite] = useState(false);
 
@@ -111,7 +151,61 @@ export function RandomArticle({
     }
   };
 
-  // Sharing is handled via ShareModal
+
+// Compound Modal Component
+function Modal({ children, onClose, show }: { children: React.ReactNode; onClose: () => void; show: boolean }) {
+  if (!show) return null;
+  return (
+    <Modal.Overlay onClose={onClose}>
+      <Modal.Content>{children}</Modal.Content>
+    </Modal.Overlay>
+  );
+}
+Modal.Overlay = function ModalOverlay({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === "Escape") onClose();
+  }, [onClose]);
+  return (
+    <div className="modal-overlay" role="dialog" aria-modal="true" onKeyDown={handleKeyDown}>
+      {children}
+    </div>
+  );
+};
+Modal.Content = function ModalContent({ children }: { children: React.ReactNode }) {
+  return <div className="modal-content" style={{ position: "relative" }}>{children}</div>;
+};
+
+// Usage for ShareModal
+function ShareModal({ article, show, onClose }: { article: Article | null; show: boolean; onClose: () => void }) {
+  if (!show || !article) return null;
+  const shareText = encodeURIComponent(`¡He leído: ${article.title}!`);
+  const url = encodeURIComponent(article.url);
+  const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+  return (
+    <Modal show={show} onClose={onClose}>
+      <button className="modal-close" onClick={onClose} aria-label="Cerrar">
+        <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>×</span>
+      </button>
+      <h2 id="share-modal-title-random">¡Genial! 🎉</h2>
+      <p>
+        Has marcado este artículo como leído.
+        <br />
+        ¿Quieres compartirlo en tus redes?
+      </p>
+      <div className="share-buttons-row">
+        <a href={blueskyUrl} target="_blank" rel="noopener noreferrer" className="share-button bluesky">
+          <img src="/blusky.svg" alt="" className="share-icon" />
+          Bluesky
+        </a>
+        <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="share-button linkedin">
+          <img src="/linkedin.svg" alt="" className="share-icon" />
+          LinkedIn
+        </a>
+      </div>
+    </Modal>
+  );
+}
 
   const handleToggleRead = async () => {
     if (!repository || !article) return;
@@ -213,57 +307,21 @@ export function RandomArticle({
               <>
                 {/* Actions bar above image/title */}
                 <div className="article-actions-container">
-                  <ActionButton
-                    emoji={loadingRead ? "⏳" : article.isRead ? "✅" : "📖"}
-                    text=""
+                  <ActionButton.Read
+                    loading={loadingRead}
+                    isRead={article.isRead}
                     onClick={handleToggleRead}
-                    title={
-                      loadingRead
-                        ? "Marcando..."
-                        : article.isRead
-                        ? "Marcar como no leído"
-                        : "Marcar como leído"
-                    }
-                    type={article.isRead ? "success" : undefined}
-                    iconOnly={true}
                   />
-                  <ActionButton
-                    emoji={loadingFavorite ? "⏳" : article.isFavorite ? "⭐" : ""}
-                    text=""
+                  <ActionButton.Favorite
+                    loading={loadingFavorite}
+                    isFavorite={article.isFavorite ?? false}
                     onClick={handleToggleFavorite}
-                    title={
-                      loadingFavorite
-                        ? "Marcando..."
-                        : article.isFavorite
-                        ? "Quitar de favoritos"
-                        : "Añadir a favoritos"
-                    }
-                    type={article.isFavorite ? "favorite" : undefined}
-                    iconOnly={true}
-                    customIcon={
-                      !loadingFavorite && !article.isFavorite
-                        ? "/star_unfilled.png"
-                        : undefined
-                    }
                   />
-                  <ActionButton
-                    emoji="📣"
-                    text=""
-                    onClick={() => setShareOpen(true)}
-                    title="Abrir opciones para compartir"
-                    type="share"
-                    iconOnly={true}
+                  <ActionButton.Share
+                    onClick={() => modalActions.openShare()}
                   />
-                  <ActionButton
-                    emoji="🗑️"
-                    text=""
-                    onClick={() => {
-                      setArticleToDelete(Number(article.id));
-                      setModalOpen(true);
-                    }}
-                    title="Borrar artículo"
-                    type="danger"
-                    iconOnly={true}
+                  <ActionButton.Delete
+                    onClick={() => modalActions.openConfirm(Number(article.id))}
                   />
                 </div>
 
@@ -272,8 +330,8 @@ export function RandomArticle({
                     src={article.featuredImage || "/placeholder.webp"}
                     alt={
                       article.featuredImage
-                        ? "Featured Image"
-                        : "Imagen por defecto"
+                        ? `Imagen destacada de: ${article.title}`
+                        : ""
                     }
                     className={`article-featured-image ${
                       !article.featuredImage ? "loading" : ""
@@ -431,95 +489,105 @@ export function RandomArticle({
 
       {/* toast removed */}
       <ConfirmModal
-        open={modalOpen}
-        onCancel={() => setModalOpen(false)}
+        show={modalState.confirm}
+        onCancel={modalActions.closeConfirm}
         onConfirm={() => {
-          if (articleToDelete !== null) handleDelete(articleToDelete);
+          if (modalState.articleToDelete !== null) handleDelete(modalState.articleToDelete);
+          modalActions.closeConfirm();
         }}
       />
       <ShareModal
-        open={shareOpen}
+        show={modalState.share}
         article={article}
-        onClose={() => setShareOpen(false)}
+        onClose={modalActions.closeShare}
       />
       <FavoriteModal
-        open={favoriteModalOpen}
+        show={modalState.favorite}
         article={article}
-        onClose={() => setFavoriteModalOpen(false)}
+        onClose={modalActions.closeFavorite}
       />
     </div>
   );
 }
 
-function ActionButton({
-  emoji,
-  text,
-  onClick,
-  title,
-  type,
-  iconOnly = false,
-  customIcon,
-}: {
-  emoji: string;
-  text: string;
-  onClick: () => void;
-  title: string;
-  type?: "linkedin" | "bluesky" | "danger" | "share" | "success" | "favorite";
-  iconOnly?: boolean;
-  customIcon?: string;
-}) {
-  return (
-    <button
-      className={`app-button action-button ${type ? type : ""} ${
-        iconOnly ? "icon-only" : ""
-      }`}
-      onClick={onClick}
-      title={title}
-      aria-label={title}
-    >
-      {customIcon ? (
-        <img
-          src={customIcon}
-          alt=""
-          className="button-custom-icon"
-          style={{ width: "1.5em", height: "1.5em" }}
-        />
-      ) : (
-        <span className="button-emoji">{emoji}</span>
-      )}
-      {!iconOnly && <span className="button-text">{text}</span>}
-    </button>
-  );
-}
 
-function ConfirmModal({
-  open,
-  onConfirm,
-  onCancel,
-}: {
-  open: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
-}) {
-  if (!open) return null;
+// ActionButton compound variants
+const ActionButton = {
+  Read: function Read({ loading, isRead, onClick }: { loading: boolean; isRead: boolean; onClick: () => void }) {
+    return (
+      <button
+        className={`app-button action-button success icon-only`}
+        onClick={onClick}
+        title={loading ? "Marcando..." : isRead ? "Marcar como no leído" : "Marcar como leído"}
+        aria-label={loading ? "Marcando..." : isRead ? "Marcar como no leído" : "Marcar como leído"}
+      >
+        <span className="button-emoji">{loading ? "⏳" : isRead ? "✅" : "📖"}</span>
+      </button>
+    );
+  },
+  Favorite: function Favorite({ loading, isFavorite, onClick }: { loading: boolean; isFavorite: boolean; onClick: () => void }) {
+    return (
+      <button
+        className={`app-button action-button favorite icon-only`}
+        onClick={onClick}
+        title={loading ? "Marcando..." : isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
+        aria-label={loading ? "Marcando..." : isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
+      >
+        {loading ? (
+          <span className="button-emoji">⏳</span>
+        ) : isFavorite ? (
+          <span className="button-emoji">⭐</span>
+        ) : (
+          <img src="/star_unfilled.png" alt="" className="button-custom-icon" style={{ width: "1.5em", height: "1.5em" }} />
+        )}
+      </button>
+    );
+  },
+  Share: function Share({ onClick }: { onClick: () => void }) {
+    return (
+      <button
+        className="app-button action-button share icon-only"
+        onClick={onClick}
+        title="Abrir opciones para compartir"
+        aria-label="Abrir opciones para compartir"
+      >
+        <span className="button-emoji">📣</span>
+      </button>
+    );
+  },
+  Delete: function Delete({ onClick }: { onClick: () => void }) {
+    return (
+      <button
+        className="app-button action-button danger icon-only"
+        onClick={onClick}
+        title="Borrar artículo"
+        aria-label="Borrar artículo"
+      >
+        <span className="button-emoji">🗑️</span>
+      </button>
+    );
+  },
+};
+
+
+function ConfirmModal({ show, onConfirm, onCancel }: { show: boolean; onConfirm: () => void; onCancel: () => void }) {
+  if (!show) return null;
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h2>¿Borrar artículo?</h2>
-        <p>
-          ¿Seguro que quieres borrar este artículo? <br />
-          <strong>Esta acción no se puede deshacer.</strong>
-        </p>
-        <div className="modal-actions">
-          <button className="app-button" onClick={onCancel}>
-            Cancelar
-          </button>
-          <button className="app-button danger" onClick={onConfirm}>
-            Borrar definitivamente
-          </button>
-        </div>
+    <Modal show={show} onClose={onCancel}>
+      <h2 id="confirm-delete-title-random">¿Borrar artículo?</h2>
+      <p id="confirm-delete-desc-random">
+        ¿Seguro que quieres borrar este artículo? <br />
+        <strong>Esta acción no se puede deshacer.</strong>
+      </p>
+      <div className="modal-actions">
+        <button className="app-button" onClick={onCancel}>
+          Cancelar
+        </button>
+        <button className="app-button danger" onClick={onConfirm}>
+          Borrar definitivamente
+        </button>
       </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -574,55 +642,31 @@ function ShareModal({
   );
 }
 
-function FavoriteModal({
-  open,
-  article,
-  onClose,
-}: {
-  open: boolean;
-  article: Article | null;
-  onClose: () => void;
-}) {
-  if (!open || !article) return null;
+
+function FavoriteModal({ article, show, onClose }: { article: Article | null; show: boolean; onClose: () => void }) {
+  if (!show || !article) return null;
   const shareText = encodeURIComponent(`¡He guardado como favorito: ${article.title}!`);
   const url = encodeURIComponent(article.url);
   const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
   const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
   return (
-    <div className="modal-overlay">
-      <div className="modal-content" style={{ position: "relative" }}>
-        <button className="modal-close" onClick={onClose} title="Cerrar">
-          <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>
-            ×
-          </span>
-        </button>
-        <h2>¡Genial! ⭐</h2>
-        <p>
-          Has guardado este artículo como favorito.
-          <br />
-          ¿Quieres compartirlo en tus redes?
-        </p>
-        <div className="share-buttons-row">
-          <a
-            href={blueskyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="share-button bluesky"
-          >
-            <img src="/blusky.svg" alt="Bluesky" className="share-icon" />
-            Bluesky
-          </a>
-          <a
-            href={linkedinUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="share-button linkedin"
-          >
-            <img src="/linkedin.svg" alt="LinkedIn" className="share-icon" />
-            LinkedIn
-          </a>
-        </div>
+    <Modal show={show} onClose={onClose}>
+      <h2 id="favorite-modal-title">¡Genial! ⭐</h2>
+      <p>
+        Has guardado este artículo como favorito.
+        <br />
+        ¿Quieres compartirlo en tus redes?
+      </p>
+      <div className="share-buttons-row">
+        <a href={blueskyUrl} target="_blank" rel="noopener noreferrer" className="share-button bluesky">
+          <img src="/blusky.svg" alt="" className="share-icon" />
+          Bluesky
+        </a>
+        <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="share-button linkedin">
+          <img src="/linkedin.svg" alt="" className="share-icon" />
+          LinkedIn
+        </a>
       </div>
-    </div>
+    </Modal>
   );
 }

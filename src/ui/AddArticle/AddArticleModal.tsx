@@ -3,6 +3,7 @@ import React, {
   useContext,
   useRef,
   useEffect,
+  useCallback,
   forwardRef,
 } from "react";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
@@ -21,13 +22,31 @@ const Modal = forwardRef<
     open: boolean;
     onClose: () => void;
     children: React.ReactNode;
+    labelId?: string;
   }
->(({ open, onClose, children }, ref) => {
+>(({ open, onClose, children, labelId }, ref) => {
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    },
+    [onClose]
+  );
+
   if (!open) return null;
   return (
-    <div className="modal-overlay">
+    <div
+      className="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={labelId}
+      onKeyDown={handleKeyDown}
+    >
       <div className="modal-content" ref={ref}>
-        <button className="modal-close" onClick={onClose} title="Cerrar">
+        <button
+          className="modal-close"
+          onClick={onClose}
+          aria-label="Cerrar"
+        >
           ×
         </button>
         {children}
@@ -152,11 +171,11 @@ export const AddArticle: React.FC<{
       >
         + Nuevo
       </button>
-      <Modal open={isModalOpen} onClose={closeModal} ref={modalRef}>
+      <Modal open={isModalOpen} onClose={closeModal} ref={modalRef} labelId="add-article-title">
         <form onSubmit={handleSubmit} className="add-article-form">
-          <h3>Añadir nuevo artículo</h3>
-          {error && <div className="error-message">{error}</div>}
-          {success && <div className="success-message">{success}</div>}
+          <h3 id="add-article-title">Añadir nuevo artículo</h3>
+          {error && <div className="error-message" role="alert">{error}</div>}
+          {success && <div className="success-message" role="status">{success}</div>}
 
           <div className="form-group">
             <label htmlFor="url">URL:</label>
