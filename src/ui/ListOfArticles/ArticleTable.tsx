@@ -1,5 +1,5 @@
 import "./ListOfArticles.css";
-import { useEffect, useContext, useReducer } from "react";
+import { useEffect, useContext, useReducer, useCallback } from "react";
 import type { Article } from "../../domain/Article";
 import {
   markArticleAsRead,
@@ -22,12 +22,26 @@ function ConfirmModal({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") onCancel();
+    },
+    [onCancel]
+  );
+
   if (!open) return null;
   return (
-    <div className="modal-overlay">
+    <div
+      className="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirm-delete-title"
+      aria-describedby="confirm-delete-desc"
+      onKeyDown={handleKeyDown}
+    >
       <div className="modal-content">
-        <h2>¿Borrar artículo?</h2>
-        <p>
+        <h2 id="confirm-delete-title">¿Borrar artículo?</h2>
+        <p id="confirm-delete-desc">
           ¿Seguro que quieres borrar este artículo? <br />
           <strong>Esta acción no se puede deshacer.</strong>
         </p>
@@ -46,7 +60,11 @@ function ConfirmModal({
 
 function Toast({ message, show }: { message: string; show: boolean }) {
   if (!show) return null;
-  return <div className="toast-notification">{message}</div>;
+  return (
+    <div className="toast-notification" role="status" aria-live="polite">
+      {message}
+    </div>
+  );
 }
 
 function ShareModal({
@@ -58,20 +76,37 @@ function ShareModal({
   article: Article | null;
   onClose: () => void;
 }) {
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    },
+    [onClose]
+  );
+
   if (!open || !article) return null;
   const shareText = encodeURIComponent(`¡He leído: ${article.title}!`);
   const url = encodeURIComponent(article.url);
   const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
   const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
   return (
-    <div className="modal-overlay">
+    <div
+      className="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="share-modal-title"
+      onKeyDown={handleKeyDown}
+    >
       <div className="modal-content" style={{ position: "relative" }}>
-        <button className="modal-close" onClick={onClose} title="Cerrar">
+        <button
+          className="modal-close"
+          onClick={onClose}
+          aria-label="Cerrar"
+        >
           <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>
             ×
           </span>
         </button>
-        <h2>¡Genial! 🎉</h2>
+        <h2 id="share-modal-title">¡Genial! 🎉</h2>
         <p>
           Has marcado este artículo como leído.
           <br />
@@ -84,7 +119,7 @@ function ShareModal({
             rel="noopener noreferrer"
             className="share-button bluesky"
           >
-            <img src="/blusky.svg" alt="Bluesky" className="share-icon" />
+            <img src="/blusky.svg" alt="" className="share-icon" />
             Bluesky
           </a>
           <a
@@ -93,7 +128,7 @@ function ShareModal({
             rel="noopener noreferrer"
             className="share-button linkedin"
           >
-            <img src="/linkedin.svg" alt="LinkedIn" className="share-icon" />
+            <img src="/linkedin.svg" alt="" className="share-icon" />
             LinkedIn
           </a>
         </div>
@@ -297,67 +332,83 @@ export function ArticleTable({
     lastReadArticle: null,
   });
 
-  // Determine if we need to filter (any filter active or search)
-  const hasActiveFilters =
-    filtersState.readFilter !== "all" ||
-    filtersState.favoriteFilter === "favorites";
-  const needsAllArticles =
-    filtersState.searchTerm !== "" || hasActiveFilters;
+  // Memoized filter, sort, and pagination logic
+  const {
+    hasActiveFilters,
+    needsAllArticles,
+    filteredArticles,
+    effectiveTotal,
+    displayedArticles
+  } = useMemo(() => {
+    const hasActiveFilters =
+      filtersState.readFilter !== "all" ||
+      filtersState.favoriteFilter === "favorites";
+    const needsAllArticles =
+      filtersState.searchTerm !== "" || hasActiveFilters;
 
-  // Build base set - use allArticles if we have filters or search, otherwise use current page
-  const base = needsAllArticles
-    ? articlesState.allArticles.filter((article) => {
-        // Apply search filter if present
-        if (
-          filtersState.searchTerm &&
-          !article.title
-            .toLowerCase()
-            .includes(filtersState.searchTerm.toLowerCase())
-        ) {
-          return false;
-        }
-        return true;
-      })
-    : articlesState.articles;
-
-  const filteredArticles = base.filter((article) => {
-    // Apply read filter
-    if (filtersState.readFilter === "unread" && article.isRead) return false;
-    if (filtersState.readFilter === "read" && !article.isRead) return false;
-
-    // Apply favorite filter
-    if (
-      filtersState.favoriteFilter === "favorites" &&
-      !article.isFavorite
-    )
-      return false;
-
-    return true;
-  });
-
-  // Calculate total based on filtered articles when filters are active
-  const effectiveTotal = needsAllArticles
-    ? filteredArticles.length
-    : articlesState.total;
-
-  // Sort by read date when filter is "read"
-  const sortedArticles =
-    filtersState.readFilter === "read"
-      ? [...filteredArticles].sort((a, b) => {
-          const aTime = a.readAt ? new Date(a.readAt).getTime() : 0;
-          const bTime = b.readAt ? new Date(b.readAt).getTime() : 0;
-          return bTime - aTime; // descending: most recent first
+    // Build base set - use allArticles if we have filters or search, otherwise use current page
+    const base = needsAllArticles
+      ? articlesState.allArticles.filter((article) => {
+          // Apply search filter if present
+          if (
+            filtersState.searchTerm &&
+            !article.title
+              .toLowerCase()
+              .includes(filtersState.searchTerm.toLowerCase())
+          ) {
+            return false;
+          }
+          return true;
         })
-      : filteredArticles;
+      : articlesState.articles;
 
-  // Apply pagination when filters are active (when we have all articles loaded)
-  // When no filters, use articles directly (already paginated from server)
-  const displayedArticles = needsAllArticles
-    ? sortedArticles.slice(
-        (articlesState.page - 1) * PAGE_SIZE,
-        articlesState.page * PAGE_SIZE
+    const filteredArticles = base.filter((article) => {
+      // Apply read filter
+      if (filtersState.readFilter === "unread" && article.isRead) return false;
+      if (filtersState.readFilter === "read" && !article.isRead) return false;
+
+      // Apply favorite filter
+      if (
+        filtersState.favoriteFilter === "favorites" &&
+        !article.isFavorite
       )
-    : articlesState.articles;
+        return false;
+
+      return true;
+    });
+
+    // Calculate total based on filtered articles when filters are active
+    const effectiveTotal = needsAllArticles
+      ? filteredArticles.length
+      : articlesState.total;
+
+    // Sort by read date when filter is "read"
+    const sortedArticles =
+      filtersState.readFilter === "read"
+        ? [...filteredArticles].sort((a, b) => {
+            const aTime = a.readAt ? new Date(a.readAt).getTime() : 0;
+            const bTime = b.readAt ? new Date(b.readAt).getTime() : 0;
+            return bTime - aTime; // descending: most recent first
+          })
+        : filteredArticles;
+
+    // Apply pagination when filters are active (when we have all articles loaded)
+    // When no filters, use articles directly (already paginated from server)
+    const displayedArticles = needsAllArticles
+      ? sortedArticles.slice(
+          (articlesState.page - 1) * PAGE_SIZE,
+          articlesState.page * PAGE_SIZE
+        )
+      : articlesState.articles;
+
+    return {
+      hasActiveFilters,
+      needsAllArticles,
+      filteredArticles,
+      effectiveTotal,
+      displayedArticles
+    };
+  }, [filtersState, articlesState, PAGE_SIZE]);
 
   // Load all articles for search purposes
   const fetchAllArticles = async () => {
@@ -540,6 +591,7 @@ export function ArticleTable({
               })
             }
             className="search-input-field"
+            aria-label="Buscar artículos por título"
             onFocus={(e) => {
               e.target.style.borderColor = "#5a6fd8";
             }}
@@ -566,6 +618,10 @@ export function ArticleTable({
               });
             }}
             title="Mostrar todos"
+            aria-pressed={
+              filtersState.readFilter === "all" &&
+              filtersState.favoriteFilter === "all"
+            }
           >
             📚 Todos
           </button>
@@ -581,6 +637,7 @@ export function ArticleTable({
               });
             }}
             title="Solo no leídos"
+            aria-pressed={filtersState.readFilter === "unread"}
           >
             📄 No leídos
           </button>
@@ -596,6 +653,7 @@ export function ArticleTable({
               });
             }}
             title="Solo leídos"
+            aria-pressed={filtersState.readFilter === "read"}
           >
             ✅ Leídos
           </button>
@@ -612,6 +670,7 @@ export function ArticleTable({
               dispatchFilters({ type: "SET_READ_FILTER", payload: "all" });
             }}
             title="Solo favoritos"
+            aria-pressed={filtersState.favoriteFilter === "favorites"}
           >
             ⭐ Favoritos
           </button>

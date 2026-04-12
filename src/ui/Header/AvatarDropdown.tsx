@@ -18,34 +18,46 @@ export const AvatarDropdown = ({
 }: AvatarDropdownProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        triggerRef.current &&
-        !triggerRef.current.contains(event.target as Node)
-      ) {
-        onClose();
-      }
-    };
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node) &&
+      triggerRef.current &&
+      !triggerRef.current.contains(event.target as Node)
+    ) {
+      onClose();
+    }
+  }, [onClose, triggerRef]);
 
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      onClose();
+      (triggerRef.current as HTMLElement | null)?.focus();
+    }
+  }, [onClose, triggerRef]);
+
+  useEffect(() => {
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
     }
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, onClose, triggerRef]);
+  }, [isOpen, handleClickOutside, handleKeyDown]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="avatar-dropdown" ref={dropdownRef}>
+    <div className="avatar-dropdown" ref={dropdownRef} role="menu" aria-label="Menú de usuario">
       <div className="dropdown-arrow"></div>
       <div className="dropdown-content">
-        <button className="dropdown-item logout-item" onClick={onLogout}>
+        <button
+          className="dropdown-item logout-item"
+          onClick={onLogout}
+          role="menuitem"
+        >
           <svg
             className="dropdown-icon"
             viewBox="0 0 24 24"
@@ -60,6 +72,7 @@ export const AvatarDropdown = ({
           target="_blank"
           rel="noopener noreferrer"
           className="dropdown-item telegram-item"
+          role="menuitem"
         >
           <svg
             className="dropdown-icon"

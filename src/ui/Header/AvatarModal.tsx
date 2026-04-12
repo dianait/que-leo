@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
 import "./AvatarModal.css";
 
@@ -17,12 +17,32 @@ export const AvatarModal: React.FC<AvatarModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") onClose();
+  };
+
   return (
-    <div className="avatar-modal-overlay" onClick={onClose} data-testid="modal-overlay">
-      <div className="avatar-modal" onClick={(e) => e.stopPropagation()} data-testid="modal-content">
+    <div
+      className="avatar-modal-overlay"
+      onClick={onClose}
+      data-testid="modal-overlay"
+    >
+      <div
+        className="avatar-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="avatar-modal-title"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={handleKeyDown}
+        data-testid="modal-content"
+      >
         <div className="avatar-modal-header">
-          <h3>Opciones de usuario</h3>
-          <button className="avatar-modal-close" onClick={onClose}>
+          <h3 id="avatar-modal-title">Opciones de usuario</h3>
+          <button
+            className="avatar-modal-close"
+            onClick={onClose}
+            aria-label="Cerrar"
+          >
             ✕
           </button>
         </div>
