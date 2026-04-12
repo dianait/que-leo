@@ -47,9 +47,10 @@
   font-size: 14px;
 }
 
-.form-group input:focus {
-  outline: none;
+.form-group input:focus-visible {
+  outline: 2px solid #5a6fd8;
   border-color: #5a6fd8;
+  box-shadow: 0 0 0 2px rgba(90,111,216,0.12);
 }
 
 .form-group input:disabled {

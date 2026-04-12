@@ -81,8 +81,8 @@
   transition: border-color 0.3s ease;
 }
 
-.form-group input:focus {
-  outline: none;
+.form-group input:focus-visible {
+  outline: 2px solid #667eea;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }

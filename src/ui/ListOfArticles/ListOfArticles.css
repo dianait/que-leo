@@ -312,7 +312,12 @@
   border: 2px solid #e1e5e9;
   border-radius: 8px;
   font-size: 16px;
-  outline: none;
+  outline: none; /* Remove this line, handled below */
+  .search-input-field:focus-visible {
+    outline: 2px solid #5a6fd8;
+    border-color: #5a6fd8;
+    box-shadow: 0 0 0 2px rgba(90,111,216,0.12);
+  }
   transition: border-color 0.2s ease;
   background-color: #fff;
   box-sizing: border-box;

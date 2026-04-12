@@ -1,5 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 
+// ⚠️ Nunca uses claves de servicio (service role) en el frontend.
+// ⚠️ Asegúrate de tener Row Level Security (RLS) activado en todas las tablas de Supabase.
+// Solo usa la anon key en el navegador.
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
