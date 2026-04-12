@@ -21,8 +21,9 @@ export function App() {
 
   return (
     <div className="app-container">
+      <a href="#main-content" className="skip-link">Saltar al contenido principal</a>
       <Header />
-      <main className="app-main-content">
+      <main className="app-main-content" id="main-content">
         <Suspense fallback={<AppSkeleton />}>
           <Routes>
             <Route

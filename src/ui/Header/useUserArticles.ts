@@ -12,30 +12,29 @@ export const useUserArticles = () => {
   const { user } = useAuth();
   const repository = useContext(ArticleRepositoryContext);
 
-  useEffect(() => {
+  const fetchArticles = useCallback(async () => {
     if (!repository || !user) {
       setLoading(false);
       setHasArticles(false);
       return;
     }
+    try {
+      setLoading(true);
+      const svc = new ArticleService(repository);
+      const userArticles = await svc.getByUser(user.id);
+      setArticles(() => userArticles);
+      setHasArticles(() => userArticles.length > 0);
+    } catch (error) {
+      console.error("Error fetching user articles:", error);
+      setHasArticles(() => false);
+    } finally {
+      setLoading(() => false);
+    }
+  }, [repository, user]);
 
-    const fetchArticles = async () => {
-      try {
-        setLoading(true);
-        const svc = new ArticleService(repository);
-        const userArticles = await svc.getByUser(user.id);
-        setArticles(userArticles);
-        setHasArticles(userArticles.length > 0);
-      } catch (error) {
-        console.error("Error fetching user articles:", error);
-        setHasArticles(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-
+  useEffect(() => {
     fetchArticles();
-  }, [user, repository]);
+  }, [fetchArticles]);
 
   return { articles, loading, hasArticles };
 };
