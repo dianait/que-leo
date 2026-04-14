@@ -55,10 +55,6 @@ screenshots/*
 # Ignorar datos de usuario de Playwright (contiene tokens de OAuth)
 .playwright-user-data/
 
-# Configuración local de git hooks y GitHub
-.husky/
-.github/
-
 # Archivos de cache y temporales
 tsconfig.tsbuildinfo
 *.tsbuildinfo

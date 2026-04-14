@@ -25,13 +25,13 @@
     "date-fns": "4.1.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-router-dom": "7.6.3",
+    "react-router-dom": "7.14.0",
     "sharp": "0.34.2"
   },
   "devDependencies": {
     "@eslint/js": "9.25.0",
-    "@playwright/mcp": "0.0.29",
-    "@playwright/test": "1.53.2",
+    "@playwright/mcp": "0.0.70",
+    "@playwright/test": "1.59.1",
     "@supabase/supabase-js": "2.50.1",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
@@ -41,7 +41,7 @@
     "@types/react-dom": "19.1.2",
     "@vitejs/plugin-react-swc": "3.9.0",
     "dotenv-cli": "8.0.0",
-    "eslint": "9.25.0",
+    "eslint": "9.39.4",
     "eslint-plugin-hexagonal-architecture": "1.0.3",
     "eslint-plugin-react-hooks": "5.2.0",
     "eslint-plugin-react-refresh": "0.4.19",
@@ -54,6 +54,6 @@
     "tsx": "4.20.3",
     "typescript": "5.8.3",
     "typescript-eslint": "8.30.1",
-    "vite": "6.4.1"
+    "vite": "6.4.2"
   }
 }
