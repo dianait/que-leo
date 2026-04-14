@@ -40,43 +40,6 @@ Todas las contribuciones son valoradas y ayudan a mejorar la experiencia de todo
 
 ---
 
-## 🛡️ Supabase/Postgres Best Practices
-
-### Environment Variables
-
-1. **Never commit real secrets**. Usa `.env.example` como plantilla y añade `.env` a `.gitignore`.
-2. Variables requeridas:
-	- `VITE_SUPABASE_URL`
-	- `VITE_SUPABASE_ANON_KEY`
-	- (Opcional para desarrollo local) `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_DB_PASSWORD`
-
-### Seguridad
-
-- Activa [Row Level Security (RLS)](https://supabase.com/docs/guides/auth/row-level-security) en todas las tablas.
-- Nunca expongas claves de servicio en el frontend.
-- Solo usa la anon key en el navegador.
-
-### Migraciones & Esquema
-
-- Usa la [Supabase CLI](https://supabase.com/docs/guides/cli) para migraciones y desarrollo local.
-- Mantén tu esquema en control de versiones (ver carpeta `/supabase` si existe).
-- Documenta cualquier cambio SQL manual.
-
-### Conexión & Pooling
-
-- Usa el cliente oficial `@supabase/supabase-js`.
-- Para SSR/Node, usa connection pooling (ver docs de Supabase).
-
-### Manejo de errores
-
-- Siempre revisa `.error` en las respuestas de Supabase y maneja los errores de forma amigable.
-
-### Testing
-
-- Usa un proyecto o esquema separado de Supabase para tests.
-
----
-
 Consulta `.env.example` para la configuración de entorno.
 
 Más información: [Supabase Postgres Best Practices](https://supabase.com/docs/guides/database/database-best-practices).
