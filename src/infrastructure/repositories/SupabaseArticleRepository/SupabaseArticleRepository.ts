@@ -3,6 +3,19 @@ import type { Article } from "../../../domain/Article";
 import type { ArticleRepository } from "../../../domain/ArticleRepository";
 import { createSupabaseClient } from "./supabaseConfig";
 
+// Raw row shape returned by Supabase (snake_case DB columns)
+interface ArticleRow {
+  id: number;
+  title: string;
+  url: string;
+  created_at: string;
+  language?: string;
+  authors?: string[];
+  topics?: string[];
+  less_15?: boolean;
+  featured_image?: string;
+}
+
 // ⚠️ Best practices:
 // - Activa Row Level Security (RLS) en todas las tablas de Supabase.
 // - Nunca uses claves de servicio (service role) en el frontend.
@@ -58,7 +71,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         updated_at?: string;
         article_id: number;
         is_favorite?: boolean;
-        articles: Partial<Article> | Partial<Article>[] | null | undefined;
+        articles: ArticleRow | ArticleRow[] | null | undefined;
       };
       const { data, error } = await this.supabase
         .from("user_articles")
@@ -136,7 +149,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         updated_at?: string;
         article_id: number;
         is_favorite?: boolean;
-        articles: Partial<Article> | Partial<Article>[] | null | undefined;
+        articles: ArticleRow | ArticleRow[] | null | undefined;
       };
       const { data, error, count } = await this.supabase
         .from("user_articles")
@@ -454,7 +467,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         throw new Error(`Error al obtener artículos: ${error.message}`);
       }
 
-      return (data || []).map((row: Partial<Article>) => ({
+      return (data || []).map((row: ArticleRow) => ({
         id: row.id as number,
         title: row.title as string,
         url: row.url as string,

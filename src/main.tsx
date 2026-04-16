@@ -28,9 +28,5 @@ createRoot(document.getElementById("root")!).render(
 
 // Defer Analytics loading after hydration
 if (typeof window !== "undefined") {
-  import("@vercel/analytics/react").then((mod) => {
-    const Analytics = mod.Analytics;
-    // Opcional: renderizar Analytics dinámicamente si se requiere
-    // createRoot(document.getElementById("analytics-root")!).render(<Analytics />);
-  });
+  void import("@vercel/analytics/react");
 }

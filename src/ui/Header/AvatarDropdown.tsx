@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import "./AvatarDropdown.css";
 
 interface AvatarDropdownProps {

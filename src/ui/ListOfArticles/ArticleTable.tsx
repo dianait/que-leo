@@ -1,5 +1,5 @@
 import "./ListOfArticles.css";
-import { useEffect, useContext, useReducer, useCallback } from "react";
+import { useEffect, useContext, useReducer, useCallback, useMemo } from "react";
 import type { Article } from "../../domain/Article";
 import {
   markArticleAsRead,
@@ -334,8 +334,6 @@ export function ArticleTable({
 
   // Memoized filter, sort, and pagination logic
   const {
-    hasActiveFilters,
-    needsAllArticles,
     filteredArticles,
     effectiveTotal,
     displayedArticles
@@ -727,7 +725,7 @@ export function ArticleTable({
               </tr>
             </thead>
             <tbody>
-              {displayedArticles.map((article) => (
+              {displayedArticles.map((article: Article) => (
                 <tr
                   key={article.id}
                   className={article.isRead ? "is-read" : ""}

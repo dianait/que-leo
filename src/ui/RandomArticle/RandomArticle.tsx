@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback, createContext, useContext as useReactContext } from "react";
+import React, { useState, useEffect, useContext, useCallback, createContext, useContext as useReactContext } from "react";
 // Modal context and provider
 type ModalState = {
   confirm: boolean;
@@ -119,7 +119,7 @@ function RandomArticleInner({ articlesVersion }: { articlesVersion: number }) {
 
   const handleDelete = async (articleId: number) => {
     if (!repository || !user) return;
-    setModalOpen(false);
+    modalActions.closeConfirm();
     console.log("Attempting to delete article", { articleId, userId: user.id });
     try {
       const svc = new ArticleService(repository);
@@ -151,29 +151,6 @@ function RandomArticleInner({ articlesVersion }: { articlesVersion: number }) {
     }
   };
 
-
-// Compound Modal Component
-function Modal({ children, onClose, show }: { children: React.ReactNode; onClose: () => void; show: boolean }) {
-  if (!show) return null;
-  return (
-    <Modal.Overlay onClose={onClose}>
-      <Modal.Content>{children}</Modal.Content>
-    </Modal.Overlay>
-  );
-}
-Modal.Overlay = function ModalOverlay({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === "Escape") onClose();
-  }, [onClose]);
-  return (
-    <div className="modal-overlay" role="dialog" aria-modal="true" onKeyDown={handleKeyDown}>
-      {children}
-    </div>
-  );
-};
-Modal.Content = function ModalContent({ children }: { children: React.ReactNode }) {
-  return <div className="modal-content" style={{ position: "relative" }}>{children}</div>;
-};
 
 // Usage for ShareModal
 function ShareModal({ article, show, onClose }: { article: Article | null; show: boolean; onClose: () => void }) {
@@ -278,7 +255,7 @@ function ShareModal({ article, show, onClose }: { article: Article | null; show:
         prev.map((a) => (Number(a.id) === Number(article.id) ? nextArticle : a))
       );
       // Mostrar modal de favorito
-      setFavoriteModalOpen(true);
+      modalActions.openFavorite();
     } catch (e) {
       alert("Error al actualizar estado de favorito");
     } finally {
@@ -570,6 +547,29 @@ const ActionButton = {
 };
 
 
+// Compound Modal Component
+function Modal({ children, onClose, show }: { children: React.ReactNode; onClose: () => void; show: boolean }) {
+  if (!show) return null;
+  return (
+    <Modal.Overlay onClose={onClose}>
+      <Modal.Content>{children}</Modal.Content>
+    </Modal.Overlay>
+  );
+}
+Modal.Overlay = function ModalOverlay({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === "Escape") onClose();
+  }, [onClose]);
+  return (
+    <div className="modal-overlay" role="dialog" aria-modal="true" onKeyDown={handleKeyDown}>
+      {children}
+    </div>
+  );
+};
+Modal.Content = function ModalContent({ children }: { children: React.ReactNode }) {
+  return <div className="modal-content" style={{ position: "relative" }}>{children}</div>;
+};
+
 function ConfirmModal({ show, onConfirm, onCancel }: { show: boolean; onConfirm: () => void; onCancel: () => void }) {
   if (!show) return null;
   return (
@@ -590,58 +590,6 @@ function ConfirmModal({ show, onConfirm, onCancel }: { show: boolean; onConfirm:
     </Modal>
   );
 }
-
-// Toast removed
-
-function ShareModal({
-  open,
-  article,
-  onClose,
-}: {
-  open: boolean;
-  article: Article | null;
-  onClose: () => void;
-}) {
-  if (!open || !article) return null;
-  const shareText = encodeURIComponent(`¡He leído: ${article.title}!`);
-  const url = encodeURIComponent(article.url);
-  const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
-  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-  return (
-    <div className="modal-overlay">
-      <div className="modal-content" style={{ position: "relative" }}>
-        <button className="modal-close" onClick={onClose} title="Cerrar">
-          <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>
-            ×
-          </span>
-        </button>
-        <h2>Comparte este artículo</h2>
-        <p>Elige una red para compartirlo:</p>
-        <div className="share-buttons-row">
-          <a
-            href={blueskyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="share-button bluesky"
-          >
-            <img src="/blusky.svg" alt="Bluesky" className="share-icon" />
-            Bluesky
-          </a>
-          <a
-            href={linkedinUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="share-button linkedin"
-          >
-            <img src="/linkedin.svg" alt="LinkedIn" className="share-icon" />
-            LinkedIn
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 
 function FavoriteModal({ article, show, onClose }: { article: Article | null; show: boolean; onClose: () => void }) {
   if (!show || !article) return null;
