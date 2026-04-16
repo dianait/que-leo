@@ -1,9 +1,5 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-// ⚠️ Nunca uses claves de servicio (service role) en el frontend.
-// ⚠️ Asegúrate de tener Row Level Security (RLS) activado en todas las tablas de Supabase.
-// Solo usa la anon key en el navegador.
-
 let supabaseClient: SupabaseClient | null = null;
 
 export const createSupabaseClient = (
