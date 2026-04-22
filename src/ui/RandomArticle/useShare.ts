@@ -1,10 +1,13 @@
-// Hook para compartir usando Web Share API o fallback
 type ShareParams = { url: string; title: string; text?: string };
 
 export function useShare() {
   function share({ url, title, text }: ShareParams) {
     if (navigator.share) {
-      navigator.share({ title, url, text });
+      navigator.share({ title, url, text }).catch((err) => {
+        if (err instanceof Error && err.name !== "AbortError") {
+          window.open(url, "_blank");
+        }
+      });
     } else {
       window.open(url, "_blank");
     }
