@@ -83,28 +83,16 @@ function RandomArticleInner({ articlesVersion }: { articlesVersion: number }) {
     fetchArticles();
   }, [user, repository, articlesVersion]);
 
-  useEffect(() => {
-    // Only pick a random article when none is selected and there are items available
-    if (!article && articles.length > 0) {
-      let filtered = articles.filter((a) => !a.isRead);
-      if (filtered.length === 0) {
-        setArticle(null);
-      } else {
-        const randomIndex = Math.floor(Math.random() * filtered.length);
-        setArticle(filtered[randomIndex]);
-      }
-    }
-  }, [articles, article]);
+  const pickRandomUnread = useCallback((from: typeof articles) => {
+    const unread = from.filter((a) => !a.isRead);
+    setArticle(unread.length > 0 ? unread[Math.floor(Math.random() * unread.length)] : null);
+  }, []);
 
-  const handleGetRandomArticle = () => {
-    let filtered = articles.filter((a) => !a.isRead);
-    if (filtered.length === 0) {
-      setArticle(null);
-    } else {
-      const randomIndex = Math.floor(Math.random() * filtered.length);
-      setArticle(filtered[randomIndex]);
-    }
-  };
+  useEffect(() => {
+    if (!article && articles.length > 0) pickRandomUnread(articles);
+  }, [articles, article, pickRandomUnread]);
+
+  const handleGetRandomArticle = () => pickRandomUnread(articles);
 
   const handleArticleClick = (url: string, event: React.MouseEvent) => {
     event.preventDefault();
@@ -132,18 +120,8 @@ function RandomArticleInner({ articlesVersion }: { articlesVersion: number }) {
         prev.filter((a) => Number(a.id) !== Number(articleId))
       );
 
-      // If the deleted article was being displayed, pick a new one
       if (article && Number(article.id) === Number(articleId)) {
-        const remainingArticles = articles.filter(
-          (a) => Number(a.id) !== Number(articleId)
-        );
-        const filtered = remainingArticles.filter((a) => !a.isRead);
-        if (filtered.length === 0) {
-          setArticle(null);
-        } else {
-          const randomIndex = Math.floor(Math.random() * filtered.length);
-          setArticle(filtered[randomIndex]);
-        }
+        pickRandomUnread(articles.filter((a) => Number(a.id) !== Number(articleId)));
       }
 
       // no toast
