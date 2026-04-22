@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback, createContext, useContext as useReactContext } from "react";
+import { useShare } from "./useShare";
 // Modal context and provider
 type ModalState = {
   confirm: boolean;
@@ -155,10 +156,10 @@ function RandomArticleInner({ articlesVersion }: { articlesVersion: number }) {
 // Usage for ShareModal
 function ShareModal({ article, show, onClose }: { article: Article | null; show: boolean; onClose: () => void }) {
   if (!show || !article) return null;
-  const shareText = encodeURIComponent(`¡He leído: ${article.title}!`);
-  const url = encodeURIComponent(article.url);
-  const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
-  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+  const shareText = `¡He leído: ${article.title}!`;
+  const url = article.url;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
   return (
     <Modal show={show} onClose={onClose}>
       <button className="modal-close" onClick={onClose} aria-label="Cerrar">
@@ -171,9 +172,9 @@ function ShareModal({ article, show, onClose }: { article: Article | null; show:
         ¿Quieres compartirlo en tus redes?
       </p>
       <div className="share-buttons-row">
-        <a href={blueskyUrl} target="_blank" rel="noopener noreferrer" className="share-button bluesky">
-          <img src="/blusky.svg" alt="" className="share-icon" />
-          Bluesky
+        <a href={twitterUrl} target="_blank" rel="noopener noreferrer" className="share-button twitter">
+          <img src="/x.svg" alt="" className="share-icon" />
+          Twitter
         </a>
         <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="share-button linkedin">
           <img src="/linkedin.svg" alt="" className="share-icon" />
@@ -293,6 +294,10 @@ function ShareModal({ article, show, onClose }: { article: Article | null; show:
                     loading={loadingFavorite}
                     isFavorite={article.isFavorite ?? false}
                     onClick={handleToggleFavorite}
+                  />
+                  <ActionButton.NativeShare
+                    url={article.url}
+                    title={article.title}
                   />
                   <ActionButton.Share
                     onClick={() => modalActions.openShare()}
@@ -517,6 +522,19 @@ const ActionButton = {
         ) : (
           <img src="/star_unfilled.png" alt="" className="button-custom-icon" style={{ width: "1.5em", height: "1.5em" }} />
         )}
+      </button>
+    );
+  },
+  NativeShare: function NativeShare({ url, title }: { url: string; title: string }) {
+    const share = useShare();
+    return (
+      <button
+        className="app-button action-button share icon-only"
+        onClick={() => share({ url, title })}
+        title="Compartir"
+        aria-label="Compartir"
+      >
+        <span className="button-emoji">📤</span>
       </button>
     );
   },
