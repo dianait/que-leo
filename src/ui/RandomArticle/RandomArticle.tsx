@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback, createContext, useContext as useReactContext } from "react";
+import React, { useState, useEffect, useContext, useCallback, createContext } from "react";
 import { useShare } from "./useShare";
 // Modal context and provider
 type ModalState = {
@@ -35,7 +35,7 @@ function ModalProvider({ children }: { children: React.ReactNode }) {
   return <ModalContext.Provider value={{ state, actions }}>{children}</ModalContext.Provider>;
 }
 function useModals() {
-  const ctx = useReactContext(ModalContext);
+  const ctx = useContext(ModalContext);
   if (!ctx) throw new Error("useModals must be used within ModalProvider");
   return ctx;
 }
