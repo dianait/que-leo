@@ -231,6 +231,130 @@ export class SupabaseArticleRepository implements ArticleRepository {
     }
   }
 
+  async getArticlesByUserFromUserArticlesFiltered(
+    userId: string,
+    filters: import("../../../domain/ArticleListFilters").ArticleListFilters,
+    limit: number,
+    offset: number
+  ): Promise<{ articles: Article[]; total: number }> {
+    try {
+      type UserArticleRow = {
+        is_read: boolean;
+        read_at?: string;
+        added_at?: string;
+        updated_at?: string;
+        article_id: number;
+        is_favorite?: boolean;
+        ai_rating?: number | null;
+        ai_rating_reason?: string | null;
+        articles: ArticleRow | ArticleRow[] | null | undefined;
+      };
+
+      const searchTerm = filters.searchTerm?.trim();
+      const useInnerJoin = Boolean(searchTerm);
+
+      let query = this.supabase
+        .from("user_articles")
+        .select(
+          `
+          is_read,
+          read_at,
+          added_at,
+          updated_at,
+          article_id,
+          is_favorite,
+          ai_rating,
+          ai_rating_reason,
+          articles${useInnerJoin ? "!inner" : ""} (
+            id,
+            title,
+            url,
+            language,
+            authors,
+            topics,
+            less_15,
+            featured_image
+          )
+        `,
+          { count: "exact" }
+        )
+        .eq("user_id", userId);
+
+      if (filters.readFilter === "read") {
+        query = query.eq("is_read", true);
+      } else if (filters.readFilter === "unread") {
+        query = query.eq("is_read", false);
+      }
+
+      if (filters.favoriteFilter === "favorites") {
+        query = query.eq("is_favorite", true);
+      }
+
+      if (searchTerm) {
+        query = query.ilike("articles.title", `%${searchTerm}%`);
+      }
+
+      const { data, error, count } = await query
+        .order("ai_rating", { ascending: false, nullsFirst: false })
+        .order("added_at", { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (error) {
+        throw new Error(
+          `Error al obtener artículos filtrados del usuario: ${error.message}`
+        );
+      }
+
+      const articles = ((data as UserArticleRow[]) || [])
+        .map((row) => {
+          let art = row.articles;
+          if (Array.isArray(art)) {
+            art = art[0];
+          }
+          if (!art) return null;
+          return {
+            id: art.id,
+            title: art.title,
+            url: art.url,
+            dateAdded: new Date(row.added_at || Date.now()),
+            isRead: row.is_read,
+            readAt: row.read_at ? new Date(row.read_at) : undefined,
+            isFavorite: row.is_favorite ?? false,
+            language: art.language,
+            authors: art.authors,
+            topics: art.topics,
+            less_15: art.less_15,
+            featuredImage: art.featured_image,
+            aiRating: row.ai_rating ?? undefined,
+            aiRatingReason: row.ai_rating_reason ?? undefined,
+          };
+        })
+        .filter(Boolean) as Article[];
+
+      return { articles, total: count ?? 0 };
+    } catch (error) {
+      console.error(
+        "Error en SupabaseArticleRepository.getArticlesByUserFromUserArticlesFiltered:",
+        error
+      );
+      throw error;
+    }
+  }
+
+  async getArticlesByUserFiltered(
+    userId: string,
+    filters: import("../../../domain/ArticleListFilters").ArticleListFilters,
+    limit: number,
+    offset: number
+  ): Promise<{ articles: Article[]; total: number }> {
+    return this.getArticlesByUserFromUserArticlesFiltered(
+      userId,
+      filters,
+      limit,
+      offset
+    );
+  }
+
   /**
   * Insert article into articles (if it does not exist) and link it to the user in user_articles (if the relation does not exist).
   * Returns the full article entity.
@@ -381,7 +505,11 @@ export class SupabaseArticleRepository implements ArticleRepository {
     };
   }
 
-  async markAsRead(articleId: number, isRead: boolean): Promise<void> {
+  async markAsRead(
+    articleId: number,
+    isRead: boolean,
+    userId: string
+  ): Promise<void> {
     try {
       const { error } = await this.supabase
         .from("user_articles")
@@ -389,7 +517,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
           is_read: isRead,
           read_at: isRead ? new Date().toISOString() : null,
         })
-        .eq("article_id", articleId);
+        .eq("article_id", articleId)
+        .eq("user_id", userId);
 
       if (error) {
         throw new Error(
@@ -402,14 +531,19 @@ export class SupabaseArticleRepository implements ArticleRepository {
     }
   }
 
-  async markAsFavorite(articleId: number, isFavorite: boolean): Promise<void> {
+  async markAsFavorite(
+    articleId: number,
+    isFavorite: boolean,
+    userId: string
+  ): Promise<void> {
     try {
       const { error } = await this.supabase
         .from("user_articles")
         .update({
           is_favorite: isFavorite,
         })
-        .eq("article_id", articleId);
+        .eq("article_id", articleId)
+        .eq("user_id", userId);
 
       if (error) {
         throw new Error(

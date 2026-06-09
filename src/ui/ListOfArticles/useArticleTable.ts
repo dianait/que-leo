@@ -18,15 +18,22 @@ import {
   initialArticlesState,
   initialFiltersState,
   initialUIState,
+  type FiltersState,
 } from "./articleTableReducers";
 import {
-  hasActiveTableFilters,
   needsAllArticlesForFilters,
   paginateArticles,
 } from "./articleTableFiltering";
 import { useArticleTableDisplay } from "./useArticleTableDisplay";
 
 const PAGE_SIZE = 15;
+
+const neutralDisplayFilters: FiltersState = {
+  readFilter: "all",
+  favoriteFilter: "all",
+  searchTerm: "",
+  isSearching: false,
+};
 
 export function useArticleTable() {
   const { version } = useArticlesRefresh();
@@ -36,7 +43,7 @@ export function useArticleTable() {
     patchArticle,
     removeArticle,
   } = useArticlesCache();
-  const { isReady, user, repository } = useArticleFetcher();
+  const { fetchFiltered, isReady, user, repository } = useArticleFetcher();
   const { markRead, markFavorite, deleteArticle } = useArticleMutations(
     repository,
     user?.id
@@ -57,8 +64,21 @@ export function useArticleTable() {
     [filtersState]
   );
 
+  const displayState = useMemo(
+    () =>
+      serverFiltered
+        ? { ...articlesState, allArticles: [] }
+        : articlesState,
+    [serverFiltered, articlesState]
+  );
+
+  const displayFilters = useMemo(
+    () => (serverFiltered ? neutralDisplayFilters : filtersState),
+    [serverFiltered, filtersState]
+  );
+
   const { filteredArticles, effectiveTotal, displayedArticles } =
-    useArticleTableDisplay(articlesState, filtersState, PAGE_SIZE);
+    useArticleTableDisplay(displayState, displayFilters, PAGE_SIZE);
 
   useEffect(() => {
     if (!isReady || serverFiltered) return;
@@ -84,22 +104,55 @@ export function useArticleTable() {
   ]);
 
   useEffect(() => {
-    if (!serverFiltered) return;
+    if (!isReady || !serverFiltered) return;
 
-    if (cacheLoading) {
+    let cancelled = false;
+
+    const loadFiltered = async () => {
       dispatchFilters({ type: "SET_IS_SEARCHING", payload: true });
-      return;
-    }
+      dispatchArticles({ type: "SET_LOADING", payload: true });
+      try {
+        const { articles, total } = await fetchFiltered(
+          PAGE_SIZE,
+          (articlesState.page - 1) * PAGE_SIZE,
+          {
+            searchTerm: filtersState.searchTerm,
+            readFilter: filtersState.readFilter,
+            favoriteFilter: filtersState.favoriteFilter,
+          }
+        );
+        if (!cancelled) {
+          dispatchArticles({
+            type: "SET_ARTICLES",
+            payload: { articles, total },
+          });
+        }
+      } catch (error) {
+        console.error("Error loading filtered articles:", error);
+        if (!cancelled) {
+          dispatchArticles({ type: "SET_LOADING", payload: false });
+        }
+      } finally {
+        if (!cancelled) {
+          dispatchFilters({ type: "SET_IS_SEARCHING", payload: false });
+        }
+      }
+    };
 
-    dispatchArticles({ type: "SET_ALL_ARTICLES", payload: cachedArticles });
-    dispatchFilters({ type: "SET_IS_SEARCHING", payload: false });
+    loadFiltered();
+
+    return () => {
+      cancelled = true;
+    };
   }, [
+    isReady,
     serverFiltered,
-    cachedArticles,
-    cacheLoading,
+    fetchFiltered,
     filtersState.searchTerm,
     filtersState.readFilter,
     filtersState.favoriteFilter,
+    articlesState.page,
+    version,
   ]);
 
   useEffect(() => {

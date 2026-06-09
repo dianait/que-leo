@@ -20,6 +20,20 @@ const mockRepository: ArticleRepository = {
       aiRatingReason: "Encaja con tus temas favoritos",
     },
   ]),
+  getArticlesByUserFromUserArticles: jest.fn().mockResolvedValue([
+    {
+      id: "1",
+      title: "Artículo con valoración IA",
+      url: "http://ejemplo.com",
+      isRead: false,
+      dateAdded: new Date(),
+      authors: ["Autor Test"],
+      topics: [],
+      less_15: false,
+      aiRating: 8,
+      aiRatingReason: "Encaja con tus temas favoritos",
+    },
+  ]),
   getArticlesByUserPaginated: jest
     .fn()
     .mockResolvedValue({ articles: [], total: 0 }),

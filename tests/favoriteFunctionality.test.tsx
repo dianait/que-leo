@@ -5,6 +5,8 @@ import {
 } from "@testing-library/react";
 import { ArticleTable } from "../src/ui/ListOfArticles/ArticleTable";
 import { renderWithProviders } from "./renderWithProviders";
+import { makeArticleRepoMock } from "./helpers/makeArticleRepoMock";
+import { mockUser } from "./setup";
 
 describe("Favorite Functionality", () => {
   const baseArticles = [
@@ -41,15 +43,7 @@ describe("Favorite Functionality", () => {
   ];
 
   function makeRepoMock(list = baseArticles) {
-    return {
-      getArticlesByUserPaginated: jest.fn().mockResolvedValue({
-        articles: list,
-        total: list.length,
-      }),
-      markAsRead: jest.fn().mockResolvedValue(undefined),
-      markAsFavorite: jest.fn().mockResolvedValue(undefined),
-      deleteArticle: jest.fn().mockResolvedValue(undefined),
-    };
+    return makeArticleRepoMock(list);
   }
 
   it("muestra el icono de estrella vacía para artículos no favoritos", async () => {
@@ -60,7 +54,7 @@ describe("Favorite Functionality", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue (buscar un título de artículo)
@@ -87,7 +81,7 @@ describe("Favorite Functionality", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue
@@ -113,7 +107,7 @@ describe("Favorite Functionality", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue
@@ -147,7 +141,7 @@ describe("Favorite Functionality", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue
@@ -181,7 +175,7 @@ describe("Favorite Functionality", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue
@@ -214,7 +208,7 @@ describe("Favorite Functionality", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue
@@ -251,7 +245,7 @@ describe("Favorite Functionality", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue

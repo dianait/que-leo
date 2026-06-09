@@ -2,7 +2,7 @@ import { screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { ArticleTable } from "../src/ui/ListOfArticles/ArticleTable";
 import { renderWithProviders } from "./renderWithProviders";
-import { mockUser } from "./setup";
+import { makeArticleRepoMock } from "./helpers/makeArticleRepoMock";
 
 describe("ArticleTable - Orden por valoración IA", () => {
   it("muestra los artículos ordenados por valoración IA descendente", async () => {
@@ -32,14 +32,7 @@ describe("ArticleTable - Orden por valoración IA", () => {
       },
     ];
 
-    const repo = {
-      getArticlesByUserPaginated: jest
-        .fn()
-        .mockResolvedValue({ articles, total: articles.length }),
-      markAsRead: jest.fn(),
-      markAsFavorite: jest.fn(),
-      deleteArticle: jest.fn(),
-    };
+    const repo = makeArticleRepoMock(articles);
 
     renderWithProviders(
       <ArticleTable />,

@@ -7,6 +7,7 @@ import {
 import "@testing-library/jest-dom";
 import { ArticleTable } from "../src/ui/ListOfArticles/ArticleTable";
 import { renderWithProviders } from "./renderWithProviders";
+import { makeArticleRepoMock } from "./helpers/makeArticleRepoMock";
 
 describe("ArticleTable - Manejo de Errores", () => {
   const baseArticles = [
@@ -33,15 +34,7 @@ describe("ArticleTable - Manejo de Errores", () => {
   ];
 
   function makeRepoMock(list = baseArticles) {
-    return {
-      getArticlesByUserPaginated: jest.fn().mockResolvedValue({
-        articles: list,
-        total: list.length,
-      }),
-      markAsRead: jest.fn().mockResolvedValue(undefined),
-      markAsFavorite: jest.fn().mockResolvedValue(undefined),
-      deleteArticle: jest.fn().mockResolvedValue(undefined),
-    };
+    return makeArticleRepoMock(list);
   }
 
   beforeEach(() => {
@@ -54,7 +47,7 @@ describe("ArticleTable - Manejo de Errores", () => {
 
   it("maneja error al cargar artículos inicialmente", async () => {
     const repo = {
-      getArticlesByUserPaginated: jest
+      getArticlesByUserFromUserArticles: jest
         .fn()
         .mockRejectedValue(new Error("Error de red")),
       markAsRead: jest.fn(),
@@ -68,7 +61,7 @@ describe("ArticleTable - Manejo de Errores", () => {
     );
 
     await waitFor(() => {
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled();
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled();
     });
 
     // Debería mostrar el skeleton inicialmente y luego desaparecer
@@ -199,16 +192,11 @@ describe("ArticleTable - Manejo de Errores", () => {
     alertSpy.mockRestore();
   });
 
-  it("maneja error al cargar todos los artículos para búsqueda", async () => {
+  it("maneja error al cargar artículos filtrados para búsqueda", async () => {
     const repo = makeRepoMock();
-    // Primera llamada funciona, segunda (para búsqueda) falla
-    repo.getArticlesByUserPaginated = jest
+    repo.getArticlesByUserFiltered = jest
       .fn()
-      .mockResolvedValueOnce({
-        articles: baseArticles,
-        total: baseArticles.length,
-      })
-      .mockRejectedValueOnce(new Error("Error al cargar todos los artículos"));
+      .mockRejectedValue(new Error("Error al cargar artículos filtrados"));
 
     renderWithProviders(
       <ArticleTable />,
@@ -219,16 +207,17 @@ describe("ArticleTable - Manejo de Errores", () => {
       expect(screen.getByText(/React Hooks Tutorial/i)).toBeInTheDocument();
     });
 
-    // Activar búsqueda
     const input = screen.getByPlaceholderText(/Buscar por título/i);
     fireEvent.change(input, { target: { value: "React" } });
 
-    // Esperar a que se intente cargar todos los artículos
     await waitFor(() => {
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalledTimes(2);
+      expect(repo.getArticlesByUserFiltered).toHaveBeenCalled();
     });
 
-    // El componente debería manejar el error sin crashear
+    await waitFor(() => {
+      expect(console.error).toHaveBeenCalled();
+    });
+  });
     await waitFor(() => {
       expect(console.error).toHaveBeenCalled();
     });

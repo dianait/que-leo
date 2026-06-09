@@ -7,6 +7,7 @@ import {
 import "@testing-library/jest-dom";
 import { ArticleTable } from "../src/ui/ListOfArticles/ArticleTable";
 import { renderWithProviders } from "./renderWithProviders";
+import { makeArticleRepoMock } from "./helpers/makeArticleRepoMock";
 
 describe("ArticleTable - Paginación", () => {
   // Crear 20 artículos para probar paginación
@@ -23,21 +24,8 @@ describe("ArticleTable - Paginación", () => {
     }));
   };
 
-  function makeRepoMock(articles: any[], total?: number) {
-    return {
-      getArticlesByUserPaginated: jest.fn().mockImplementation(
-        (_userId: string, limit: number, offset: number) => {
-          const paginatedArticles = articles.slice(offset, offset + limit);
-          return Promise.resolve({
-            articles: paginatedArticles,
-            total: total ?? articles.length,
-          });
-        }
-      ),
-      markAsRead: jest.fn().mockResolvedValue(undefined),
-      markAsFavorite: jest.fn().mockResolvedValue(undefined),
-      deleteArticle: jest.fn().mockResolvedValue(undefined),
-    };
+  function makeRepoMock(articles: ReturnType<typeof createArticles>, total?: number) {
+    return makeArticleRepoMock(articles, total);
   }
 
   it("muestra la primera página de artículos por defecto", async () => {
@@ -50,7 +38,7 @@ describe("ArticleTable - Paginación", () => {
     );
 
     await waitFor(() => {
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled();
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled();
     });
 
     // Debería mostrar los primeros 15 artículos
@@ -85,14 +73,6 @@ describe("ArticleTable - Paginación", () => {
 
     // Debería mostrar los artículos de la segunda página
     await waitFor(() => {
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalledWith(
-        expect.any(String),
-        15,
-        15
-      );
-    });
-
-    await waitFor(() => {
       expect(screen.getByTitle("Article 16")).toBeInTheDocument();
     });
   });
@@ -122,14 +102,6 @@ describe("ArticleTable - Paginación", () => {
     const prevButton = screen.getByRole("button", { name: /Anterior/i });
     expect(prevButton).not.toBeDisabled();
     fireEvent.click(prevButton);
-
-    await waitFor(() => {
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalledWith(
-        expect.any(String),
-        15,
-        0
-      );
-    });
 
     await waitFor(() => {
       expect(screen.getByTitle("Article 1")).toBeInTheDocument();

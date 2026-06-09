@@ -7,7 +7,7 @@ import {
 } from "@testing-library/react";
 import { ArticleTable } from "../src/ui/ListOfArticles/ArticleTable";
 import { renderWithProviders } from "./renderWithProviders";
-import { mockUser } from "./setup";
+import { makeArticleRepoMock } from "./helpers/makeArticleRepoMock";
 
 describe("ArticleTable - UI de filtros y acciones", () => {
   const baseArticles = [
@@ -41,15 +41,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
   ];
 
   function makeRepoMock(list = baseArticles) {
-    return {
-      getArticlesByUserPaginated: jest.fn().mockResolvedValue({
-        articles: list,
-        total: list.length,
-      }),
-      markAsRead: jest.fn().mockResolvedValue(undefined),
-      markAsFavorite: jest.fn().mockResolvedValue(undefined),
-      deleteArticle: jest.fn().mockResolvedValue(undefined),
-    };
+    return makeArticleRepoMock(list);
   }
 
   it("muestra los botones de filtro con emojis y resalta el activo", async () => {
@@ -61,7 +53,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
 
     // Esperar a que cargue la tabla
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     expect(
@@ -89,7 +81,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue
@@ -119,7 +111,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Buscar por "TypeScript" y filtrar por leídos
@@ -140,7 +132,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Hacer clic en el primer botón de estado "No leído" para marcarlo como leído
@@ -165,7 +157,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     const favoritesBtn = screen.getByRole("button", { name: /⭐ Favoritos/i });
@@ -214,7 +206,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue
@@ -228,7 +220,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
 
     // Esperar a que se carguen todos los artículos para el filtro
     await waitFor(() => {
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalledTimes(2); // Inicial + carga todos para filtro
+      expect(repo.getArticlesByUserFiltered).toHaveBeenCalled();
     }, { timeout: 3000 });
 
     // Verificar que solo se muestran favoritos
@@ -280,7 +272,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue
@@ -351,7 +343,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
 
     const repo = makeRepoMock(articlesWithFavorites);
     // Mock para que getByUserPaginated devuelva todos los artículos cuando se busca
-    repo.getArticlesByUserPaginated = jest.fn().mockResolvedValue({
+    repo.getArticlesByUserFromUserArticles = jest.fn().mockResolvedValue({
       articles: articlesWithFavorites,
       total: articlesWithFavorites.length,
     });
@@ -362,7 +354,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue
@@ -376,7 +368,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
 
     // Esperar a que se carguen todos los artículos para el filtro
     await waitFor(() => {
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalledTimes(2); // Inicial + carga todos para filtro
+      expect(repo.getArticlesByUserFiltered).toHaveBeenCalled();
     }, { timeout: 3000 });
 
     // Buscar por "TypeScript" - esto debería usar los artículos ya cargados
@@ -386,7 +378,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     // Esperar a que se aplique el filtro de búsqueda
     await waitFor(() => {
       // Verificar que se llamó al menos 2 veces (inicial + carga todos para filtro)
-      expect(repo.getArticlesByUserPaginated.mock.calls.length).toBeGreaterThanOrEqual(2);
+      expect(repo.getArticlesByUserFiltered.mock.calls.length).toBeGreaterThanOrEqual(1);
     }, { timeout: 3000 });
 
     // Verificar que solo aparece el favorito que coincide con la búsqueda
@@ -428,7 +420,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     );
 
     await waitFor(() =>
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+      expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
     );
 
     // Esperar a que la tabla se cargue
@@ -443,7 +435,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     
     // Esperar a que se carguen todos los artículos para el filtro
     await waitFor(() => {
-      expect(repo.getArticlesByUserPaginated).toHaveBeenCalledTimes(2); // Inicial + carga todos para filtro
+      expect(repo.getArticlesByUserFiltered).toHaveBeenCalled();
     }, { timeout: 3000 });
 
     // Esperar a que se aplique el filtro y se muestren solo favoritos
@@ -504,7 +496,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
       );
 
       await waitFor(() =>
-        expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+        expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
       );
 
       await waitFor(() => {
@@ -539,7 +531,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
       );
 
       await waitFor(() =>
-        expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+        expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
       );
 
       await waitFor(() => {
@@ -574,7 +566,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
       );
 
       await waitFor(() =>
-        expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+        expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
       );
 
       await waitFor(() => {
@@ -609,7 +601,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
       );
 
       await waitFor(() =>
-        expect(repo.getArticlesByUserPaginated).toHaveBeenCalled()
+        expect(repo.getArticlesByUserFromUserArticles).toHaveBeenCalled()
       );
 
       await waitFor(() => {

@@ -29,9 +29,9 @@ describe("ArticleService", () => {
       deleteArticle: jest.fn().mockResolvedValue(undefined),
     } as any;
     const svc = new ArticleService(repo);
-    await svc.markRead(1, true);
+    await svc.markRead(1, true, "u");
     await svc.delete(1, "u");
-    expect(repo.markAsRead).toHaveBeenCalledWith(1, true);
+    expect(repo.markAsRead).toHaveBeenCalledWith(1, true, "u");
     expect(repo.deleteArticle).toHaveBeenCalledWith(1, "u");
   });
 
@@ -40,11 +40,28 @@ describe("ArticleService", () => {
       markAsFavorite: jest.fn().mockResolvedValue(undefined),
     } as any;
     const svc = new ArticleService(repo);
-    await svc.markFavorite(1, true);
-    expect(repo.markAsFavorite).toHaveBeenCalledWith(1, true);
-    
-    await svc.markFavorite(2, false);
-    expect(repo.markAsFavorite).toHaveBeenCalledWith(2, false);
+    await svc.markFavorite(1, true, "u");
+    expect(repo.markAsFavorite).toHaveBeenCalledWith(1, true, "u");
+
+    await svc.markFavorite(2, false, "u");
+    expect(repo.markAsFavorite).toHaveBeenCalledWith(2, false, "u");
+  });
+
+  it("delegates getByUserFiltered to repository", async () => {
+    const mockResult = { articles: [], total: 0 };
+    const repo = {
+      getArticlesByUserFiltered: jest.fn().mockResolvedValue(mockResult),
+    } as any;
+    const svc = new ArticleService(repo);
+    const filters = { searchTerm: "react", readFilter: "unread" as const };
+    const result = await svc.getByUserFiltered("u", filters, 15, 0);
+    expect(repo.getArticlesByUserFiltered).toHaveBeenCalledWith(
+      "u",
+      filters,
+      15,
+      0
+    );
+    expect(result).toBe(mockResult);
   });
 });
 

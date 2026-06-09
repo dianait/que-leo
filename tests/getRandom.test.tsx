@@ -7,7 +7,7 @@ import { renderWithProviders } from "./renderWithProviders";
 // Mock del repositorio
 const mockRepository: ArticleRepository = {
   getAllArticles: jest.fn(),
-  getArticlesByUser: jest.fn().mockResolvedValue([
+  getArticlesByUserFromUserArticles: jest.fn().mockResolvedValue([
     {
       id: "1",
       title: "Artículo de prueba",
