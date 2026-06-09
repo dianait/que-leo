@@ -7,6 +7,7 @@ import {
 import { useArticleFetcher } from "../hooks/useArticleFetcher";
 import { useArticleMutations } from "../hooks/useArticleMutations";
 import { useArticlesRefresh } from "../context/ArticlesRefreshContext";
+import { useArticlesCache } from "../context/ArticlesCacheProvider";
 import {
   initialRandomArticleState,
   randomArticleReducer,
@@ -14,7 +15,8 @@ import {
 
 export function useRandomArticle() {
   const { version } = useArticlesRefresh();
-  const { fetchAll, isReady, user, repository } = useArticleFetcher();
+  const { articles, loading, patchArticle, removeArticle } = useArticlesCache();
+  const { isReady, user, repository } = useArticleFetcher();
   const { markRead, markFavorite, deleteArticle } = useArticleMutations(
     repository,
     user?.id
@@ -30,29 +32,13 @@ export function useRandomArticle() {
       return;
     }
 
-    let cancelled = false;
-
-    const loadArticles = async () => {
+    if (loading) {
       dispatch({ type: "FETCH_START" });
-      try {
-        const result = await fetchAll();
-        if (!cancelled) {
-          dispatch({ type: "FETCH_SUCCESS", payload: result });
-        }
-      } catch (error) {
-        console.error("Error loading user articles:", error);
-        if (!cancelled) {
-          dispatch({ type: "FETCH_ERROR" });
-        }
-      }
-    };
+      return;
+    }
 
-    loadArticles();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [fetchAll, isReady, version, user]);
+    dispatch({ type: "FETCH_SUCCESS", payload: articles });
+  }, [articles, loading, isReady, user, version]);
 
   const pickRandom = useCallback(() => {
     dispatch({ type: "PICK_RANDOM_UNREAD" });
@@ -71,6 +57,10 @@ export function useRandomArticle() {
         readAt: nextIsRead ? new Date() : undefined,
       } as Article;
       dispatch({ type: "UPDATE_ARTICLE", payload: nextArticle });
+      patchArticle(Number(state.current.id), {
+        isRead: nextIsRead,
+        readAt: nextIsRead ? new Date() : undefined,
+      });
       return true;
     } catch {
       alert("Error al actualizar estado de lectura");
@@ -78,7 +68,7 @@ export function useRandomArticle() {
     } finally {
       dispatch({ type: "SET_PENDING", payload: null });
     }
-  }, [repository, user, state.current, markRead]);
+  }, [repository, user, state.current, markRead, patchArticle]);
 
   const toggleFavorite = useCallback(async (): Promise<boolean> => {
     if (!repository || !state.current) return false;
@@ -98,6 +88,9 @@ export function useRandomArticle() {
         isFavorite: newArticleState.isFavorite,
       } as Article;
       dispatch({ type: "UPDATE_ARTICLE", payload: nextArticle });
+      patchArticle(Number(state.current.id), {
+        isFavorite: newArticleState.isFavorite,
+      });
       return !wasFavorite;
     } catch {
       alert("Error al actualizar estado de favorito");
@@ -105,22 +98,23 @@ export function useRandomArticle() {
     } finally {
       dispatch({ type: "SET_PENDING", payload: null });
     }
-  }, [repository, state.current, markFavorite]);
+  }, [repository, state.current, markFavorite, patchArticle]);
 
-  const removeArticle = useCallback(
+  const removeArticleFromLibrary = useCallback(
     async (articleId: number): Promise<boolean> => {
       if (!repository || !user) return false;
 
       try {
         await deleteArticle(articleId);
         dispatch({ type: "REMOVE_ARTICLE", payload: articleId });
+        removeArticle(articleId);
         return true;
       } catch (error) {
         console.error("Error al borrar artículo:", error);
         return false;
       }
     },
-    [repository, user, deleteArticle]
+    [repository, user, deleteArticle, removeArticle]
   );
 
   return {
@@ -132,6 +126,6 @@ export function useRandomArticle() {
     pickRandom,
     toggleRead,
     toggleFavorite,
-    deleteArticle: removeArticle,
+    deleteArticle: removeArticleFromLibrary,
   };
 }

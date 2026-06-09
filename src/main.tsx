@@ -7,6 +7,7 @@ import { createSupabaseClient } from "./infrastructure/repositories/SupabaseArti
 import { SupabaseArticleRepository } from "./infrastructure/repositories/SupabaseArticleRepository/SupabaseArticleRepository.ts";
 import { ArticleRepositoryContext } from "./domain/ArticleRepositoryContext.ts";
 import { ArticlesRefreshProvider } from "./ui/context/ArticlesRefreshContext.tsx";
+import { ArticlesCacheProvider } from "./ui/context/ArticlesCacheProvider.tsx";
 import { BrowserRouter } from "react-router-dom";
 // Analytics se cargará de forma diferida tras la hidratación
 
@@ -20,9 +21,11 @@ createRoot(document.getElementById("root")!).render(
     <ArticleRepositoryContext.Provider value={articleRepository}>
       <AuthProvider supabase={supabase}>
         <ArticlesRefreshProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <ArticlesCacheProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </ArticlesCacheProvider>
         </ArticlesRefreshProvider>
       </AuthProvider>
     </ArticleRepositoryContext.Provider>

@@ -31,6 +31,7 @@ export function ArticleTable() {
     handleToggleFavorite,
     handleDelete,
     clearSearch,
+    cachedTotal,
   } = useArticleTable();
 
   return (
@@ -154,9 +155,9 @@ export function ArticleTable() {
                 {filteredArticles.length} artículo
                 {filteredArticles.length !== 1 ? "s" : ""} encontrado
                 {filteredArticles.length !== 1 ? "s" : ""}
-                {articlesState.allArticles.length > 0 && (
+                {cachedTotal > 0 && (
                   <span style={{ marginLeft: "8px", opacity: 0.7 }}>
-                    (de {articlesState.allArticles.length} total)
+                    (de {cachedTotal} total)
                   </span>
                 )}
               </>

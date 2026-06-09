@@ -3,6 +3,7 @@ import { render, type RenderOptions } from "@testing-library/react";
 import { AuthContext } from "../src/domain/AuthContext";
 import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
 import { ArticlesRefreshProvider } from "../src/ui/context/ArticlesRefreshContext";
+import { ArticlesCacheProvider } from "../src/ui/context/ArticlesCacheProvider";
 import { mockUser, createMockAuthContext } from "./setup";
 
 export function renderWithProviders(
@@ -15,7 +16,9 @@ export function renderWithProviders(
   const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <AuthContext.Provider value={authValue}>
       <ArticleRepositoryContext.Provider value={repoMock as never}>
-        <ArticlesRefreshProvider>{children}</ArticlesRefreshProvider>
+        <ArticlesRefreshProvider>
+          <ArticlesCacheProvider>{children}</ArticlesCacheProvider>
+        </ArticlesRefreshProvider>
       </ArticleRepositoryContext.Provider>
     </AuthContext.Provider>
   );

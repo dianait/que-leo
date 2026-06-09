@@ -1,14 +1,16 @@
-import { useEffect, useReducer, useCallback } from "react";
+import { useEffect, useReducer, useCallback, useMemo } from "react";
 import type { Article } from "../../domain/Article";
 import {
   markArticleAsRead,
   markArticleAsUnread,
   markArticleAsFavorite,
   markArticleAsUnfavorite,
+  sortArticlesByAiRating,
 } from "../../domain/Article";
 import { useArticleFetcher } from "../hooks/useArticleFetcher";
 import { useArticleMutations } from "../hooks/useArticleMutations";
 import { useArticlesRefresh } from "../context/ArticlesRefreshContext";
+import { useArticlesCache } from "../context/ArticlesCacheProvider";
 import {
   articlesReducer,
   filtersReducer,
@@ -17,15 +19,24 @@ import {
   initialFiltersState,
   initialUIState,
 } from "./articleTableReducers";
-import { hasActiveTableFilters } from "./articleTableFiltering";
+import {
+  hasActiveTableFilters,
+  needsAllArticlesForFilters,
+  paginateArticles,
+} from "./articleTableFiltering";
 import { useArticleTableDisplay } from "./useArticleTableDisplay";
 
 const PAGE_SIZE = 15;
-const ALL_ARTICLES_LIMIT = 1000;
 
 export function useArticleTable() {
   const { version } = useArticlesRefresh();
-  const { fetchPaginated, isReady, user, repository } = useArticleFetcher();
+  const {
+    articles: cachedArticles,
+    loading: cacheLoading,
+    patchArticle,
+    removeArticle,
+  } = useArticlesCache();
+  const { isReady, user, repository } = useArticleFetcher();
   const { markRead, markFavorite, deleteArticle } = useArticleMutations(
     repository,
     user?.id
@@ -41,58 +52,54 @@ export function useArticleTable() {
   );
   const [uiState, dispatchUI] = useReducer(uiReducer, initialUIState);
 
+  const serverFiltered = useMemo(
+    () => needsAllArticlesForFilters(filtersState),
+    [filtersState]
+  );
+
   const { filteredArticles, effectiveTotal, displayedArticles } =
     useArticleTableDisplay(articlesState, filtersState, PAGE_SIZE);
 
-  const fetchAllArticles = useCallback(async () => {
-    if (!isReady) return;
-    dispatchFilters({ type: "SET_IS_SEARCHING", payload: true });
-    try {
-      const { articles } = await fetchPaginated(ALL_ARTICLES_LIMIT, 0);
-      dispatchArticles({ type: "SET_ALL_ARTICLES", payload: articles });
-    } catch (error) {
-      console.error("Error al cargar todos los artículos:", error);
-    } finally {
-      dispatchFilters({ type: "SET_IS_SEARCHING", payload: false });
-    }
-  }, [fetchPaginated, isReady]);
-
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady || serverFiltered) return;
 
-    const loadArticles = async () => {
-      dispatchArticles({ type: "SET_LOADING", payload: true });
-      try {
-        const { articles, total } = await fetchPaginated(
-          PAGE_SIZE,
-          (articlesState.page - 1) * PAGE_SIZE
-        );
-        dispatchArticles({
-          type: "SET_ARTICLES",
-          payload: { articles, total },
-        });
-      } catch (error) {
-        console.error("Error loading user articles:", error);
-        dispatchArticles({ type: "SET_LOADING", payload: false });
-      }
-    };
+    dispatchArticles({ type: "SET_LOADING", payload: cacheLoading });
+    if (cacheLoading) return;
 
-    loadArticles();
-  }, [isReady, fetchPaginated, version, articlesState.page]);
-
-  useEffect(() => {
-    if (
-      (filtersState.searchTerm || hasActiveTableFilters(filtersState)) &&
-      articlesState.allArticles.length === 0
-    ) {
-      fetchAllArticles();
-    }
+    const sorted = sortArticlesByAiRating(cachedArticles, false);
+    dispatchArticles({
+      type: "SET_ARTICLES",
+      payload: {
+        articles: paginateArticles(sorted, articlesState.page, PAGE_SIZE),
+        total: cachedArticles.length,
+      },
+    });
   }, [
+    isReady,
+    cacheLoading,
+    cachedArticles,
+    articlesState.page,
+    version,
+    serverFiltered,
+  ]);
+
+  useEffect(() => {
+    if (!serverFiltered) return;
+
+    if (cacheLoading) {
+      dispatchFilters({ type: "SET_IS_SEARCHING", payload: true });
+      return;
+    }
+
+    dispatchArticles({ type: "SET_ALL_ARTICLES", payload: cachedArticles });
+    dispatchFilters({ type: "SET_IS_SEARCHING", payload: false });
+  }, [
+    serverFiltered,
+    cachedArticles,
+    cacheLoading,
     filtersState.searchTerm,
     filtersState.readFilter,
     filtersState.favoriteFilter,
-    articlesState.allArticles.length,
-    fetchAllArticles,
   ]);
 
   useEffect(() => {
@@ -120,6 +127,10 @@ export function useArticleTable() {
 
       try {
         await markRead(Number(articleToToggle.id), newArticleState.isRead);
+        patchArticle(Number(articleToToggle.id), {
+          isRead: newArticleState.isRead,
+          readAt: newArticleState.readAt,
+        });
 
         if (!articleToToggle.isRead) {
           dispatchUI({
@@ -138,7 +149,7 @@ export function useArticleTable() {
         });
       }
     },
-    [repository, markRead]
+    [repository, markRead, patchArticle]
   );
 
   const handleToggleFavorite = useCallback(
@@ -161,6 +172,9 @@ export function useArticleTable() {
           Number(articleToToggle.id),
           newArticleState.isFavorite ?? false
         );
+        patchArticle(Number(articleToToggle.id), {
+          isFavorite: newArticleState.isFavorite,
+        });
       } catch (error) {
         console.error("Error marking as favorite:", error);
         dispatchArticles({
@@ -172,7 +186,7 @@ export function useArticleTable() {
         });
       }
     },
-    [repository, markFavorite]
+    [repository, markFavorite, patchArticle]
   );
 
   const handleDelete = useCallback(
@@ -182,6 +196,7 @@ export function useArticleTable() {
       try {
         await deleteArticle(articleId);
         dispatchArticles({ type: "REMOVE_ARTICLE", payload: articleId });
+        removeArticle(articleId);
         dispatchUI({ type: "SHOW_TOAST" });
         setTimeout(() => dispatchUI({ type: "HIDE_TOAST" }), 2000);
       } catch (error: unknown) {
@@ -191,7 +206,7 @@ export function useArticleTable() {
         alert("Error al borrar el artículo: " + message);
       }
     },
-    [repository, user, deleteArticle]
+    [repository, user, deleteArticle, removeArticle]
   );
 
   const clearSearch = useCallback(() => {
@@ -214,5 +229,6 @@ export function useArticleTable() {
     handleToggleFavorite,
     handleDelete,
     clearSearch,
+    cachedTotal: cachedArticles.length,
   };
 }
