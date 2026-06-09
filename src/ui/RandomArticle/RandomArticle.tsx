@@ -1,6 +1,6 @@
 import React, {
   useState,
-  useContext,
+  use,
   useCallback,
   createContext,
 } from "react";
@@ -64,7 +64,7 @@ function ModalProvider({ children }: { children: React.ReactNode }) {
 }
 
 function useModals() {
-  const ctx = useContext(ModalContext);
+  const ctx = use(ModalContext);
   if (!ctx) throw new Error("useModals must be used within ModalProvider");
   return ctx;
 }

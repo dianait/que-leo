@@ -1,11 +1,11 @@
-import { useContext, useCallback } from "react";
+import { use, useCallback } from "react";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
 import { ArticleService } from "../../application/ArticleService";
 import type { Article } from "../../domain/Article";
 
 export function useArticleFetcher() {
-  const repository = useContext(ArticleRepositoryContext);
+  const repository = use(ArticleRepositoryContext);
   const { user } = useAuth();
 
   const fetchAll = useCallback(async (): Promise<Article[]> => {

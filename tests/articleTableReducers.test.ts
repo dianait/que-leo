@@ -1,163 +1,13 @@
 import type { Article } from "../src/domain/Article";
-
-// Importar los reducers desde ArticleTable
-// Como están definidos dentro del componente, necesitamos extraerlos o testearlos indirectamente
-// Por ahora, vamos a crear tests unitarios directos copiando la lógica
-
-type ArticlesState = {
-  articles: Article[];
-  total: number;
-  page: number;
-  allArticles: Article[];
-  loading: boolean;
-};
-
-type ArticlesAction =
-  | { type: "SET_ARTICLES"; payload: { articles: Article[]; total: number } }
-  | { type: "SET_PAGE"; payload: number }
-  | { type: "SET_ALL_ARTICLES"; payload: Article[] }
-  | { type: "SET_LOADING"; payload: boolean }
-  | { type: "UPDATE_ARTICLE"; payload: { id: number; updates: Partial<Article> } }
-  | { type: "REMOVE_ARTICLE"; payload: number };
-
-function articlesReducer(
-  state: ArticlesState,
-  action: ArticlesAction
-): ArticlesState {
-  switch (action.type) {
-    case "SET_ARTICLES":
-      return {
-        ...state,
-        articles: action.payload.articles,
-        total: action.payload.total,
-        loading: false,
-      };
-    case "SET_PAGE":
-      return { ...state, page: action.payload };
-    case "SET_ALL_ARTICLES":
-      return { ...state, allArticles: action.payload };
-    case "SET_LOADING":
-      return { ...state, loading: action.payload };
-    case "UPDATE_ARTICLE": {
-      const updateArticle = (articles: Article[]) =>
-        articles.map((a) =>
-          Number(a.id) === action.payload.id
-            ? { ...a, ...action.payload.updates }
-            : a
-        );
-      return {
-        ...state,
-        articles: updateArticle(state.articles),
-        allArticles:
-          state.allArticles.length > 0
-            ? updateArticle(state.allArticles)
-            : state.allArticles,
-      };
-    }
-    case "REMOVE_ARTICLE":
-      return {
-        ...state,
-        articles: state.articles.filter(
-          (a) => Number(a.id) !== action.payload
-        ),
-        allArticles: state.allArticles.filter(
-          (a) => Number(a.id) !== action.payload
-        ),
-      };
-    default:
-      return state;
-  }
-}
-
-type FiltersState = {
-  readFilter: "all" | "unread" | "read";
-  favoriteFilter: "all" | "favorites";
-  searchTerm: string;
-  isSearching: boolean;
-};
-
-type FiltersAction =
-  | { type: "SET_READ_FILTER"; payload: "all" | "unread" | "read" }
-  | { type: "SET_FAVORITE_FILTER"; payload: "all" | "favorites" }
-  | { type: "SET_SEARCH_TERM"; payload: string }
-  | { type: "SET_IS_SEARCHING"; payload: boolean }
-  | { type: "RESET_FILTERS" };
-
-function filtersReducer(
-  state: FiltersState,
-  action: FiltersAction
-): FiltersState {
-  switch (action.type) {
-    case "SET_READ_FILTER":
-      return { ...state, readFilter: action.payload };
-    case "SET_FAVORITE_FILTER":
-      return { ...state, favoriteFilter: action.payload };
-    case "SET_SEARCH_TERM":
-      return { ...state, searchTerm: action.payload };
-    case "SET_IS_SEARCHING":
-      return { ...state, isSearching: action.payload };
-    case "RESET_FILTERS":
-      return {
-        readFilter: "all",
-        favoriteFilter: "all",
-        searchTerm: "",
-        isSearching: false,
-      };
-    default:
-      return state;
-  }
-}
-
-type UIState = {
-  modalOpen: boolean;
-  articleToDelete: number | null;
-  toast: boolean;
-  showShareModal: boolean;
-  lastReadArticle: Article | null;
-};
-
-type UIAction =
-  | { type: "OPEN_DELETE_MODAL"; payload: number }
-  | { type: "CLOSE_DELETE_MODAL" }
-  | { type: "SHOW_TOAST" }
-  | { type: "HIDE_TOAST" }
-  | { type: "SHOW_SHARE_MODAL"; payload: Article }
-  | { type: "CLOSE_SHARE_MODAL" };
-
-function uiReducer(state: UIState, action: UIAction): UIState {
-  switch (action.type) {
-    case "OPEN_DELETE_MODAL":
-      return {
-        ...state,
-        modalOpen: true,
-        articleToDelete: action.payload,
-      };
-    case "CLOSE_DELETE_MODAL":
-      return {
-        ...state,
-        modalOpen: false,
-        articleToDelete: null,
-      };
-    case "SHOW_TOAST":
-      return { ...state, toast: true };
-    case "HIDE_TOAST":
-      return { ...state, toast: false };
-    case "SHOW_SHARE_MODAL":
-      return {
-        ...state,
-        showShareModal: true,
-        lastReadArticle: action.payload,
-      };
-    case "CLOSE_SHARE_MODAL":
-      return {
-        ...state,
-        showShareModal: false,
-        lastReadArticle: null,
-      };
-    default:
-      return state;
-  }
-}
+import {
+  articlesReducer,
+  filtersReducer,
+  uiReducer,
+  type FiltersAction,
+  type ArticlesState,
+  type FiltersState,
+  type UIState,
+} from "../src/ui/ListOfArticles/articleTableReducers";
 
 describe("ArticleTable Reducers", () => {
   describe("articlesReducer", () => {
@@ -412,4 +262,3 @@ describe("ArticleTable Reducers", () => {
     });
   });
 });
-

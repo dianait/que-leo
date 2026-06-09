@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, use } from "react";
 import type { User, Session } from "@supabase/supabase-js";
 
 export interface AuthContextType {
@@ -15,7 +15,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
+  const context = use(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth debe ser usado dentro de un AuthProvider");
   }

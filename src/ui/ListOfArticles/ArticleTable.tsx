@@ -1,19 +1,10 @@
 import "./ListOfArticles.css";
-import { useEffect, useReducer, useMemo } from "react";
 import type { Article } from "../../domain/Article";
-import {
-  markArticleAsRead,
-  markArticleAsUnread,
-  markArticleAsFavorite,
-  markArticleAsUnfavorite,
-  sortArticlesByAiRating,
-} from "../../domain/Article";
-import { ArticleService } from "../../application/ArticleService";
-import { useArticleFetcher } from "../hooks/useArticleFetcher";
 import { ArticleTableSkeleton } from "../AppSkeleton/AppSkeleton";
 import { AddArticle } from "../AddArticle/AddArticleModal";
 import { ConfirmModal } from "../shared/ConfirmModal";
 import { ShareModal } from "../shared/ShareModal";
+import { useArticleTable } from "./useArticleTable";
 
 function Toast({ message, show }: { message: string; show: boolean }) {
   if (!show) return null;
@@ -24,164 +15,6 @@ function Toast({ message, show }: { message: string; show: boolean }) {
   );
 }
 
-// Articles state reducer
-type ArticlesState = {
-  articles: Article[];
-  total: number;
-  page: number;
-  allArticles: Article[];
-  loading: boolean;
-};
-
-type ArticlesAction =
-  | { type: "SET_ARTICLES"; payload: { articles: Article[]; total: number } }
-  | { type: "SET_PAGE"; payload: number }
-  | { type: "SET_ALL_ARTICLES"; payload: Article[] }
-  | { type: "SET_LOADING"; payload: boolean }
-  | { type: "UPDATE_ARTICLE"; payload: { id: number; updates: Partial<Article> } }
-  | { type: "REMOVE_ARTICLE"; payload: number };
-
-function articlesReducer(
-  state: ArticlesState,
-  action: ArticlesAction
-): ArticlesState {
-  switch (action.type) {
-    case "SET_ARTICLES":
-      return {
-        ...state,
-        articles: action.payload.articles,
-        total: action.payload.total,
-        loading: false,
-      };
-    case "SET_PAGE":
-      return { ...state, page: action.payload };
-    case "SET_ALL_ARTICLES":
-      return { ...state, allArticles: action.payload };
-    case "SET_LOADING":
-      return { ...state, loading: action.payload };
-    case "UPDATE_ARTICLE": {
-      const updateArticle = (articles: Article[]) =>
-        articles.map((a) =>
-          Number(a.id) === action.payload.id
-            ? { ...a, ...action.payload.updates }
-            : a
-        );
-      return {
-        ...state,
-        articles: updateArticle(state.articles),
-        allArticles:
-          state.allArticles.length > 0
-            ? updateArticle(state.allArticles)
-            : state.allArticles,
-      };
-    }
-    case "REMOVE_ARTICLE":
-      return {
-        ...state,
-        articles: state.articles.filter(
-          (a) => Number(a.id) !== action.payload
-        ),
-        allArticles: state.allArticles.filter(
-          (a) => Number(a.id) !== action.payload
-        ),
-      };
-    default:
-      return state;
-  }
-}
-
-// Filters state reducer
-type FiltersState = {
-  readFilter: "all" | "unread" | "read";
-  favoriteFilter: "all" | "favorites";
-  searchTerm: string;
-  isSearching: boolean;
-};
-
-type FiltersAction =
-  | { type: "SET_READ_FILTER"; payload: "all" | "unread" | "read" }
-  | { type: "SET_FAVORITE_FILTER"; payload: "all" | "favorites" }
-  | { type: "SET_SEARCH_TERM"; payload: string }
-  | { type: "SET_IS_SEARCHING"; payload: boolean }
-  | { type: "RESET_FILTERS" };
-
-function filtersReducer(
-  state: FiltersState,
-  action: FiltersAction
-): FiltersState {
-  switch (action.type) {
-    case "SET_READ_FILTER":
-      return { ...state, readFilter: action.payload };
-    case "SET_FAVORITE_FILTER":
-      return { ...state, favoriteFilter: action.payload };
-    case "SET_SEARCH_TERM":
-      return { ...state, searchTerm: action.payload };
-    case "SET_IS_SEARCHING":
-      return { ...state, isSearching: action.payload };
-    case "RESET_FILTERS":
-      return {
-        readFilter: "all",
-        favoriteFilter: "all",
-        searchTerm: "",
-        isSearching: false,
-      };
-    default:
-      return state;
-  }
-}
-
-// UI state reducer
-type UIState = {
-  modalOpen: boolean;
-  articleToDelete: number | null;
-  toast: boolean;
-  showShareModal: boolean;
-  lastReadArticle: Article | null;
-};
-
-type UIAction =
-  | { type: "OPEN_DELETE_MODAL"; payload: number }
-  | { type: "CLOSE_DELETE_MODAL" }
-  | { type: "SHOW_TOAST" }
-  | { type: "HIDE_TOAST" }
-  | { type: "SHOW_SHARE_MODAL"; payload: Article }
-  | { type: "CLOSE_SHARE_MODAL" };
-
-function uiReducer(state: UIState, action: UIAction): UIState {
-  switch (action.type) {
-    case "OPEN_DELETE_MODAL":
-      return {
-        ...state,
-        modalOpen: true,
-        articleToDelete: action.payload,
-      };
-    case "CLOSE_DELETE_MODAL":
-      return {
-        ...state,
-        modalOpen: false,
-        articleToDelete: null,
-      };
-    case "SHOW_TOAST":
-      return { ...state, toast: true };
-    case "HIDE_TOAST":
-      return { ...state, toast: false };
-    case "SHOW_SHARE_MODAL":
-      return {
-        ...state,
-        showShareModal: true,
-        lastReadArticle: action.payload,
-      };
-    case "CLOSE_SHARE_MODAL":
-      return {
-        ...state,
-        showShareModal: false,
-        lastReadArticle: null,
-      };
-    default:
-      return state;
-  }
-}
-
 export function ArticleTable({
   articlesVersion,
   setArticlesVersion,
@@ -189,256 +22,22 @@ export function ArticleTable({
   articlesVersion: number;
   setArticlesVersion: (v: (v: number) => number) => void;
 }) {
-  const PAGE_SIZE = 15;
-  const { fetchPaginated, isReady, user, repository } = useArticleFetcher();
-
-  // Articles state
-  const [articlesState, dispatchArticles] = useReducer(articlesReducer, {
-    articles: [],
-    total: 0,
-    page: 1,
-    allArticles: [],
-    loading: true,
-  });
-
-  // Filters state
-  const [filtersState, dispatchFilters] = useReducer(filtersReducer, {
-    readFilter: "all",
-    favoriteFilter: "all",
-    searchTerm: "",
-    isSearching: false,
-  });
-
-  // UI state
-  const [uiState, dispatchUI] = useReducer(uiReducer, {
-    modalOpen: false,
-    articleToDelete: null,
-    toast: false,
-    showShareModal: false,
-    lastReadArticle: null,
-  });
-
-  // Memoized filter, sort, and pagination logic
   const {
+    pageSize,
+    articlesState,
+    filtersState,
+    uiState,
     filteredArticles,
     effectiveTotal,
-    displayedArticles
-  } = useMemo(() => {
-    const hasActiveFilters =
-      filtersState.readFilter !== "all" ||
-      filtersState.favoriteFilter === "favorites";
-    const needsAllArticles =
-      filtersState.searchTerm !== "" || hasActiveFilters;
-
-    // Build base set - use allArticles if we have filters or search, otherwise use current page
-    const base = needsAllArticles
-      ? articlesState.allArticles.filter((article) => {
-          // Apply search filter if present
-          if (
-            filtersState.searchTerm &&
-            !article.title
-              .toLowerCase()
-              .includes(filtersState.searchTerm.toLowerCase())
-          ) {
-            return false;
-          }
-          return true;
-        })
-      : articlesState.articles;
-
-    const filteredArticles = base.filter((article) => {
-      // Apply read filter
-      if (filtersState.readFilter === "unread" && article.isRead) return false;
-      if (filtersState.readFilter === "read" && !article.isRead) return false;
-
-      // Apply favorite filter
-      if (
-        filtersState.favoriteFilter === "favorites" &&
-        !article.isFavorite
-      )
-        return false;
-
-      return true;
-    });
-
-    // Calculate total based on filtered articles when filters are active
-    const effectiveTotal = needsAllArticles
-      ? filteredArticles.length
-      : articlesState.total;
-
-    // Sort by AI rating (highest first); when viewing read articles, tie-break by read date
-    const sortedArticles = sortArticlesByAiRating(
-      filteredArticles,
-      filtersState.readFilter === "read"
-    );
-
-    // Apply pagination when filters are active (when we have all articles loaded)
-    // When no filters, articles come paginated from server (also ordered by ai_rating)
-    const displayedArticles = needsAllArticles
-      ? sortedArticles.slice(
-          (articlesState.page - 1) * PAGE_SIZE,
-          articlesState.page * PAGE_SIZE
-        )
-      : sortedArticles;
-
-    return {
-      hasActiveFilters,
-      needsAllArticles,
-      filteredArticles,
-      effectiveTotal,
-      displayedArticles,
-    };
-  }, [filtersState, articlesState, PAGE_SIZE]);
-
-  // Load all articles for search purposes
-  const fetchAllArticles = async () => {
-    if (!isReady) return;
-    dispatchFilters({ type: "SET_IS_SEARCHING", payload: true });
-    try {
-      const { articles } = await fetchPaginated(1000, 0);
-      dispatchArticles({ type: "SET_ALL_ARTICLES", payload: articles });
-    } catch (error) {
-      console.error("Error al cargar todos los artículos:", error);
-    } finally {
-      dispatchFilters({ type: "SET_IS_SEARCHING", payload: false });
-    }
-  };
-
-  useEffect(() => {
-    if (!isReady) return;
-    const loadArticles = async () => {
-      dispatchArticles({ type: "SET_LOADING", payload: true });
-      try {
-        const { articles, total } = await fetchPaginated(
-          PAGE_SIZE,
-          (articlesState.page - 1) * PAGE_SIZE
-        );
-        dispatchArticles({
-          type: "SET_ARTICLES",
-          payload: { articles, total },
-        });
-      } catch (error) {
-        console.error("Error loading user articles:", error);
-        dispatchArticles({ type: "SET_LOADING", payload: false });
-      }
-    };
-    loadArticles();
-  }, [isReady, fetchPaginated, articlesVersion, articlesState.page]);
-
-  // Load all articles when there is a search term or active filters
-  useEffect(() => {
-    const hasActiveFilters =
-      filtersState.readFilter !== "all" ||
-      filtersState.favoriteFilter === "favorites";
-    if (
-      (filtersState.searchTerm || hasActiveFilters) &&
-      articlesState.allArticles.length === 0
-    ) {
-      fetchAllArticles();
-    }
-  }, [
-    filtersState.searchTerm,
-    filtersState.readFilter,
-    filtersState.favoriteFilter,
-  ]);
-
-  // Reset to page 1 when filters change
-  useEffect(() => {
-    dispatchArticles({ type: "SET_PAGE", payload: 1 });
-  }, [
-    filtersState.readFilter,
-    filtersState.favoriteFilter,
-    filtersState.searchTerm,
-  ]);
-
-  const handleToggleRead = async (articleToToggle: Article) => {
-    if (!repository) return;
-    const newArticleState = articleToToggle.isRead
-      ? markArticleAsUnread(articleToToggle)
-      : markArticleAsRead(articleToToggle);
-
-    // Update local state immediately for a snappier UI
-    dispatchArticles({
-      type: "UPDATE_ARTICLE",
-      payload: {
-        id: Number(articleToToggle.id),
-        updates: { isRead: newArticleState.isRead },
-      },
-    });
-
-    try {
-      const svc = new ArticleService(repository);
-      await svc.markRead(Number(articleToToggle.id), newArticleState.isRead);
-
-      if (!articleToToggle.isRead) {
-        dispatchUI({
-          type: "SHOW_SHARE_MODAL",
-          payload: articleToToggle,
-        });
-      }
-    } catch (error) {
-      console.error("Error marking as read:", error);
-      // Revert local change if it fails
-      dispatchArticles({
-        type: "UPDATE_ARTICLE",
-        payload: {
-          id: Number(articleToToggle.id),
-          updates: { isRead: articleToToggle.isRead },
-        },
-      });
-    }
-  };
-
-  const handleToggleFavorite = async (articleToToggle: Article) => {
-    if (!repository) return;
-    const newArticleState = articleToToggle.isFavorite
-      ? markArticleAsUnfavorite(articleToToggle)
-      : markArticleAsFavorite(articleToToggle);
-
-    // Update local state immediately for a snappier UI
-    dispatchArticles({
-      type: "UPDATE_ARTICLE",
-      payload: {
-        id: Number(articleToToggle.id),
-        updates: { isFavorite: newArticleState.isFavorite },
-      },
-    });
-
-    try {
-      const svc = new ArticleService(repository);
-      await svc.markFavorite(
-        Number(articleToToggle.id),
-        newArticleState.isFavorite ?? false
-      );
-    } catch (error) {
-      console.error("Error marking as favorite:", error);
-      // Revert local change if it fails
-      dispatchArticles({
-        type: "UPDATE_ARTICLE",
-        payload: {
-          id: Number(articleToToggle.id),
-          updates: { isFavorite: articleToToggle.isFavorite },
-        },
-      });
-    }
-  };
-
-  const handleDelete = async (articleId: number) => {
-    if (!repository || !user) return;
-    dispatchUI({ type: "CLOSE_DELETE_MODAL" });
-    console.log("Attempting to delete article", { articleId, userId: user.id });
-    try {
-      const svc = new ArticleService(repository);
-      await svc.delete(Number(articleId), user.id);
-      console.log("Article deleted successfully", articleId);
-      dispatchArticles({ type: "REMOVE_ARTICLE", payload: articleId });
-      dispatchUI({ type: "SHOW_TOAST" });
-      setTimeout(() => dispatchUI({ type: "HIDE_TOAST" }), 2000);
-    } catch (error: any) {
-      console.error("Error al borrar el artículo:", error);
-      alert("Error al borrar el artículo: " + (error?.message || error));
-    }
-  };
+    displayedArticles,
+    dispatchArticles,
+    dispatchFilters,
+    dispatchUI,
+    handleToggleRead,
+    handleToggleFavorite,
+    handleDelete,
+    clearSearch,
+  } = useArticleTable(articlesVersion);
 
   return (
     <div className="articles-table-container">
@@ -700,10 +299,7 @@ export function ArticleTable({
                 No hay artículos que coincidan con "{filtersState.searchTerm}"
               </p>
               <button
-                onClick={() => {
-                  dispatchFilters({ type: "SET_SEARCH_TERM", payload: "" });
-                  dispatchArticles({ type: "SET_ALL_ARTICLES", payload: [] });
-                }}
+                onClick={clearSearch}
                 style={{
                   marginTop: "16px",
                   padding: "8px 16px",
@@ -736,7 +332,7 @@ export function ArticleTable({
         </button>
         <span className="pagination-info">
           Página {articlesState.page} de{" "}
-          {Math.max(1, Math.ceil(effectiveTotal / PAGE_SIZE))}
+          {Math.max(1, Math.ceil(effectiveTotal / pageSize))}
         </span>
         <button
           className="app-button"
@@ -746,7 +342,7 @@ export function ArticleTable({
               payload: articlesState.page + 1,
             })
           }
-          disabled={articlesState.page * PAGE_SIZE >= effectiveTotal}
+          disabled={articlesState.page * pageSize >= effectiveTotal}
         >
           Siguiente
         </button>

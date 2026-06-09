@@ -1,24 +1,22 @@
-import React, {
-  useContext,
-  useRef,
-  useEffect,
-  useCallback,
-  forwardRef,
-} from "react";
+import React, { use, useRef, useEffect, useCallback } from "react";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
 import { useAddArticleForm } from "./useAddArticleForm";
 import "./AddArticle.css";
 
-const Modal = forwardRef<
-  HTMLDivElement,
-  {
-    open: boolean;
-    onClose: () => void;
-    children: React.ReactNode;
-    labelId?: string;
-  }
->(({ open, onClose, children, labelId }, ref) => {
+function Modal({
+  open,
+  onClose,
+  children,
+  labelId,
+  ref,
+}: {
+  open: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  labelId?: string;
+  ref?: React.Ref<HTMLDivElement>;
+}) {
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -47,15 +45,13 @@ const Modal = forwardRef<
       </div>
     </div>
   );
-});
-
-Modal.displayName = "Modal";
+}
 
 export const AddArticle: React.FC<{
   setArticlesVersion?: (v: (v: number) => number) => void;
 }> = ({ setArticlesVersion }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const repository = useContext(ArticleRepositoryContext);
+  const repository = use(ArticleRepositoryContext);
   const { user } = useAuth();
 
   const { state, openModal, closeModal, setTitle, setUrl, handleSubmit } =
