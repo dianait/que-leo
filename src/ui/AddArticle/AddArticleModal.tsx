@@ -1,5 +1,4 @@
 import React, {
-  useState,
   useContext,
   useRef,
   useEffect,
@@ -8,14 +7,9 @@ import React, {
 } from "react";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
-import { ArticleService } from "../../application/ArticleService";
-import {
-  MetadataService,
-  type ArticleMetadata,
-} from "../../infrastructure/services/MetadataService";
+import { useAddArticleForm } from "./useAddArticleForm";
 import "./AddArticle.css";
 
-// Simple modal
 const Modal = forwardRef<
   HTMLDivElement,
   {
@@ -60,16 +54,12 @@ Modal.displayName = "Modal";
 export const AddArticle: React.FC<{
   setArticlesVersion?: (v: (v: number) => number) => void;
 }> = ({ setArticlesVersion }) => {
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
-
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
+
+  const { state, openModal, closeModal, setTitle, setUrl, handleSubmit } =
+    useAddArticleForm(repository, user?.id, setArticlesVersion);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -81,86 +71,14 @@ export const AddArticle: React.FC<{
       }
     }
 
-    if (isModalOpen) {
+    if (state.isModalOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isModalOpen]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user || !repository) return;
-
-    setLoading(true);
-    setError("");
-    setSuccess("");
-
-    let finalUrl = url;
-    if (!/^https?:\/\//i.test(finalUrl)) {
-      finalUrl = `https://${finalUrl}`;
-    }
-
-    try {
-      // Extract metadata in the background
-      let metadata: ArticleMetadata | null = null;
-      try {
-        metadata = await MetadataService.extractMetadata(finalUrl);
-        // If the title was extracted automatically, use it when empty
-        if (!title.trim() && metadata.title) {
-          setTitle(metadata.title);
-        }
-      } catch (metadataError) {
-        // If metadata extraction fails, proceed without it
-        console.warn("No se pudieron extraer metadatos:", metadataError);
-      }
-
-      const svc = new ArticleService(repository);
-      await svc.add({
-        title: title || metadata?.title || "Sin título",
-        url: finalUrl,
-        userId: user.id,
-        language: metadata?.language || null,
-        authors: metadata?.authors || null,
-        topics: metadata?.topics || null,
-        less_15: null,
-        featuredImage: metadata?.featuredimage || null,
-      });
-      setSuccess("¡Artículo añadido con éxito!");
-      setTitle("");
-      setUrl("");
-      // Update article list version to refresh the table
-      if (setArticlesVersion) {
-        setArticlesVersion((v) => v + 1);
-      }
-      setTimeout(() => {
-        setIsModalOpen(false);
-        setSuccess("");
-      }, 1000);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("Error desconocido al añadir artículo");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-    setError("");
-    setSuccess("");
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setError("");
-    setSuccess("");
-  };
+  }, [state.isModalOpen, closeModal]);
 
   return (
     <div className="add-article-container">
@@ -171,22 +89,35 @@ export const AddArticle: React.FC<{
       >
         + Nuevo
       </button>
-      <Modal open={isModalOpen} onClose={closeModal} ref={modalRef} labelId="add-article-title">
+      <Modal
+        open={state.isModalOpen}
+        onClose={closeModal}
+        ref={modalRef}
+        labelId="add-article-title"
+      >
         <form onSubmit={handleSubmit} className="add-article-form">
           <h3 id="add-article-title">Añadir nuevo artículo</h3>
-          {error && <div className="error-message" role="alert">{error}</div>}
-          {success && <div className="success-message" role="status">{success}</div>}
+          {state.error && (
+            <div className="error-message" role="alert">
+              {state.error}
+            </div>
+          )}
+          {state.success && (
+            <div className="success-message" role="status">
+              {state.success}
+            </div>
+          )}
 
           <div className="form-group">
             <label htmlFor="url">URL:</label>
             <input
               type="url"
               id="url"
-              value={url}
+              value={state.url}
               onChange={(e) => setUrl(e.target.value)}
               required
               placeholder="https://ejemplo.com/articulo"
-              disabled={loading}
+              disabled={state.loading}
             />
           </div>
 
@@ -195,19 +126,19 @@ export const AddArticle: React.FC<{
             <input
               type="text"
               id="title"
-              value={title}
+              value={state.title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Se extraerá automáticamente si se deja vacío"
-              disabled={loading}
+              disabled={state.loading}
             />
           </div>
 
           <button
             type="submit"
             className="modern-button button-primary"
-            disabled={loading}
+            disabled={state.loading}
           >
-            {loading ? "Añadiendo..." : "Añadir artículo 📚"}
+            {state.loading ? "Añadiendo..." : "Añadir artículo 📚"}
           </button>
         </form>
       </Modal>
