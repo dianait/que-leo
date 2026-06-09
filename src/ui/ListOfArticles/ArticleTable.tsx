@@ -6,6 +6,7 @@ import {
   markArticleAsUnread,
   markArticleAsFavorite,
   markArticleAsUnfavorite,
+  sortArticlesByAiRating,
 } from "../../domain/Article";
 import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
@@ -340,24 +341,20 @@ export function ArticleTable({
     ? filteredArticles.length
     : articlesState.total;
 
-  // Sort by read date when filter is "read"
-  const sortedArticles =
+  // Sort by AI rating (highest first); when viewing read articles, tie-break by read date
+  const sortedArticles = sortArticlesByAiRating(
+    filteredArticles,
     filtersState.readFilter === "read"
-      ? [...filteredArticles].sort((a, b) => {
-          const aTime = a.readAt ? new Date(a.readAt).getTime() : 0;
-          const bTime = b.readAt ? new Date(b.readAt).getTime() : 0;
-          return bTime - aTime; // descending: most recent first
-        })
-      : filteredArticles;
+  );
 
   // Apply pagination when filters are active (when we have all articles loaded)
-  // When no filters, use articles directly (already paginated from server)
+  // When no filters, articles come paginated from server (also ordered by ai_rating)
   const displayedArticles = needsAllArticles
     ? sortedArticles.slice(
         (articlesState.page - 1) * PAGE_SIZE,
         articlesState.page * PAGE_SIZE
       )
-    : articlesState.articles;
+    : sortedArticles;
 
   // Load all articles for search purposes
   const fetchAllArticles = async () => {

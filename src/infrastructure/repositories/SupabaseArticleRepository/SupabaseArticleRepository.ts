@@ -53,6 +53,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
         updated_at?: string;
         article_id: number;
         is_favorite?: boolean;
+        ai_rating?: number | null;
+        ai_rating_reason?: string | null;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         articles: any;
       };
@@ -66,6 +68,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
           updated_at,
           article_id,
           is_favorite,
+          ai_rating,
+          ai_rating_reason,
           articles (
             id,
             title,
@@ -79,6 +83,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
         `
         )
         .eq("user_id", userId)
+        .order("ai_rating", { ascending: false, nullsFirst: false })
         .order("added_at", { ascending: false });
 
       if (error) {
@@ -107,6 +112,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
             topics: art.topics,
             less_15: art.less_15,
             featuredImage: art.featured_image,
+            aiRating: row.ai_rating ?? undefined,
+            aiRatingReason: row.ai_rating_reason ?? undefined,
           };
         })
         .filter(Boolean) as Article[];
@@ -132,6 +139,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
         updated_at?: string;
         article_id: number;
         is_favorite?: boolean;
+        ai_rating?: number | null;
+        ai_rating_reason?: string | null;
         articles:
           | {
               id: number;
@@ -166,6 +175,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
           updated_at,
           article_id,
           is_favorite,
+          ai_rating,
+          ai_rating_reason,
           articles (
             id,
             title,
@@ -180,6 +191,7 @@ export class SupabaseArticleRepository implements ArticleRepository {
           { count: "exact" }
         )
         .eq("user_id", userId)
+        .order("ai_rating", { ascending: false, nullsFirst: false })
         .order("added_at", { ascending: false })
         .range(offset, offset + limit - 1);
 
@@ -209,6 +221,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
             topics: art.topics,
             less_15: art.less_15,
             featuredImage: art.featured_image,
+            aiRating: row.ai_rating ?? undefined,
+            aiRatingReason: row.ai_rating_reason ?? undefined,
           };
         })
         .filter(Boolean) as Article[];

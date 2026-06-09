@@ -198,6 +198,12 @@ export function RandomArticle({
     return "";
   }
 
+  function getAiRatingTier(rating: number): "low" | "medium" | "high" {
+    if (rating <= 4) return "low";
+    if (rating <= 7) return "medium";
+    return "high";
+  }
+
   return (
     <div className="random-article-container">
       <div className="article-container">
@@ -296,6 +302,19 @@ export function RandomArticle({
                   {article.authors && article.authors.length > 0 && (
                     <div className="random-article-authors">
                       {article.authors.join(", ")}
+                    </div>
+                  )}
+                  {article.aiRating != null && (
+                    <div
+                      className={`article-ai-rating rating-${getAiRatingTier(
+                        article.aiRating
+                      )}`}
+                      title={article.aiRatingReason ?? undefined}
+                    >
+                      <span className="article-ai-rating-label">Valoración: </span>
+                      <span className="article-ai-rating-score">
+                        {article.aiRating}/10
+                      </span>
                     </div>
                   )}
                 </div>

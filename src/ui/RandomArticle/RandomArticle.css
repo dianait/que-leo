@@ -43,6 +43,37 @@
   flex: 1;
 }
 
+.article-ai-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.article-ai-rating-label {
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+.article-ai-rating.rating-low {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.article-ai-rating.rating-medium {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.article-ai-rating.rating-high {
+  background: #dcfce7;
+  color: #15803d;
+}
+
 /* Enlaces */
 .article-links-container {
   margin-bottom: 10px;
