@@ -75,3 +75,4 @@ Thumbs.db
 # Archivos locales de configuración del asistente
 agents.md
 skills-lock.json
+tsconfig.tsbuildinfo

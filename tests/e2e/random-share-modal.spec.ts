@@ -14,7 +14,7 @@ test.describe("RandomArticle - Modal de compartir (E2E)", () => {
     // Abrir compartir
     await page.getByRole("button", { name: /Compartir/ }).click();
     await expect(page.locator(".modal-content")).toBeVisible();
-    await expect(page.locator(".share-button.bluesky")).toBeVisible();
+    await expect(page.locator(".share-button.twitter")).toBeVisible();
     await expect(page.locator(".share-button.linkedin")).toBeVisible();
 
     // Cerrar

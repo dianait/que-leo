@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import "./ConfirmModal.css";
 
 export type ConfirmModalProps = {
   open: boolean;
@@ -28,7 +29,7 @@ export function ConfirmModal({
 
   return (
     <div
-      className="modal-overlay"
+      className="modal-overlay confirm-modal"
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
@@ -41,11 +42,19 @@ export function ConfirmModal({
           ¿Seguro que quieres borrar este artículo? <br />
           <strong>Esta acción no se puede deshacer.</strong>
         </p>
-        <div className="modal-actions">
-          <button className="app-button" onClick={onCancel}>
+        <div className="confirm-modal-actions">
+          <button
+            type="button"
+            className="confirm-modal-btn confirm-modal-cancel"
+            onClick={onCancel}
+          >
             Cancelar
           </button>
-          <button className="app-button danger" onClick={onConfirm}>
+          <button
+            type="button"
+            className="confirm-modal-btn confirm-modal-delete"
+            onClick={onConfirm}
+          >
             Borrar definitivamente
           </button>
         </div>

@@ -3,7 +3,7 @@ import type { Article } from "../../domain/Article";
 import { ArticleTableSkeleton } from "../AppSkeleton/AppSkeleton";
 import { AddArticle } from "../AddArticle/AddArticleModal";
 import { ConfirmModal } from "../shared/ConfirmModal";
-import { ShareModal } from "../shared/ShareModal";
+import { ShareModal, readShareDescription } from "../shared/ShareModal";
 import { useArticleTable } from "./useArticleTable";
 
 function Toast({ message, show }: { message: string; show: boolean }) {
@@ -171,6 +171,9 @@ export function ArticleTable() {
         open={uiState.showShareModal}
         article={uiState.lastReadArticle}
         onClose={() => dispatchUI({ type: "CLOSE_SHARE_MODAL" })}
+        description={readShareDescription}
+        shareText={(item) => `¡He leído: ${item.title}!`}
+        networks={["twitter", "linkedin"]}
       />
       {articlesState.loading ? (
         <ArticleTableSkeleton />

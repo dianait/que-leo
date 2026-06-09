@@ -24,7 +24,7 @@ export function FavoriteModal({
         </>
       }
       shareText={(item) => `¡He guardado como favorito: ${item.title}!`}
-      networks={["bluesky", "linkedin"]}
+      networks={["twitter", "linkedin"]}
       titleId="favorite-modal-title"
     />
   );

@@ -14,7 +14,9 @@ export type ShareModalProps = {
   titleId?: string;
 };
 
-const defaultDescription = (
+const defaultDescription = <>¿Quieres compartirlo en tus redes?</>;
+
+export const readShareDescription = (
   <>
     Has marcado este artículo como leído.
     <br />
@@ -55,8 +57,8 @@ export function ShareModal({
   onClose,
   title = "¡Genial! 🎉",
   description = defaultDescription,
-  shareText = (item) => `¡He leído: ${item.title}!`,
-  networks = ["bluesky", "linkedin"],
+  shareText = (item) => `Te recomiendo: ${item.title}`,
+  networks = ["twitter", "linkedin"],
   titleId = "share-modal-title",
 }: ShareModalProps) {
   const handleKeyDown = useCallback(

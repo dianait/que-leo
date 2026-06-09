@@ -123,11 +123,12 @@ describe("RandomArticle - Funcionalidad de favoritos", () => {
     });
 
     // Verificar que aparecen los botones de compartir
-    const blueskyButton = screen.getByText(/Bluesky/i);
+    const twitterButton = screen.getByText(/Twitter/i);
     const linkedinButton = screen.getByText(/LinkedIn/i);
 
-    expect(blueskyButton).toBeInTheDocument();
+    expect(twitterButton).toBeInTheDocument();
     expect(linkedinButton).toBeInTheDocument();
+    expect(screen.queryByText(/Bluesky/i)).not.toBeInTheDocument();
   });
 
   it("quita un artículo de favoritos sin mostrar modal", async () => {
