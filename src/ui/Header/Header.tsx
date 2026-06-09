@@ -64,22 +64,32 @@ export const Header = () => {
               {/* Clickable avatar: dropdown on desktop, modal on mobile */}
               <div className="avatar-container" style={{ position: 'relative' }}>
                 {user.user_metadata.avatar_url ? (
-                  <img
-                    ref={avatarRef as React.RefObject<HTMLImageElement>}
-                    src={user.user_metadata.avatar_url}
-                    alt={user.user_metadata.user_name || "Avatar"}
-                    className="user-avatar clickable"
-                    title={user.user_metadata.user_name || user.email}
+                  <button
+                    ref={avatarRef as React.RefObject<HTMLButtonElement>}
+                    className="avatar-button"
                     onClick={handleAvatarClick}
-                  />
+                    aria-label={`Menú de usuario: ${user.user_metadata.user_name || user.email}`}
+                    aria-haspopup="true"
+                    aria-expanded={isDropdownOpen}
+                  >
+                    <img
+                      src={user.user_metadata.avatar_url}
+                      alt=""
+                      className="user-avatar"
+                      title={user.user_metadata.user_name || user.email}
+                    />
+                  </button>
                 ) : (
-                  <span 
-                    ref={avatarRef as React.RefObject<HTMLSpanElement>}
-                    className="user-email clickable"
+                  <button
+                    ref={avatarRef as React.RefObject<HTMLButtonElement>}
+                    className="user-email-button"
                     onClick={handleAvatarClick}
+                    aria-label={`Menú de usuario: ${user.user_metadata.user_name || user.email}`}
+                    aria-haspopup="true"
+                    aria-expanded={isDropdownOpen}
                   >
                     {user.user_metadata.user_name || user.email}
-                  </span>
+                  </button>
                 )}
                 
                 {/* Desktop dropdown */}

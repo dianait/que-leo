@@ -42,7 +42,7 @@ describe("RandomArticle - Valoración IA", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Valoración IA")).toBeInTheDocument();
+      expect(screen.getByText("Valoración:")).toBeInTheDocument();
       expect(screen.getByText("8/10")).toBeInTheDocument();
     });
 
@@ -85,6 +85,6 @@ describe("RandomArticle - Valoración IA", () => {
       ).toBeInTheDocument();
     });
 
-    expect(screen.queryByText("Valoración IA")).not.toBeInTheDocument();
+    expect(screen.queryByText("Valoración:")).not.toBeInTheDocument();
   });
 });

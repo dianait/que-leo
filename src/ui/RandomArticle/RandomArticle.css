@@ -553,11 +553,11 @@
   filter: brightness(0) invert(1);
 }
 
-.share-button.bluesky {
-  background: #0072ff;
+.share-button.twitter {
+  background: #000000;
 }
-.share-button.bluesky:hover {
-  background: #005bb5;
+.share-button.twitter:hover {
+  background: #333333;
 }
 
 .share-button.linkedin {

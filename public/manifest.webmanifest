@@ -1,0 +1,21 @@
+{
+  "name": "¿Qué leo?",
+  "short_name": "¿Qué leo?",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#5a6fd8",
+  "description": "Tu organizador de artículos personal. Guarda, organiza y descubre tu próxima lectura sin distracciones.",
+  "icons": [
+    {
+      "src": "/queleo_icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/queleo_icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

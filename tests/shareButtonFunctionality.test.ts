@@ -31,12 +31,12 @@ describe("Share Button Functionality", () => {
     window.open(linkedinUrl, "_blank", "noopener,noreferrer");
   };
 
-  // Mock function for Bluesky
-  const handleShareToBluesky = (article: typeof mockArticle) => {
-    const shareText = encodeURIComponent(`¡He leído: ${article.title}!`);
-    const url = encodeURIComponent(article.url);
-    const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
-    window.open(blueskyUrl, "_blank", "noopener,noreferrer");
+  // Mock function for Twitter
+  const handleShareToTwitter = (article: typeof mockArticle) => {
+    const shareText = `¡He leído: ${article.title}!`;
+    const url = article.url;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl, "_blank", "noopener,noreferrer");
   };
 
   describe("LinkedIn Share", () => {
@@ -60,20 +60,20 @@ describe("Share Button Functionality", () => {
     });
   });
 
-  describe("Bluesky Share", () => {
-    it("should open Bluesky compose URL", () => {
-      handleShareToBluesky(mockArticle);
+  describe("Twitter Share", () => {
+    it("should open Twitter intent URL", () => {
+      handleShareToTwitter(mockArticle);
 
       expect(mockWindowOpen).toHaveBeenCalledTimes(1);
       expect(mockWindowOpen).toHaveBeenCalledWith(
-        expect.stringContaining("bsky.app/intent/compose"),
+        expect.stringContaining("twitter.com/intent/tweet"),
         "_blank",
         "noopener,noreferrer"
       );
     });
 
-    it("should include article title and URL in Bluesky share", () => {
-      handleShareToBluesky(mockArticle);
+    it("should include article title and URL in Twitter share", () => {
+      handleShareToTwitter(mockArticle);
 
       const callArgs = mockWindowOpen.mock.calls[0][0];
       expect(callArgs).toContain("text=");
@@ -87,7 +87,7 @@ describe("Share Button Functionality", () => {
         title: "Artículo con ñ y acentos: ¡Hola!",
       };
 
-      handleShareToBluesky(articleWithSpecialChars);
+      handleShareToTwitter(articleWithSpecialChars);
 
       const callArgs = mockWindowOpen.mock.calls[0][0];
       expect(callArgs).toContain("Art%C3%ADculo%20con%20%C3%B1%20y%20acentos");
@@ -113,7 +113,7 @@ describe("Share Button Functionality", () => {
         url: "https://example.com/article#section",
       };
 
-      handleShareToBluesky(articleWithFragment);
+      handleShareToTwitter(articleWithFragment);
 
       const callArgs = mockWindowOpen.mock.calls[0][0];
       expect(callArgs).toContain(
@@ -133,9 +133,9 @@ describe("Share Button Functionality", () => {
       expect(mockWindowOpen).toHaveBeenCalledTimes(1);
     });
 
-    it("should call Bluesky share function when Bluesky button is clicked", () => {
+    it("should call Twitter share function when Twitter button is clicked", () => {
       const mockOnClick = jest.fn();
-      mockOnClick.mockImplementation(() => handleShareToBluesky(mockArticle));
+      mockOnClick.mockImplementation(() => handleShareToTwitter(mockArticle));
 
       mockOnClick();
 
