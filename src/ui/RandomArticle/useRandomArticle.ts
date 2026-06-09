@@ -4,8 +4,8 @@ import {
   markArticleAsFavorite,
   markArticleAsUnfavorite,
 } from "../../domain/Article";
-import { ArticleService } from "../../application/ArticleService";
 import { useArticleFetcher } from "../hooks/useArticleFetcher";
+import { useArticleMutations } from "../hooks/useArticleMutations";
 import {
   initialRandomArticleState,
   randomArticleReducer,
@@ -13,6 +13,10 @@ import {
 
 export function useRandomArticle(articlesVersion: number) {
   const { fetchAll, isReady, user, repository } = useArticleFetcher();
+  const { markRead, markFavorite, deleteArticle } = useArticleMutations(
+    repository,
+    user?.id
+  );
   const [state, dispatch] = useReducer(
     randomArticleReducer,
     initialRandomArticleState
@@ -55,8 +59,7 @@ export function useRandomArticle(articlesVersion: number) {
     dispatch({ type: "SET_PENDING", payload: "read" });
     try {
       const nextIsRead = !state.current.isRead;
-      const svc = new ArticleService(repository);
-      await svc.markRead(Number(state.current.id), nextIsRead);
+      await markRead(Number(state.current.id), nextIsRead);
       const nextArticle = {
         ...state.current,
         isRead: nextIsRead,
@@ -70,7 +73,7 @@ export function useRandomArticle(articlesVersion: number) {
     } finally {
       dispatch({ type: "SET_PENDING", payload: null });
     }
-  }, [repository, user, state.current]);
+  }, [repository, user, state.current, markRead]);
 
   const toggleFavorite = useCallback(async (): Promise<boolean> => {
     if (!repository || !state.current) return false;
@@ -81,8 +84,7 @@ export function useRandomArticle(articlesVersion: number) {
       const newArticleState = wasFavorite
         ? markArticleAsUnfavorite(state.current)
         : markArticleAsFavorite(state.current);
-      const svc = new ArticleService(repository);
-      await svc.markFavorite(
+      await markFavorite(
         Number(state.current.id),
         newArticleState.isFavorite ?? false
       );
@@ -98,15 +100,14 @@ export function useRandomArticle(articlesVersion: number) {
     } finally {
       dispatch({ type: "SET_PENDING", payload: null });
     }
-  }, [repository, state.current]);
+  }, [repository, state.current, markFavorite]);
 
-  const deleteArticle = useCallback(
+  const removeArticle = useCallback(
     async (articleId: number): Promise<boolean> => {
       if (!repository || !user) return false;
 
       try {
-        const svc = new ArticleService(repository);
-        await svc.delete(Number(articleId), user.id);
+        await deleteArticle(articleId);
         dispatch({ type: "REMOVE_ARTICLE", payload: articleId });
         return true;
       } catch (error) {
@@ -114,7 +115,7 @@ export function useRandomArticle(articlesVersion: number) {
         return false;
       }
     },
-    [repository, user]
+    [repository, user, deleteArticle]
   );
 
   return {
@@ -126,6 +127,6 @@ export function useRandomArticle(articlesVersion: number) {
     pickRandom,
     toggleRead,
     toggleFavorite,
-    deleteArticle,
+    deleteArticle: removeArticle,
   };
 }

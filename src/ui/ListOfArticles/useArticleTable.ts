@@ -6,8 +6,8 @@ import {
   markArticleAsFavorite,
   markArticleAsUnfavorite,
 } from "../../domain/Article";
-import { ArticleService } from "../../application/ArticleService";
 import { useArticleFetcher } from "../hooks/useArticleFetcher";
+import { useArticleMutations } from "../hooks/useArticleMutations";
 import {
   articlesReducer,
   filtersReducer,
@@ -24,6 +24,10 @@ const ALL_ARTICLES_LIMIT = 1000;
 
 export function useArticleTable(articlesVersion: number) {
   const { fetchPaginated, isReady, user, repository } = useArticleFetcher();
+  const { markRead, markFavorite, deleteArticle } = useArticleMutations(
+    repository,
+    user?.id
+  );
 
   const [articlesState, dispatchArticles] = useReducer(
     articlesReducer,
@@ -113,8 +117,7 @@ export function useArticleTable(articlesVersion: number) {
       });
 
       try {
-        const svc = new ArticleService(repository);
-        await svc.markRead(Number(articleToToggle.id), newArticleState.isRead);
+        await markRead(Number(articleToToggle.id), newArticleState.isRead);
 
         if (!articleToToggle.isRead) {
           dispatchUI({
@@ -133,7 +136,7 @@ export function useArticleTable(articlesVersion: number) {
         });
       }
     },
-    [repository]
+    [repository, markRead]
   );
 
   const handleToggleFavorite = useCallback(
@@ -152,8 +155,7 @@ export function useArticleTable(articlesVersion: number) {
       });
 
       try {
-        const svc = new ArticleService(repository);
-        await svc.markFavorite(
+        await markFavorite(
           Number(articleToToggle.id),
           newArticleState.isFavorite ?? false
         );
@@ -168,7 +170,7 @@ export function useArticleTable(articlesVersion: number) {
         });
       }
     },
-    [repository]
+    [repository, markFavorite]
   );
 
   const handleDelete = useCallback(
@@ -176,8 +178,7 @@ export function useArticleTable(articlesVersion: number) {
       if (!repository || !user) return;
       dispatchUI({ type: "CLOSE_DELETE_MODAL" });
       try {
-        const svc = new ArticleService(repository);
-        await svc.delete(Number(articleId), user.id);
+        await deleteArticle(articleId);
         dispatchArticles({ type: "REMOVE_ARTICLE", payload: articleId });
         dispatchUI({ type: "SHOW_TOAST" });
         setTimeout(() => dispatchUI({ type: "HIDE_TOAST" }), 2000);
@@ -188,7 +189,7 @@ export function useArticleTable(articlesVersion: number) {
         alert("Error al borrar el artículo: " + message);
       }
     },
-    [repository, user]
+    [repository, user, deleteArticle]
   );
 
   const clearSearch = useCallback(() => {
