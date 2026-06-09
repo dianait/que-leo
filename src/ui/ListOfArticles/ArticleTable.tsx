@@ -36,15 +36,8 @@ export function ArticleTable() {
 
   return (
     <div className="articles-table-container">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      >
-        <h2 style={{ margin: 0, color: "#333" }}>Mis artículos</h2>
+      <div className="article-table-header">
+        <h2 className="article-table-title">Mis artículos</h2>
         <AddArticle />
       </div>
 
@@ -147,7 +140,7 @@ export function ArticleTable() {
           </button>
         </div>
         {filtersState.searchTerm && (
-          <div style={{ marginTop: "8px", fontSize: "14px", color: "#6c757d" }}>
+          <div className="search-results-summary">
             {filtersState.isSearching ? (
               "🔍 Buscando en todos los artículos..."
             ) : (
@@ -156,7 +149,7 @@ export function ArticleTable() {
                 {filteredArticles.length !== 1 ? "s" : ""} encontrado
                 {filteredArticles.length !== 1 ? "s" : ""}
                 {cachedTotal > 0 && (
-                  <span style={{ marginLeft: "8px", opacity: 0.7 }}>
+                  <span className="search-results-total">
                     (de {cachedTotal} total)
                   </span>
                 )}
@@ -251,7 +244,7 @@ export function ArticleTable() {
                           <img
                             src="/star_unfilled.png"
                             alt=""
-                            style={{ width: "1.5em", height: "1.5em" }}
+                            className="article-table-star-icon"
                           />
                         )}
                       </button>
@@ -276,36 +269,15 @@ export function ArticleTable() {
 
           {/* Message when there are no search results */}
           {filtersState.searchTerm && filteredArticles.length === 0 && (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "40px 20px",
-                color: "#6c757d",
-                backgroundColor: "#f8f9fa",
-                borderRadius: "8px",
-                marginTop: "20px",
-              }}
-            >
-              <div style={{ fontSize: "48px", marginBottom: "16px" }}>🔍</div>
-              <h3 style={{ margin: "0 0 8px 0", color: "#495057" }}>
+            <div className="no-search-results">
+              <div className="no-search-results-icon">🔍</div>
+              <h3 className="no-search-results-title">
                 No se encontraron artículos
               </h3>
-              <p style={{ margin: 0 }}>
+              <p className="no-search-results-text">
                 No hay artículos que coincidan con "{filtersState.searchTerm}"
               </p>
-              <button
-                onClick={clearSearch}
-                style={{
-                  marginTop: "16px",
-                  padding: "8px 16px",
-                  backgroundColor: "#5a6fd8",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                }}
-              >
+              <button onClick={clearSearch} className="clear-search-button">
                 Limpiar búsqueda
               </button>
             </div>

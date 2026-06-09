@@ -81,3 +81,11 @@ export const pickRandomUnreadArticle = (articles: Article[]): Article | null => 
   if (unread.length === 0) return null;
   return unread[Math.floor(Math.random() * unread.length)];
 };
+
+export type AiRatingTier = "low" | "medium" | "high";
+
+export const getAiRatingTier = (rating: number): AiRatingTier => {
+  if (rating <= 4) return "low";
+  if (rating <= 7) return "medium";
+  return "high";
+};

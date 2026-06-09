@@ -1,5 +1,6 @@
 import { isBefore, subYears } from "date-fns";
 import type { Article } from "../../domain/Article";
+import { getAiRatingTier } from "../../domain/Article";
 import type { User } from "@supabase/supabase-js";
 import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
 import { ActionButton } from "./RandomArticleActionButtons";
@@ -10,13 +11,7 @@ function getFlagEmoji(language?: string) {
   return "";
 }
 
-function getAiRatingTier(rating: number): "low" | "medium" | "high" {
-  if (rating <= 4) return "low";
-  if (rating <= 7) return "medium";
-  return "high";
-}
-
-const TOPIC_TAG_COLORS = [
+ = [
   "#E0E7FF",
   "#FDE68A",
   "#FCA5A5",
