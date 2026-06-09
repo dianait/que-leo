@@ -47,15 +47,13 @@ function Modal({
   );
 }
 
-export const AddArticle: React.FC<{
-  setArticlesVersion?: (v: (v: number) => number) => void;
-}> = ({ setArticlesVersion }) => {
+export const AddArticle: React.FC = () => {
   const modalRef = useRef<HTMLDivElement>(null);
   const repository = use(ArticleRepositoryContext);
   const { user } = useAuth();
 
   const { state, openModal, closeModal, setTitle, setUrl, handleSubmit } =
-    useAddArticleForm(repository, user?.id, setArticlesVersion);
+    useAddArticleForm(repository, user?.id);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

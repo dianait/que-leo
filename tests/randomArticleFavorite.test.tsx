@@ -1,18 +1,10 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
-import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
-import { AuthContext } from "../src/domain/AuthContext";
-import { createMockAuthContext } from "./setup";
+import { renderWithProviders } from "./renderWithProviders";
 
-function renderWith(repoMock: any) {
-  return render(
-    <AuthContext.Provider value={createMockAuthContext()}>
-      <ArticleRepositoryContext.Provider value={repoMock}>
-        <RandomArticle articlesVersion={0} />
-      </ArticleRepositoryContext.Provider>
-    </AuthContext.Provider>
-  );
+function renderWith(repoMock: unknown) {
+  return renderWithProviders(<RandomArticle />, repoMock);
 }
 
 describe("RandomArticle - Funcionalidad de favoritos", () => {
@@ -92,7 +84,7 @@ describe("RandomArticle - Funcionalidad de favoritos", () => {
     fireEvent.click(favoriteButton);
 
     await waitFor(() => {
-      expect(repoMock.markAsFavorite).toHaveBeenCalledWith(1, true);
+      expect(repoMock.markAsFavorite).toHaveBeenCalledWith(1, true, "123");
     });
   });
 
@@ -151,7 +143,7 @@ describe("RandomArticle - Funcionalidad de favoritos", () => {
     fireEvent.click(favoriteButton);
 
     await waitFor(() => {
-      expect(repoMock.markAsFavorite).toHaveBeenCalledWith(1, false);
+      expect(repoMock.markAsFavorite).toHaveBeenCalledWith(1, false, "123");
     });
 
     // No debe aparecer el modal

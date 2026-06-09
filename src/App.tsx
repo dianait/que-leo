@@ -17,8 +17,6 @@ const ArticleTable = lazy(() =>
 );
 
 export function App() {
-  const [articlesVersion, setArticlesVersion] = useState(0);
-
   return (
     <div className="app-container">
       <a href="#main-content" className="skip-link">Saltar al contenido principal</a>
@@ -26,19 +24,8 @@ export function App() {
       <main className="app-main-content" id="main-content">
         <Suspense fallback={<AppSkeleton />}>
           <Routes>
-            <Route
-              path="/"
-              element={<RandomArticle articlesVersion={articlesVersion} />}
-            />
-            <Route
-              path="/articulos"
-              element={
-                <ArticleTable
-                  articlesVersion={articlesVersion}
-                  setArticlesVersion={setArticlesVersion}
-                />
-              }
-            />
+            <Route path="/" element={<RandomArticle />} />
+            <Route path="/articulos" element={<ArticleTable />} />
           </Routes>
         </Suspense>
       </main>

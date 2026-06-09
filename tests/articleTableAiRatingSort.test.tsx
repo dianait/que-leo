@@ -1,20 +1,8 @@
-import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { ArticleTable } from "../src/ui/ListOfArticles/ArticleTable";
-import { AuthContext } from "../src/domain/AuthContext";
-import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
-import { createMockAuthContext, mockUser } from "./setup";
-
-function renderWithProviders(ui: React.ReactElement, repoMock: unknown) {
-  return render(
-    <AuthContext.Provider value={createMockAuthContext({ user: mockUser })}>
-      <ArticleRepositoryContext.Provider value={repoMock as never}>
-        {ui}
-      </ArticleRepositoryContext.Provider>
-    </AuthContext.Provider>
-  );
-}
+import { renderWithProviders } from "./renderWithProviders";
+import { mockUser } from "./setup";
 
 describe("ArticleTable - Orden por valoración IA", () => {
   it("muestra los artículos ordenados por valoración IA descendente", async () => {
@@ -54,7 +42,7 @@ describe("ArticleTable - Orden por valoración IA", () => {
     };
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 

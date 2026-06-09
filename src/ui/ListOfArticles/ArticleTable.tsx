@@ -15,13 +15,7 @@ function Toast({ message, show }: { message: string; show: boolean }) {
   );
 }
 
-export function ArticleTable({
-  articlesVersion,
-  setArticlesVersion,
-}: {
-  articlesVersion: number;
-  setArticlesVersion: (v: (v: number) => number) => void;
-}) {
+export function ArticleTable() {
   const {
     pageSize,
     articlesState,
@@ -37,7 +31,7 @@ export function ArticleTable({
     handleToggleFavorite,
     handleDelete,
     clearSearch,
-  } = useArticleTable(articlesVersion);
+  } = useArticleTable();
 
   return (
     <div className="articles-table-container">
@@ -50,7 +44,7 @@ export function ArticleTable({
         }}
       >
         <h2 style={{ margin: 0, color: "#333" }}>Mis artículos</h2>
-        <AddArticle setArticlesVersion={setArticlesVersion} />
+        <AddArticle />
       </div>
 
       {/* Search and filters */}

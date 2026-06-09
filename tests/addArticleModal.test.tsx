@@ -31,6 +31,11 @@ jest.mock("../src/domain/AuthContext", () => ({
   useAuth: () => mockAuthContext,
 }));
 
+const mockBumpRefresh = jest.fn();
+jest.mock("../src/ui/context/ArticlesRefreshContext", () => ({
+  useArticlesRefresh: () => ({ version: 0, bumpRefresh: mockBumpRefresh }),
+}));
+
 // Helper para renderizar con el contexto del repositorio
 function renderWithRepo(ui: React.ReactElement, repo: ArticleRepository) {
   return render(
@@ -57,6 +62,7 @@ beforeEach(() => {
     getArticlesByUserFromUserArticlesPaginated: jest.fn(),
   };
   jest.clearAllMocks();
+  mockBumpRefresh.mockClear();
 });
 
 describe("AddArticleModal con extracción automática de metadatos", () => {
@@ -89,12 +95,7 @@ describe("AddArticleModal con extracción automática de metadatos", () => {
         mockArticle
       );
 
-      const setArticlesVersion = jest.fn();
-
-      renderWithRepo(
-        <AddArticle setArticlesVersion={setArticlesVersion} />,
-        mockRepository
-      );
+      renderWithRepo(<AddArticle />, mockRepository);
 
       // Abrir modal
       fireEvent.click(screen.getByText("+ Nuevo"));
@@ -124,7 +125,7 @@ describe("AddArticleModal con extracción automática de metadatos", () => {
           null,
           mockMetadata.featuredimage
         );
-        expect(setArticlesVersion).toHaveBeenCalled();
+        expect(mockBumpRefresh).toHaveBeenCalled();
       });
     });
 
@@ -155,12 +156,7 @@ describe("AddArticleModal con extracción automática de metadatos", () => {
         mockArticle
       );
 
-      const setArticlesVersion = jest.fn();
-
-      renderWithRepo(
-        <AddArticle setArticlesVersion={setArticlesVersion} />,
-        mockRepository
-      );
+      renderWithRepo(<AddArticle />, mockRepository);
 
       // Abrir modal
       fireEvent.click(screen.getByText("+ Nuevo"));
@@ -209,12 +205,7 @@ describe("AddArticleModal con extracción automática de metadatos", () => {
         mockArticle
       );
 
-      const setArticlesVersion = jest.fn();
-
-      renderWithRepo(
-        <AddArticle setArticlesVersion={setArticlesVersion} />,
-        mockRepository
-      );
+      renderWithRepo(<AddArticle />, mockRepository);
 
       // Abrir modal
       fireEvent.click(screen.getByText("+ Nuevo"));
@@ -270,12 +261,7 @@ describe("AddArticleModal con extracción automática de metadatos", () => {
         mockArticle
       );
 
-      const setArticlesVersion = jest.fn();
-
-      const { container } = renderWithRepo(
-        <AddArticle setArticlesVersion={setArticlesVersion} />,
-        mockRepository
-      );
+      const { container } = renderWithRepo(<AddArticle />, mockRepository);
 
       // Abrir modal
       fireEvent.click(screen.getByText("+ Nuevo"));
@@ -324,12 +310,7 @@ describe("AddArticleModal con extracción automática de metadatos", () => {
         new Error("Error de base de datos")
       );
 
-      const setArticlesVersion = jest.fn();
-
-      renderWithRepo(
-        <AddArticle setArticlesVersion={setArticlesVersion} />,
-        mockRepository
-      );
+      renderWithRepo(<AddArticle />, mockRepository);
 
       // Abrir modal
       fireEvent.click(screen.getByText("+ Nuevo"));

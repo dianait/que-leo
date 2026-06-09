@@ -2,6 +2,7 @@ import { useReducer, useCallback } from "react";
 import type { ArticleRepository } from "../../domain/ArticleRepository";
 import { ArticleService } from "../../application/ArticleService";
 import { MetadataService } from "../../infrastructure/services/MetadataService";
+import { useArticlesRefresh } from "../context/ArticlesRefreshContext";
 import {
   addArticleFormReducer,
   initialAddArticleFormState,
@@ -16,9 +17,9 @@ function normalizeUrl(url: string): string {
 
 export function useAddArticleForm(
   repository: ArticleRepository | null,
-  userId: string | undefined,
-  setArticlesVersion?: (v: (v: number) => number) => void
+  userId: string | undefined
 ) {
+  const { bumpRefresh } = useArticlesRefresh();
   const [state, dispatch] = useReducer(
     addArticleFormReducer,
     initialAddArticleFormState
@@ -79,9 +80,7 @@ export function useAddArticleForm(
         });
 
         dispatch({ type: "SUBMIT_SUCCESS" });
-        if (setArticlesVersion) {
-          setArticlesVersion((v) => v + 1);
-        }
+        bumpRefresh();
         setTimeout(() => {
           dispatch({ type: "DISMISS_AFTER_SUCCESS" });
         }, 1000);
@@ -93,7 +92,7 @@ export function useAddArticleForm(
         dispatch({ type: "SUBMIT_ERROR", payload: message });
       }
     },
-    [repository, userId, state.url, state.title, setArticlesVersion]
+    [repository, userId, state.url, state.title, bumpRefresh]
   );
 
   return {

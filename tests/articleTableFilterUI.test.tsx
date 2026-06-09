@@ -1,4 +1,3 @@
-import React from "react";
 import {
   render,
   screen,
@@ -7,20 +6,8 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { ArticleTable } from "../src/ui/ListOfArticles/ArticleTable";
-import { AuthContext } from "../src/domain/AuthContext";
-import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
-import { mockUser, createMockAuthContext } from "./setup";
-
-function renderWithProviders(ui: React.ReactElement, repoMock: any) {
-  const authValue = createMockAuthContext({ user: mockUser });
-  return render(
-    <AuthContext.Provider value={authValue}>
-      <ArticleRepositoryContext.Provider value={repoMock}>
-        {ui}
-      </ArticleRepositoryContext.Provider>
-    </AuthContext.Provider>
-  );
-}
+import { renderWithProviders } from "./renderWithProviders";
+import { mockUser } from "./setup";
 
 describe("ArticleTable - UI de filtros y acciones", () => {
   const baseArticles = [
@@ -68,7 +55,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
   it("muestra los botones de filtro con emojis y resalta el activo", async () => {
     const repo = makeRepoMock();
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -97,7 +84,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
   it("filtra por no leídos al pulsar el botón correspondiente", async () => {
     const repo = makeRepoMock();
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -127,7 +114,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
   it("combina filtro y búsqueda", async () => {
     const repo = makeRepoMock();
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -148,7 +135,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
   it("marca como leído desde la tabla y actualiza el estado local", async () => {
     const repo = makeRepoMock();
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -173,7 +160,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
   it("muestra el botón de filtro de favoritos", async () => {
     const repo = makeRepoMock();
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -222,7 +209,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
 
     const repo = makeRepoMock(articlesWithFavorites);
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -288,7 +275,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
 
     const repo = makeRepoMock(articlesWithFavorites);
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -370,7 +357,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     });
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -436,7 +423,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
 
     const repo = makeRepoMock(articlesWithFavorites);
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -512,7 +499,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     it("desactiva Favoritos cuando se selecciona Leídos", async () => {
       const repo = makeRepoMock(articlesWithFavorites);
       renderWithProviders(
-        <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+        <ArticleTable />,
         repo
       );
 
@@ -547,7 +534,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     it("desactiva Favoritos cuando se selecciona No leídos", async () => {
       const repo = makeRepoMock(articlesWithFavorites);
       renderWithProviders(
-        <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+        <ArticleTable />,
         repo
       );
 
@@ -582,7 +569,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     it("desactiva el filtro de lectura cuando se selecciona Favoritos", async () => {
       const repo = makeRepoMock(articlesWithFavorites);
       renderWithProviders(
-        <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+        <ArticleTable />,
         repo
       );
 
@@ -617,7 +604,7 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     it("solo permite un filtro activo a la vez", async () => {
       const repo = makeRepoMock(articlesWithFavorites);
       renderWithProviders(
-        <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+        <ArticleTable />,
         repo
       );
 

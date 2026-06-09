@@ -1,25 +1,10 @@
-import React from "react";
 import {
-  render,
   screen,
   fireEvent,
   waitFor,
 } from "@testing-library/react";
 import { ArticleTable } from "../src/ui/ListOfArticles/ArticleTable";
-import { AuthContext } from "../src/domain/AuthContext";
-import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
-import { mockUser, createMockAuthContext } from "./setup";
-
-function renderWithProviders(ui: React.ReactElement, repoMock: any) {
-  const authValue = createMockAuthContext({ user: mockUser });
-  return render(
-    <AuthContext.Provider value={authValue}>
-      <ArticleRepositoryContext.Provider value={repoMock}>
-        {ui}
-      </ArticleRepositoryContext.Provider>
-    </AuthContext.Provider>
-  );
-}
+import { renderWithProviders } from "./renderWithProviders";
 
 describe("Favorite Functionality", () => {
   const baseArticles = [
@@ -70,7 +55,7 @@ describe("Favorite Functionality", () => {
   it("muestra el icono de estrella vacía para artículos no favoritos", async () => {
     const repo = makeRepoMock();
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -97,7 +82,7 @@ describe("Favorite Functionality", () => {
   it("muestra el icono de estrella llena para artículos favoritos", async () => {
     const repo = makeRepoMock();
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -123,7 +108,7 @@ describe("Favorite Functionality", () => {
   it("marca un artículo como favorito al hacer clic", async () => {
     const repo = makeRepoMock();
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -148,7 +133,8 @@ describe("Favorite Functionality", () => {
     await waitFor(() => {
       expect(repo.markAsFavorite).toHaveBeenCalledWith(
         expect.any(Number),
-        true
+        true,
+        mockUser.id
       );
     });
   });
@@ -156,7 +142,7 @@ describe("Favorite Functionality", () => {
   it("quita un artículo de favoritos al hacer clic en uno ya marcado", async () => {
     const repo = makeRepoMock();
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -181,7 +167,8 @@ describe("Favorite Functionality", () => {
     await waitFor(() => {
       expect(repo.markAsFavorite).toHaveBeenCalledWith(
         expect.any(Number),
-        false
+        false,
+        mockUser.id
       );
     });
   });
@@ -189,7 +176,7 @@ describe("Favorite Functionality", () => {
   it("actualiza el estado local optimísticamente al marcar como favorito", async () => {
     const repo = makeRepoMock();
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -222,7 +209,7 @@ describe("Favorite Functionality", () => {
   it("muestra tooltip correcto según el estado de favorito", async () => {
     const repo = makeRepoMock();
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -259,7 +246,7 @@ describe("Favorite Functionality", () => {
 
     const repo = makeRepoMock(articlesWithFavorite);
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 

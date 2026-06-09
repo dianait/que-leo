@@ -8,6 +8,7 @@ import {
 } from "../../domain/Article";
 import { useArticleFetcher } from "../hooks/useArticleFetcher";
 import { useArticleMutations } from "../hooks/useArticleMutations";
+import { useArticlesRefresh } from "../context/ArticlesRefreshContext";
 import {
   articlesReducer,
   filtersReducer,
@@ -22,7 +23,8 @@ import { useArticleTableDisplay } from "./useArticleTableDisplay";
 const PAGE_SIZE = 15;
 const ALL_ARTICLES_LIMIT = 1000;
 
-export function useArticleTable(articlesVersion: number) {
+export function useArticleTable() {
+  const { version } = useArticlesRefresh();
   const { fetchPaginated, isReady, user, repository } = useArticleFetcher();
   const { markRead, markFavorite, deleteArticle } = useArticleMutations(
     repository,
@@ -76,7 +78,7 @@ export function useArticleTable(articlesVersion: number) {
     };
 
     loadArticles();
-  }, [isReady, fetchPaginated, articlesVersion, articlesState.page]);
+  }, [isReady, fetchPaginated, version, articlesState.page]);
 
   useEffect(() => {
     if (

@@ -1,10 +1,8 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
-import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
 import { ArticleRepository } from "../src/domain/ArticleRepository";
-import { AuthContext } from "../src/domain/AuthContext";
-import { createMockAuthContext } from "./setup";
+import { renderWithProviders } from "./renderWithProviders";
 
 const mockRepository: ArticleRepository = {
   getAllArticles: jest.fn(),
@@ -33,13 +31,7 @@ const mockRepository: ArticleRepository = {
 
 describe("RandomArticle - Valoración IA", () => {
   test("muestra la valoración IA en la card cuando existe", async () => {
-    render(
-      <AuthContext.Provider value={createMockAuthContext()}>
-        <ArticleRepositoryContext.Provider value={mockRepository}>
-          <RandomArticle articlesVersion={0} />
-        </ArticleRepositoryContext.Provider>
-      </AuthContext.Provider>
-    );
+    renderWithProviders(<RandomArticle />, mockRepository);
 
     await waitFor(() => {
       expect(screen.getByText("Valoración:")).toBeInTheDocument();
@@ -71,13 +63,7 @@ describe("RandomArticle - Valoración IA", () => {
       ]),
     };
 
-    render(
-      <AuthContext.Provider value={createMockAuthContext()}>
-        <ArticleRepositoryContext.Provider value={repoWithoutRating}>
-          <RandomArticle articlesVersion={0} />
-        </ArticleRepositoryContext.Provider>
-      </AuthContext.Provider>
-    );
+    renderWithProviders(<RandomArticle />, repoWithoutRating);
 
     await waitFor(() => {
       expect(

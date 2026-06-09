@@ -1,4 +1,3 @@
-import React from "react";
 import {
   render,
   screen,
@@ -7,20 +6,7 @@ import {
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { ArticleTable } from "../src/ui/ListOfArticles/ArticleTable";
-import { AuthContext } from "../src/domain/AuthContext";
-import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
-import { mockUser, createMockAuthContext } from "./setup";
-
-function renderWithProviders(ui: React.ReactElement, repoMock: any) {
-  const authValue = createMockAuthContext({ user: mockUser });
-  return render(
-    <AuthContext.Provider value={authValue}>
-      <ArticleRepositoryContext.Provider value={repoMock}>
-        {ui}
-      </ArticleRepositoryContext.Provider>
-    </AuthContext.Provider>
-  );
-}
+import { renderWithProviders } from "./renderWithProviders";
 
 describe("ArticleTable - Manejo de Errores", () => {
   const baseArticles = [
@@ -77,7 +63,7 @@ describe("ArticleTable - Manejo de Errores", () => {
     };
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -99,7 +85,7 @@ describe("ArticleTable - Manejo de Errores", () => {
       .mockRejectedValueOnce(new Error("Error al marcar como leído"));
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -134,7 +120,7 @@ describe("ArticleTable - Manejo de Errores", () => {
       .mockRejectedValueOnce(new Error("Error al marcar como favorito"));
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -172,7 +158,7 @@ describe("ArticleTable - Manejo de Errores", () => {
     const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -225,7 +211,7 @@ describe("ArticleTable - Manejo de Errores", () => {
       .mockRejectedValueOnce(new Error("Error al cargar todos los artículos"));
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -278,7 +264,7 @@ describe("ArticleTable - Manejo de Errores", () => {
       .mockRejectedValueOnce(new Error("Error de red"));
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 

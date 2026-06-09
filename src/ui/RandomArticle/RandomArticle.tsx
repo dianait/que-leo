@@ -8,23 +8,15 @@ import { ModalProvider, useModals } from "./randomArticleModals";
 import { RandomArticleCard } from "./RandomArticleCard";
 import { FavoriteModal } from "./FavoriteModal";
 
-export function RandomArticle({
-  articlesVersion,
-}: {
-  articlesVersion: number;
-}) {
+export function RandomArticle() {
   return (
     <ModalProvider>
-      <RandomArticleInner articlesVersion={articlesVersion} />
+      <RandomArticleInner />
     </ModalProvider>
   );
 }
 
-function RandomArticleInner({
-  articlesVersion,
-}: {
-  articlesVersion: number;
-}) {
+function RandomArticleInner() {
   const { state: modalState, actions: modalActions } = useModals();
   const { user } = useAuth();
 
@@ -37,7 +29,7 @@ function RandomArticleInner({
     toggleRead,
     toggleFavorite,
     deleteArticle,
-  } = useRandomArticle(articlesVersion);
+  } = useRandomArticle();
 
   const handleDelete = async (articleId: number) => {
     modalActions.closeConfirm();

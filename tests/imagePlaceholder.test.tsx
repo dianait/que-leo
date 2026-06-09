@@ -1,10 +1,8 @@
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { screen, waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
-import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
 import { ArticleRepository } from "../src/domain/ArticleRepository";
-import { AuthContext } from "../src/domain/AuthContext";
-import { createMockAuthContext } from "./setup";
+import { renderWithProviders } from "./renderWithProviders";
 
 type ArticleType = {
   id: string;
@@ -46,13 +44,7 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
       markAsFavorite: jest.fn(),
     };
-    render(
-      <AuthContext.Provider value={createMockAuthContext()}>
-        <ArticleRepositoryContext.Provider value={mockRepository}>
-          <RandomArticle articlesVersion={0} />
-        </ArticleRepositoryContext.Provider>
-      </AuthContext.Provider>
-    );
+    renderWithProviders(<RandomArticle />, mockRepository);
     await waitFor(() => {
       const image = screen.getByAltText("Imagen destacada de: Artículo con imagen");
       expect(image).toBeInTheDocument();
@@ -85,13 +77,7 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
       markAsFavorite: jest.fn(),
     };
-    render(
-      <AuthContext.Provider value={createMockAuthContext()}>
-        <ArticleRepositoryContext.Provider value={mockRepository}>
-          <RandomArticle articlesVersion={0} />
-        </ArticleRepositoryContext.Provider>
-      </AuthContext.Provider>
-    );
+    renderWithProviders(<RandomArticle />, mockRepository);
     await waitFor(() => {
       const image = document.querySelector(".article-featured-image");
       expect(image).toBeInTheDocument();
@@ -124,13 +110,7 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
       markAsFavorite: jest.fn(),
     };
-    render(
-      <AuthContext.Provider value={createMockAuthContext()}>
-        <ArticleRepositoryContext.Provider value={mockRepository}>
-          <RandomArticle articlesVersion={0} />
-        </ArticleRepositoryContext.Provider>
-      </AuthContext.Provider>
-    );
+    renderWithProviders(<RandomArticle />, mockRepository);
     await waitFor(() => {
       const image = screen.getByAltText(
         "Imagen destacada de: Artículo con imagen rota"
@@ -176,13 +156,7 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
       markAsFavorite: jest.fn(),
     };
-    render(
-      <AuthContext.Provider value={createMockAuthContext()}>
-        <ArticleRepositoryContext.Provider value={mockRepository}>
-          <RandomArticle articlesVersion={0} />
-        </ArticleRepositoryContext.Provider>
-      </AuthContext.Provider>
-    );
+    renderWithProviders(<RandomArticle />, mockRepository);
     await waitFor(() => {
       const image = screen.getByAltText("Imagen destacada de: Artículo con imagen");
       expect(image).toHaveClass("article-featured-image");
@@ -214,13 +188,7 @@ describe("Imágenes en RandomArticle", () => {
       markAsRead: jest.fn(),
       markAsFavorite: jest.fn(),
     };
-    render(
-      <AuthContext.Provider value={createMockAuthContext()}>
-        <ArticleRepositoryContext.Provider value={mockRepository}>
-          <RandomArticle articlesVersion={0} />
-        </ArticleRepositoryContext.Provider>
-      </AuthContext.Provider>
-    );
+    renderWithProviders(<RandomArticle />, mockRepository);
     await waitFor(() => {
       const image = document.querySelector(".article-featured-image");
       expect(image).toHaveClass("article-featured-image");

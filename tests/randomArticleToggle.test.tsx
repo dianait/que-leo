@@ -1,18 +1,10 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
-import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
-import { AuthContext } from "../src/domain/AuthContext";
-import { createMockAuthContext } from "./setup";
+import { renderWithProviders } from "./renderWithProviders";
 
-function renderWith(repoMock: any) {
-  return render(
-    <AuthContext.Provider value={createMockAuthContext()}>
-      <ArticleRepositoryContext.Provider value={repoMock}>
-        <RandomArticle articlesVersion={0} />
-      </ArticleRepositoryContext.Provider>
-    </AuthContext.Provider>
-  );
+function renderWith(repoMock: unknown) {
+  return renderWithProviders(<RandomArticle />, repoMock);
 }
 
 test("toggle from No leído to Leído updates UI and calls repository", async () => {
@@ -43,7 +35,7 @@ test("toggle from No leído to Leído updates UI and calls repository", async ()
   fireEvent.click(toggleBtn);
 
   await waitFor(() => {
-    expect(repoMock.markAsRead).toHaveBeenCalledWith(1, true);
+    expect(repoMock.markAsRead).toHaveBeenCalledWith(1, true, "123");
   });
 
   // Button text should change to "Leído"
@@ -71,11 +63,15 @@ test("toggle from No leído -> Leído -> No leído mantiene el UI y llama repo",
   // Unread -> Read
   const toRead = screen.getByRole("button", { name: /Marcar como leído/i });
   fireEvent.click(toRead);
-  await waitFor(() => expect(repoMock.markAsRead).toHaveBeenCalledWith(2, true));
+  await waitFor(() =>
+    expect(repoMock.markAsRead).toHaveBeenCalledWith(2, true, "123")
+  );
   const toUnread = await screen.findByRole("button", { name: /Marcar como no leído/i });
   // Read -> Unread
   fireEvent.click(toUnread);
-  await waitFor(() => expect(repoMock.markAsRead).toHaveBeenCalledWith(2, false));
+  await waitFor(() =>
+    expect(repoMock.markAsRead).toHaveBeenCalledWith(2, false, "123")
+  );
   expect(await screen.findByRole("button", { name: /Marcar como leído/i })).toBeInTheDocument();
 });
 

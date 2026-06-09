@@ -6,12 +6,14 @@ import {
 } from "../../domain/Article";
 import { useArticleFetcher } from "../hooks/useArticleFetcher";
 import { useArticleMutations } from "../hooks/useArticleMutations";
+import { useArticlesRefresh } from "../context/ArticlesRefreshContext";
 import {
   initialRandomArticleState,
   randomArticleReducer,
 } from "./randomArticleReducer";
 
-export function useRandomArticle(articlesVersion: number) {
+export function useRandomArticle() {
+  const { version } = useArticlesRefresh();
   const { fetchAll, isReady, user, repository } = useArticleFetcher();
   const { markRead, markFavorite, deleteArticle } = useArticleMutations(
     repository,
@@ -23,7 +25,10 @@ export function useRandomArticle(articlesVersion: number) {
   );
 
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady || !user) {
+      dispatch({ type: "RESET" });
+      return;
+    }
 
     let cancelled = false;
 
@@ -47,7 +52,7 @@ export function useRandomArticle(articlesVersion: number) {
     return () => {
       cancelled = true;
     };
-  }, [fetchAll, isReady, articlesVersion]);
+  }, [fetchAll, isReady, version, user]);
 
   const pickRandom = useCallback(() => {
     dispatch({ type: "PICK_RANDOM_UNREAD" });

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   render,
   screen,
@@ -7,20 +6,7 @@ import {
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { ArticleTable } from "../src/ui/ListOfArticles/ArticleTable";
-import { AuthContext } from "../src/domain/AuthContext";
-import { ArticleRepositoryContext } from "../src/domain/ArticleRepositoryContext";
-import { mockUser, createMockAuthContext } from "./setup";
-
-function renderWithProviders(ui: React.ReactElement, repoMock: any) {
-  const authValue = createMockAuthContext({ user: mockUser });
-  return render(
-    <AuthContext.Provider value={authValue}>
-      <ArticleRepositoryContext.Provider value={repoMock}>
-        {ui}
-      </ArticleRepositoryContext.Provider>
-    </AuthContext.Provider>
-  );
-}
+import { renderWithProviders } from "./renderWithProviders";
 
 describe("ArticleTable - Paginación", () => {
   // Crear 20 artículos para probar paginación
@@ -59,7 +45,7 @@ describe("ArticleTable - Paginación", () => {
     const repo = makeRepoMock(articles);
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -84,7 +70,7 @@ describe("ArticleTable - Paginación", () => {
     const repo = makeRepoMock(articles);
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -116,7 +102,7 @@ describe("ArticleTable - Paginación", () => {
     const repo = makeRepoMock(articles);
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -155,7 +141,7 @@ describe("ArticleTable - Paginación", () => {
     const repo = makeRepoMock(articles);
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -172,7 +158,7 @@ describe("ArticleTable - Paginación", () => {
     const repo = makeRepoMock(articles);
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -189,7 +175,7 @@ describe("ArticleTable - Paginación", () => {
     const repo = makeRepoMock(articles);
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -206,7 +192,7 @@ describe("ArticleTable - Paginación", () => {
     const repo = makeRepoMock(articles);
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -238,7 +224,7 @@ describe("ArticleTable - Paginación", () => {
     const repo = makeRepoMock(articles);
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -270,7 +256,7 @@ describe("ArticleTable - Paginación", () => {
     const repo = makeRepoMock(articles);
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -308,7 +294,7 @@ describe("ArticleTable - Paginación", () => {
     const repo = makeRepoMock(articlesWithFavorites);
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
@@ -338,7 +324,7 @@ describe("ArticleTable - Paginación", () => {
     const repo = makeRepoMock(articlesWithFavorites);
 
     renderWithProviders(
-      <ArticleTable articlesVersion={0} setArticlesVersion={() => {}} />,
+      <ArticleTable />,
       repo
     );
 
