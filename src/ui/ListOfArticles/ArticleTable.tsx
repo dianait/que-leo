@@ -1,5 +1,5 @@
 import "./ListOfArticles.css";
-import { useEffect, useContext, useReducer, useCallback, useMemo } from "react";
+import { useEffect, useReducer, useMemo } from "react";
 import type { Article } from "../../domain/Article";
 import {
   markArticleAsRead,
@@ -8,132 +8,18 @@ import {
   markArticleAsUnfavorite,
   sortArticlesByAiRating,
 } from "../../domain/Article";
-import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
-import { useAuth } from "../../domain/AuthContext";
 import { ArticleService } from "../../application/ArticleService";
+import { useArticleFetcher } from "../hooks/useArticleFetcher";
 import { ArticleTableSkeleton } from "../AppSkeleton/AppSkeleton";
 import { AddArticle } from "../AddArticle/AddArticleModal";
-
-function ConfirmModal({
-  open,
-  onConfirm,
-  onCancel,
-}: {
-  open: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
-}) {
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Escape") onCancel();
-    },
-    [onCancel]
-  );
-
-  if (!open) return null;
-  return (
-    <div
-      className="modal-overlay"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="confirm-delete-title"
-      aria-describedby="confirm-delete-desc"
-      onKeyDown={handleKeyDown}
-    >
-      <div className="modal-content">
-        <h2 id="confirm-delete-title">¿Borrar artículo?</h2>
-        <p id="confirm-delete-desc">
-          ¿Seguro que quieres borrar este artículo? <br />
-          <strong>Esta acción no se puede deshacer.</strong>
-        </p>
-        <div className="modal-actions">
-          <button className="app-button" onClick={onCancel}>
-            Cancelar
-          </button>
-          <button className="app-button danger" onClick={onConfirm}>
-            Borrar definitivamente
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { ConfirmModal } from "../shared/ConfirmModal";
+import { ShareModal } from "../shared/ShareModal";
 
 function Toast({ message, show }: { message: string; show: boolean }) {
   if (!show) return null;
   return (
     <div className="toast-notification" role="status" aria-live="polite">
       {message}
-    </div>
-  );
-}
-
-function ShareModal({
-  open,
-  article,
-  onClose,
-}: {
-  open: boolean;
-  article: Article | null;
-  onClose: () => void;
-}) {
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    },
-    [onClose]
-  );
-
-  if (!open || !article) return null;
-  const shareText = encodeURIComponent(`¡He leído: ${article.title}!`);
-  const url = encodeURIComponent(article.url);
-  const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
-  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-  return (
-    <div
-      className="modal-overlay"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="share-modal-title"
-      onKeyDown={handleKeyDown}
-    >
-      <div className="modal-content" style={{ position: "relative" }}>
-        <button
-          className="modal-close"
-          onClick={onClose}
-          aria-label="Cerrar"
-        >
-          <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>
-            ×
-          </span>
-        </button>
-        <h2 id="share-modal-title">¡Genial! 🎉</h2>
-        <p>
-          Has marcado este artículo como leído.
-          <br />
-          ¿Quieres compartirlo en tus redes?
-        </p>
-        <div className="share-buttons-row">
-          <a
-            href={blueskyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="share-button bluesky"
-          >
-            <img src="/blusky.svg" alt="" className="share-icon" />
-            Bluesky
-          </a>
-          <a
-            href={linkedinUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="share-button linkedin"
-          >
-            <img src="/linkedin.svg" alt="" className="share-icon" />
-            LinkedIn
-          </a>
-        </div>
-      </div>
     </div>
   );
 }
@@ -304,8 +190,7 @@ export function ArticleTable({
   setArticlesVersion: (v: (v: number) => number) => void;
 }) {
   const PAGE_SIZE = 15;
-  const repository = useContext(ArticleRepositoryContext);
-  const { user } = useAuth();
+  const { fetchPaginated, isReady, user, repository } = useArticleFetcher();
 
   // Articles state
   const [articlesState, dispatchArticles] = useReducer(articlesReducer, {
@@ -407,11 +292,10 @@ export function ArticleTable({
 
   // Load all articles for search purposes
   const fetchAllArticles = async () => {
-    if (!repository || !user) return;
+    if (!isReady) return;
     dispatchFilters({ type: "SET_IS_SEARCHING", payload: true });
     try {
-      const svc = new ArticleService(repository);
-      const { articles } = await svc.getByUserPaginated(user.id, 1000, 0); // Load up to 1000 articles
+      const { articles } = await fetchPaginated(1000, 0);
       dispatchArticles({ type: "SET_ALL_ARTICLES", payload: articles });
     } catch (error) {
       console.error("Error al cargar todos los artículos:", error);
@@ -421,13 +305,11 @@ export function ArticleTable({
   };
 
   useEffect(() => {
-    if (!repository || !user) return;
-    const fetchArticles = async () => {
+    if (!isReady) return;
+    const loadArticles = async () => {
       dispatchArticles({ type: "SET_LOADING", payload: true });
       try {
-        const svc = new ArticleService(repository);
-        const { articles, total } = await svc.getByUserPaginated(
-          user.id,
+        const { articles, total } = await fetchPaginated(
           PAGE_SIZE,
           (articlesState.page - 1) * PAGE_SIZE
         );
@@ -440,8 +322,8 @@ export function ArticleTable({
         dispatchArticles({ type: "SET_LOADING", payload: false });
       }
     };
-    fetchArticles();
-  }, [user, repository, articlesVersion, articlesState.page]);
+    loadArticles();
+  }, [isReady, fetchPaginated, articlesVersion, articlesState.page]);
 
   // Load all articles when there is a search term or active filters
   useEffect(() => {

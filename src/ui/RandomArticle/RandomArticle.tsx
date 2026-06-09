@@ -7,12 +7,13 @@ import React, {
 import { isBefore, subYears } from "date-fns";
 import "./RandomArticle.css";
 import type { Article } from "../../domain/Article";
-import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
 import { useAuth } from "../../domain/AuthContext";
 import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
 import { RandomArticleSkeleton } from "../AppSkeleton/AppSkeleton";
 import { useShare } from "./useShare";
 import { useRandomArticle } from "./useRandomArticle";
+import { ConfirmModal } from "../shared/ConfirmModal";
+import { ShareModal } from "../shared/ShareModal";
 
 type ModalState = {
   confirm: boolean;
@@ -86,7 +87,6 @@ function RandomArticleInner({
   articlesVersion: number;
 }) {
   const { state: modalState, actions: modalActions } = useModals();
-  const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
 
   const {
@@ -98,7 +98,7 @@ function RandomArticleInner({
     toggleRead,
     toggleFavorite,
     deleteArticle,
-  } = useRandomArticle(repository, user?.id, articlesVersion);
+  } = useRandomArticle(articlesVersion);
 
   const handleArticleClick = (url: string, event: React.MouseEvent) => {
     event.preventDefault();
@@ -353,7 +353,7 @@ function RandomArticleInner({
       )}
 
       <ConfirmModal
-        show={modalState.confirm}
+        open={modalState.confirm}
         onCancel={modalActions.closeConfirm}
         onConfirm={() => {
           if (modalState.articleToDelete !== null) {
@@ -361,11 +361,15 @@ function RandomArticleInner({
           }
           modalActions.closeConfirm();
         }}
+        titleId="confirm-delete-title-random"
+        descId="confirm-delete-desc-random"
       />
       <ShareModal
-        show={modalState.share}
+        open={modalState.share}
         article={article}
         onClose={modalActions.closeShare}
+        networks={["twitter", "linkedin"]}
+        titleId="share-modal-title-random"
       />
       <FavoriteModal
         show={modalState.favorite}
@@ -552,91 +556,6 @@ Modal.Content = function ModalContent({
     </div>
   );
 };
-
-function ConfirmModal({
-  show,
-  onConfirm,
-  onCancel,
-}: {
-  show: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
-}) {
-  if (!show) return null;
-  return (
-    <Modal show={show} onClose={onCancel}>
-      <h2 id="confirm-delete-title-random">¿Borrar artículo?</h2>
-      <p id="confirm-delete-desc-random">
-        ¿Seguro que quieres borrar este artículo? <br />
-        <strong>Esta acción no se puede deshacer.</strong>
-      </p>
-      <div className="modal-actions">
-        <button className="app-button" onClick={onCancel}>
-          Cancelar
-        </button>
-        <button className="app-button danger" onClick={onConfirm}>
-          Borrar definitivamente
-        </button>
-      </div>
-    </Modal>
-  );
-}
-
-function ShareModal({
-  article,
-  show,
-  onClose,
-}: {
-  article: Article | null;
-  show: boolean;
-  onClose: () => void;
-}) {
-  if (!show || !article) return null;
-  const shareText = `¡He leído: ${article.title}!`;
-  const url = article.url;
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
-  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
-  return (
-    <Modal show={show} onClose={onClose}>
-      <button
-        className="modal-close"
-        onClick={onClose}
-        title="Cerrar"
-        aria-label="Cerrar"
-      >
-        <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>
-          ×
-        </span>
-      </button>
-      <h2 id="share-modal-title-random">¡Genial! 🎉</h2>
-      <p>
-        Has marcado este artículo como leído.
-        <br />
-        ¿Quieres compartirlo en tus redes?
-      </p>
-      <div className="share-buttons-row">
-        <a
-          href={twitterUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="share-button twitter"
-        >
-          <img src="/x.svg" alt="" className="share-icon" />
-          Twitter
-        </a>
-        <a
-          href={linkedinUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="share-button linkedin"
-        >
-          <img src="/linkedin.svg" alt="" className="share-icon" />
-          LinkedIn
-        </a>
-      </div>
-    </Modal>
-  );
-}
 
 function FavoriteModal({
   article,

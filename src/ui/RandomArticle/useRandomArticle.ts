@@ -4,33 +4,29 @@ import {
   markArticleAsFavorite,
   markArticleAsUnfavorite,
 } from "../../domain/Article";
-import type { ArticleRepository } from "../../domain/ArticleRepository";
 import { ArticleService } from "../../application/ArticleService";
+import { useArticleFetcher } from "../hooks/useArticleFetcher";
 import {
   initialRandomArticleState,
   randomArticleReducer,
 } from "./randomArticleReducer";
 
-export function useRandomArticle(
-  repository: ArticleRepository | null,
-  userId: string | undefined,
-  articlesVersion: number
-) {
+export function useRandomArticle(articlesVersion: number) {
+  const { fetchAll, isReady, user, repository } = useArticleFetcher();
   const [state, dispatch] = useReducer(
     randomArticleReducer,
     initialRandomArticleState
   );
 
   useEffect(() => {
-    if (!repository || !userId) return;
+    if (!isReady) return;
 
     let cancelled = false;
 
-    const fetchArticles = async () => {
+    const loadArticles = async () => {
       dispatch({ type: "FETCH_START" });
       try {
-        const svc = new ArticleService(repository);
-        const result = await svc.getByUser(userId);
+        const result = await fetchAll();
         if (!cancelled) {
           dispatch({ type: "FETCH_SUCCESS", payload: result });
         }
@@ -42,19 +38,19 @@ export function useRandomArticle(
       }
     };
 
-    fetchArticles();
+    loadArticles();
 
     return () => {
       cancelled = true;
     };
-  }, [repository, userId, articlesVersion]);
+  }, [fetchAll, isReady, articlesVersion]);
 
   const pickRandom = useCallback(() => {
     dispatch({ type: "PICK_RANDOM_UNREAD" });
   }, []);
 
   const toggleRead = useCallback(async (): Promise<boolean> => {
-    if (!repository || !state.current) return false;
+    if (!repository || !state.current || !user) return false;
 
     dispatch({ type: "SET_PENDING", payload: "read" });
     try {
@@ -74,7 +70,7 @@ export function useRandomArticle(
     } finally {
       dispatch({ type: "SET_PENDING", payload: null });
     }
-  }, [repository, state.current]);
+  }, [repository, user, state.current]);
 
   const toggleFavorite = useCallback(async (): Promise<boolean> => {
     if (!repository || !state.current) return false;
@@ -106,11 +102,11 @@ export function useRandomArticle(
 
   const deleteArticle = useCallback(
     async (articleId: number): Promise<boolean> => {
-      if (!repository || !userId) return false;
+      if (!repository || !user) return false;
 
       try {
         const svc = new ArticleService(repository);
-        await svc.delete(Number(articleId), userId);
+        await svc.delete(Number(articleId), user.id);
         dispatch({ type: "REMOVE_ARTICLE", payload: articleId });
         return true;
       } catch (error) {
@@ -118,7 +114,7 @@ export function useRandomArticle(
         return false;
       }
     },
-    [repository, userId]
+    [repository, user]
   );
 
   return {

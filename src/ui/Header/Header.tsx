@@ -3,7 +3,7 @@ import "./Header.css";
 import { Link } from "react-router-dom";
 import { AvatarModal } from "./AvatarModal";
 import { AvatarDropdown } from "./AvatarDropdown";
-import { useUserArticles } from "./useUserArticles";
+import { useUserArticles } from "../hooks/useUserArticles";
 import { useState, useRef } from "react";
 
 export const Header = () => {
