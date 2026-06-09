@@ -1,4 +1,5 @@
 import type { Article } from "../src/domain/Article";
+import { sortArticlesByAiRating } from "../src/domain/Article";
 import type { FiltersState } from "../src/ui/ListOfArticles/articleTableReducers";
 import {
   hasActiveTableFilters,
@@ -182,7 +183,9 @@ describe("articleTableFiltering", () => {
       );
 
       expect(result.needsAllArticles).toBe(false);
-      expect(result.displayedArticles).toEqual(pageArticles);
+      expect(result.displayedArticles).toEqual(
+        sortArticlesByAiRating(pageArticles, false)
+      );
       expect(result.effectiveTotal).toBe(4);
     });
   });

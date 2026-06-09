@@ -11,7 +11,7 @@ function getFlagEmoji(language?: string) {
   return "";
 }
 
- = [
+const TOPIC_TAG_COLORS = [
   "#E0E7FF",
   "#FDE68A",
   "#FCA5A5",

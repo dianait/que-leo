@@ -12,16 +12,20 @@ describe("useArticleMutations", () => {
     markAsFavorite: jest.fn().mockResolvedValue(undefined),
   };
 
-  it("delegates markRead to ArticleService", async () => {
+  it("delegates markRead to ArticleService with userId", async () => {
     const svc = new ArticleService(mockRepository);
-    await svc.markRead(1, true);
-    expect(mockRepository.markAsRead).toHaveBeenCalledWith(1, true);
+    await svc.markRead(1, true, "user-123");
+    expect(mockRepository.markAsRead).toHaveBeenCalledWith(1, true, "user-123");
   });
 
-  it("delegates markFavorite to ArticleService", async () => {
+  it("delegates markFavorite to ArticleService with userId", async () => {
     const svc = new ArticleService(mockRepository);
-    await svc.markFavorite(2, false);
-    expect(mockRepository.markAsFavorite).toHaveBeenCalledWith(2, false);
+    await svc.markFavorite(2, false, "user-123");
+    expect(mockRepository.markAsFavorite).toHaveBeenCalledWith(
+      2,
+      false,
+      "user-123"
+    );
   });
 
   it("delegates delete to ArticleService with userId", async () => {

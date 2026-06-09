@@ -56,7 +56,7 @@ describe("AvatarModal", () => {
     const onClose = jest.fn();
     render(<AvatarModal {...defaultProps} isOpen={true} onClose={onClose} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "✕" }));
+    fireEvent.click(screen.getByRole("button", { name: "Cerrar" }));
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });

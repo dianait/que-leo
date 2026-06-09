@@ -13,18 +13,22 @@ export function useArticleMutations(
 
   const markRead = useCallback(
     async (articleId: number, isRead: boolean): Promise<void> => {
-      if (!service) throw new Error("Repository not available");
-      await service.markRead(articleId, isRead);
+      if (!service || !userId) {
+        throw new Error("Repository or user not available");
+      }
+      await service.markRead(articleId, isRead, userId);
     },
-    [service]
+    [service, userId]
   );
 
   const markFavorite = useCallback(
     async (articleId: number, isFavorite: boolean): Promise<void> => {
-      if (!service) throw new Error("Repository not available");
-      await service.markFavorite(articleId, isFavorite);
+      if (!service || !userId) {
+        throw new Error("Repository or user not available");
+      }
+      await service.markFavorite(articleId, isFavorite, userId);
     },
-    [service]
+    [service, userId]
   );
 
   const deleteArticle = useCallback(

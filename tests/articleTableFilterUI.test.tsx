@@ -1,5 +1,4 @@
 import {
-  render,
   screen,
   within,
   fireEvent,
@@ -342,11 +341,9 @@ describe("ArticleTable - UI de filtros y acciones", () => {
     ];
 
     const repo = makeRepoMock(articlesWithFavorites);
-    // Mock para que getByUserPaginated devuelva todos los artículos cuando se busca
-    repo.getArticlesByUserFromUserArticles = jest.fn().mockResolvedValue({
-      articles: articlesWithFavorites,
-      total: articlesWithFavorites.length,
-    });
+    repo.getArticlesByUserFromUserArticles = jest
+      .fn()
+      .mockResolvedValue(articlesWithFavorites);
 
     renderWithProviders(
       <ArticleTable />,

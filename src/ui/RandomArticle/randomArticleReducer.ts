@@ -14,6 +14,7 @@ export type RandomArticleAction =
   | { type: "FETCH_START" }
   | { type: "FETCH_SUCCESS"; payload: Article[] }
   | { type: "FETCH_ERROR" }
+  | { type: "RESET" }
   | { type: "PICK_RANDOM_UNREAD" }
   | { type: "UPDATE_ARTICLE"; payload: Article }
   | { type: "REMOVE_ARTICLE"; payload: number }
@@ -57,6 +58,8 @@ export function randomArticleReducer(
     }
     case "FETCH_ERROR":
       return { ...state, loading: false };
+    case "RESET":
+      return initialRandomArticleState;
     case "PICK_RANDOM_UNREAD":
       return {
         ...state,

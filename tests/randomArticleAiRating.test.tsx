@@ -61,20 +61,24 @@ describe("RandomArticle - Valoración IA", () => {
   });
 
   test("no muestra la valoración IA si no existe", async () => {
+    const articleWithoutRating = {
+      id: "2",
+      title: "Artículo sin valoración",
+      url: "http://ejemplo.com/2",
+      isRead: false,
+      dateAdded: new Date(),
+      authors: [],
+      topics: [],
+      less_15: false,
+    };
     const repoWithoutRating: ArticleRepository = {
       ...mockRepository,
-      getArticlesByUser: jest.fn().mockResolvedValue([
-        {
-          id: "2",
-          title: "Artículo sin valoración",
-          url: "http://ejemplo.com/2",
-          isRead: false,
-          dateAdded: new Date(),
-          authors: [],
-          topics: [],
-          less_15: false,
-        },
-      ]),
+      getArticlesByUser: jest
+        .fn()
+        .mockResolvedValue([articleWithoutRating]),
+      getArticlesByUserFromUserArticles: jest
+        .fn()
+        .mockResolvedValue([articleWithoutRating]),
     };
 
     renderWithProviders(<RandomArticle />, repoWithoutRating);

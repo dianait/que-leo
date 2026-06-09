@@ -6,7 +6,7 @@ import { ConfirmModal } from "../shared/ConfirmModal";
 import { ShareModal } from "../shared/ShareModal";
 import { ModalProvider, useModals } from "./randomArticleModals";
 import { RandomArticleCard } from "./RandomArticleCard";
-import { FavoriteModal } from "./FavoriteModal";
+import { FavoriteModal } from "./FavoriteModal.tsx";
 
 export function RandomArticle() {
   return (

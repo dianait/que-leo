@@ -1,5 +1,4 @@
 import {
-  render,
   screen,
   fireEvent,
   waitFor,
@@ -214,10 +213,6 @@ describe("ArticleTable - Manejo de Errores", () => {
       expect(repo.getArticlesByUserFiltered).toHaveBeenCalled();
     });
 
-    await waitFor(() => {
-      expect(console.error).toHaveBeenCalled();
-    });
-  });
     await waitFor(() => {
       expect(console.error).toHaveBeenCalled();
     });
