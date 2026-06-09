@@ -7,34 +7,34 @@ import type { Article } from "../../domain/Article";
 export const useUserArticles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hasArticles, setHasArticles] = useState(false);
 
   const { user } = useAuth();
   const repository = useContext(ArticleRepositoryContext);
 
   const fetchArticles = useCallback(async () => {
     if (!repository || !user) {
+      setArticles([]);
       setLoading(false);
-      setHasArticles(false);
       return;
     }
     try {
       setLoading(true);
       const svc = new ArticleService(repository);
       const userArticles = await svc.getByUser(user.id);
-      setArticles(() => userArticles);
-      setHasArticles(() => userArticles.length > 0);
+      setArticles(userArticles);
     } catch (error) {
       console.error("Error fetching user articles:", error);
-      setHasArticles(() => false);
+      setArticles([]);
     } finally {
-      setLoading(() => false);
+      setLoading(false);
     }
   }, [repository, user]);
 
   useEffect(() => {
     fetchArticles();
   }, [fetchArticles]);
+
+  const hasArticles = articles.length > 0;
 
   return { articles, loading, hasArticles };
 };
