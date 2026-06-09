@@ -75,3 +75,9 @@ export const sortArticlesByAiRating = (
   [...articles].sort((a, b) =>
     compareArticlesByAiRating(a, b, secondaryByReadAt)
   );
+
+export const pickRandomUnreadArticle = (articles: Article[]): Article | null => {
+  const unread = articles.filter((article) => !article.isRead);
+  if (unread.length === 0) return null;
+  return unread[Math.floor(Math.random() * unread.length)];
+};

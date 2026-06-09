@@ -54,7 +54,7 @@ describe("Imágenes en RandomArticle", () => {
       </AuthContext.Provider>
     );
     await waitFor(() => {
-      const image = screen.getByAltText("Featured Image");
+      const image = screen.getByAltText("Imagen destacada de: Artículo con imagen");
       expect(image).toBeInTheDocument();
       expect(image).toHaveAttribute("src", "https://ejemplo.com/imagen.jpg");
     });
@@ -93,7 +93,7 @@ describe("Imágenes en RandomArticle", () => {
       </AuthContext.Provider>
     );
     await waitFor(() => {
-      const image = screen.getByAltText("Imagen por defecto");
+      const image = document.querySelector(".article-featured-image");
       expect(image).toBeInTheDocument();
       expect(image).toHaveAttribute("src", "/placeholder.webp");
     });
@@ -132,15 +132,18 @@ describe("Imágenes en RandomArticle", () => {
       </AuthContext.Provider>
     );
     await waitFor(() => {
-      const image = screen.getByAltText("Featured Image");
+      const image = screen.getByAltText(
+        "Imagen destacada de: Artículo con imagen rota"
+      );
       expect(image).toBeInTheDocument();
       expect(image).toHaveAttribute(
         "src",
         "https://imagen-que-no-existe.com/error.jpg"
       );
     });
-    // Simular error de carga
-    const image = screen.getByAltText("Featured Image");
+    const image = screen.getByAltText(
+      "Imagen destacada de: Artículo con imagen rota"
+    );
     fireEvent.error(image);
     // Después del error, debería cambiar a placeholder
     await waitFor(() => {
@@ -181,7 +184,7 @@ describe("Imágenes en RandomArticle", () => {
       </AuthContext.Provider>
     );
     await waitFor(() => {
-      const image = screen.getByAltText("Featured Image");
+      const image = screen.getByAltText("Imagen destacada de: Artículo con imagen");
       expect(image).toHaveClass("article-featured-image");
     });
   });
@@ -219,7 +222,7 @@ describe("Imágenes en RandomArticle", () => {
       </AuthContext.Provider>
     );
     await waitFor(() => {
-      const image = screen.getByAltText("Imagen por defecto");
+      const image = document.querySelector(".article-featured-image");
       expect(image).toHaveClass("article-featured-image");
     });
   });

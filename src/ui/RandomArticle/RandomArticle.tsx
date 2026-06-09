@@ -1,12 +1,26 @@
-import React, { useState, useEffect, useContext, useCallback, createContext } from "react";
+import React, {
+  useState,
+  useContext,
+  useCallback,
+  createContext,
+} from "react";
+import { isBefore, subYears } from "date-fns";
+import "./RandomArticle.css";
+import type { Article } from "../../domain/Article";
+import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
+import { useAuth } from "../../domain/AuthContext";
+import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
+import { RandomArticleSkeleton } from "../AppSkeleton/AppSkeleton";
 import { useShare } from "./useShare";
-// Modal context and provider
+import { useRandomArticle } from "./useRandomArticle";
+
 type ModalState = {
   confirm: boolean;
   share: boolean;
   favorite: boolean;
   articleToDelete: number | null;
 };
+
 type ModalActions = {
   openConfirm: (articleId: number) => void;
   closeConfirm: () => void;
@@ -15,7 +29,10 @@ type ModalActions = {
   openFavorite: () => void;
   closeFavorite: () => void;
 };
-const ModalContext = createContext<{ state: ModalState; actions: ModalActions } | undefined>(undefined);
+
+const ModalContext = createContext<
+  { state: ModalState; actions: ModalActions } | undefined
+>(undefined);
 
 function ModalProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<ModalState>({
@@ -25,34 +42,37 @@ function ModalProvider({ children }: { children: React.ReactNode }) {
     articleToDelete: null,
   });
   const actions: ModalActions = {
-    openConfirm: (articleId) => setState((s) => ({ ...s, confirm: true, articleToDelete: articleId })),
-    closeConfirm: () => setState((s) => ({ ...s, confirm: false, articleToDelete: null })),
+    openConfirm: (articleId) =>
+      setState((s) => ({
+        ...s,
+        confirm: true,
+        articleToDelete: articleId,
+      })),
+    closeConfirm: () =>
+      setState((s) => ({ ...s, confirm: false, articleToDelete: null })),
     openShare: () => setState((s) => ({ ...s, share: true })),
     closeShare: () => setState((s) => ({ ...s, share: false })),
     openFavorite: () => setState((s) => ({ ...s, favorite: true })),
     closeFavorite: () => setState((s) => ({ ...s, favorite: false })),
   };
-  return <ModalContext.Provider value={{ state, actions }}>{children}</ModalContext.Provider>;
+  return (
+    <ModalContext.Provider value={{ state, actions }}>
+      {children}
+    </ModalContext.Provider>
+  );
 }
+
 function useModals() {
   const ctx = useContext(ModalContext);
   if (!ctx) throw new Error("useModals must be used within ModalProvider");
   return ctx;
 }
-import { isBefore, subYears } from "date-fns";
-import "./RandomArticle.css";
-import type { Article } from "../../domain/Article";
-import {
-  markArticleAsFavorite,
-  markArticleAsUnfavorite,
-} from "../../domain/Article";
-import { ArticleRepositoryContext } from "../../domain/ArticleRepositoryContext";
-import { useAuth } from "../../domain/AuthContext";
-import { ArticleService } from "../../application/ArticleService";
-import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
-import { RandomArticleSkeleton } from "../AppSkeleton/AppSkeleton";
 
-export function RandomArticle({ articlesVersion }: { articlesVersion: number }) {
+export function RandomArticle({
+  articlesVersion,
+}: {
+  articlesVersion: number;
+}) {
   return (
     <ModalProvider>
       <RandomArticleInner articlesVersion={articlesVersion} />
@@ -60,39 +80,25 @@ export function RandomArticle({ articlesVersion }: { articlesVersion: number }) 
   );
 }
 
-function RandomArticleInner({ articlesVersion }: { articlesVersion: number }) {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [article, setArticle] = useState<Article | null>(null);
-  const [loading, setLoading] = useState(true);
+function RandomArticleInner({
+  articlesVersion,
+}: {
+  articlesVersion: number;
+}) {
   const { state: modalState, actions: modalActions } = useModals();
-  const [loadingRead, setLoadingRead] = useState(false);
-  const [loadingFavorite, setLoadingFavorite] = useState(false);
-
   const repository = useContext(ArticleRepositoryContext);
   const { user } = useAuth();
 
-  useEffect(() => {
-    if (!repository || !user) return;
-    const fetchArticles = async () => {
-      setLoading(true);
-      const svc = new ArticleService(repository);
-      const result = await svc.getByUser(user.id);
-      setArticles(result);
-      setLoading(false);
-    };
-    fetchArticles();
-  }, [user, repository, articlesVersion]);
-
-  const pickRandomUnread = useCallback((from: typeof articles) => {
-    const unread = from.filter((a) => !a.isRead);
-    setArticle(unread.length > 0 ? unread[Math.floor(Math.random() * unread.length)] : null);
-  }, []);
-
-  useEffect(() => {
-    if (!article && articles.length > 0) pickRandomUnread(articles);
-  }, [articles, article, pickRandomUnread]);
-
-  const handleGetRandomArticle = () => pickRandomUnread(articles);
+  const {
+    article,
+    loading,
+    loadingRead,
+    loadingFavorite,
+    pickRandom,
+    toggleRead,
+    toggleFavorite,
+    deleteArticle,
+  } = useRandomArticle(repository, user?.id, articlesVersion);
 
   const handleArticleClick = (url: string, event: React.MouseEvent) => {
     event.preventDefault();
@@ -107,138 +113,18 @@ function RandomArticleInner({ articlesVersion }: { articlesVersion: number }) {
   };
 
   const handleDelete = async (articleId: number) => {
-    if (!repository || !user) return;
     modalActions.closeConfirm();
-    console.log("Attempting to delete article", { articleId, userId: user.id });
-    try {
-      const svc = new ArticleService(repository);
-      await svc.delete(Number(articleId), user.id);
-      console.log("Article deleted successfully", articleId);
-
-      // Update local articles list
-      setArticles((prev) =>
-        prev.filter((a) => Number(a.id) !== Number(articleId))
-      );
-
-      if (article && Number(article.id) === Number(articleId)) {
-        pickRandomUnread(articles.filter((a) => Number(a.id) !== Number(articleId)));
-      }
-
-      // no toast
-    } catch (error) {
-      console.error("Error al borrar artículo:", error);
-    }
+    await deleteArticle(articleId);
   };
 
-
-// Usage for ShareModal
-function ShareModal({ article, show, onClose }: { article: Article | null; show: boolean; onClose: () => void }) {
-  if (!show || !article) return null;
-  const shareText = `¡He leído: ${article.title}!`;
-  const url = article.url;
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
-  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
-  return (
-    <Modal show={show} onClose={onClose}>
-      <button className="modal-close" onClick={onClose} aria-label="Cerrar">
-        <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>×</span>
-      </button>
-      <h2 id="share-modal-title-random">¡Genial! 🎉</h2>
-      <p>
-        Has marcado este artículo como leído.
-        <br />
-        ¿Quieres compartirlo en tus redes?
-      </p>
-      <div className="share-buttons-row">
-        <a href={twitterUrl} target="_blank" rel="noopener noreferrer" className="share-button twitter">
-          <img src="/x.svg" alt="" className="share-icon" />
-          Twitter
-        </a>
-        <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="share-button linkedin">
-          <img src="/linkedin.svg" alt="" className="share-icon" />
-          LinkedIn
-        </a>
-      </div>
-    </Modal>
-  );
-}
-
   const handleToggleRead = async () => {
-    if (!repository || !article) return;
-    setLoadingRead(true);
-    try {
-      const nextIsRead = !article.isRead;
-      const svc = new ArticleService(repository);
-      await svc.markRead(Number(article.id), nextIsRead);
-      const nextArticle = {
-        ...article,
-        isRead: nextIsRead,
-        readAt: nextIsRead ? new Date() : undefined,
-      } as Article;
-      setArticle(nextArticle);
-      setArticles((prev) =>
-        prev.map((a) => (Number(a.id) === Number(article.id) ? nextArticle : a))
-      );
-      // No toast on toggle read in card view
-    } catch (e) {
-      alert("Error al actualizar estado de lectura");
-    } finally {
-      setLoadingRead(false);
-    }
+    await toggleRead();
   };
 
   const handleToggleFavorite = async () => {
-    if (!repository || !article) return;
-    
-    // Si ya es favorito, simplemente quitar sin modal
-    if (article.isFavorite) {
-      setLoadingFavorite(true);
-      try {
-        const newArticleState = markArticleAsUnfavorite(article);
-        const svc = new ArticleService(repository);
-        await svc.markFavorite(
-          Number(article.id),
-          newArticleState.isFavorite ?? false
-        );
-        const nextArticle = {
-          ...article,
-          isFavorite: newArticleState.isFavorite,
-        } as Article;
-        setArticle(nextArticle);
-        setArticles((prev) =>
-          prev.map((a) => (Number(a.id) === Number(article.id) ? nextArticle : a))
-        );
-      } catch (e) {
-        alert("Error al actualizar estado de favorito");
-      } finally {
-        setLoadingFavorite(false);
-      }
-      return;
-    }
-
-    // Si no es favorito, marcar como favorito y mostrar modal
-    setLoadingFavorite(true);
-    try {
-      const newArticleState = markArticleAsFavorite(article);
-      const svc = new ArticleService(repository);
-      await svc.markFavorite(
-        Number(article.id),
-        newArticleState.isFavorite ?? false
-      );
-      const nextArticle = {
-        ...article,
-        isFavorite: newArticleState.isFavorite,
-      } as Article;
-      setArticle(nextArticle);
-      setArticles((prev) =>
-        prev.map((a) => (Number(a.id) === Number(article.id) ? nextArticle : a))
-      );
-      // Mostrar modal de favorito
+    const markedAsFavorite = await toggleFavorite();
+    if (markedAsFavorite) {
       modalActions.openFavorite();
-    } catch (e) {
-      alert("Error al actualizar estado de favorito");
-    } finally {
-      setLoadingFavorite(false);
     }
   };
 
@@ -267,7 +153,6 @@ function ShareModal({ article, show, onClose }: { article: Article | null; show:
           >
             {article ? (
               <>
-                {/* Actions bar above image/title */}
                 <div className="article-actions-container">
                   <ActionButton.Read
                     loading={loadingRead}
@@ -287,7 +172,9 @@ function ShareModal({ article, show, onClose }: { article: Article | null; show:
                     onClick={() => modalActions.openShare()}
                   />
                   <ActionButton.Delete
-                    onClick={() => modalActions.openConfirm(Number(article.id))}
+                    onClick={() =>
+                      modalActions.openConfirm(Number(article.id))
+                    }
                   />
                 </div>
 
@@ -303,12 +190,10 @@ function ShareModal({ article, show, onClose }: { article: Article | null; show:
                       !article.featuredImage ? "loading" : ""
                     }`}
                     onLoad={(e) => {
-                      // Remove loading class when the image is loaded
                       const target = e.target as HTMLImageElement;
                       target.classList.remove("loading");
                     }}
                     onError={(e) => {
-                      // If the image fails to load, fallback to custom placeholder
                       const target = e.target as HTMLImageElement;
                       target.src = "/placeholder.webp";
                       target.classList.remove("loading");
@@ -329,7 +214,9 @@ function ShareModal({ article, show, onClose }: { article: Article | null; show:
                       )}`}
                       title={article.aiRatingReason ?? undefined}
                     >
-                      <span className="article-ai-rating-label">Valoración: </span>
+                      <span className="article-ai-rating-label">
+                        Valoración:{" "}
+                      </span>
                       <span className="article-ai-rating-score">
                         {article.aiRating}/10
                       </span>
@@ -393,18 +280,17 @@ function ShareModal({ article, show, onClose }: { article: Article | null; show:
                     }}
                   >
                     {article.topics.map((tag, idx) => {
-                      // Pastel color palette
                       const colors = [
-                        "#E0E7FF", // blue
-                        "#FDE68A", // yellow
-                        "#FCA5A5", // red
-                        "#6EE7B7", // green
-                        "#FBCFE8", // pink
-                        "#A7F3D0", // turquoise
-                        "#F9A8D4", // fuchsia
-                        "#FCD34D", // orange
-                        "#C7D2FE", // lilac
-                        "#FECACA", // coral
+                        "#E0E7FF",
+                        "#FDE68A",
+                        "#FCA5A5",
+                        "#6EE7B7",
+                        "#FBCFE8",
+                        "#A7F3D0",
+                        "#F9A8D4",
+                        "#FCD34D",
+                        "#C7D2FE",
+                        "#FECACA",
                       ];
                       const bgColor = colors[idx % colors.length];
                       return (
@@ -459,19 +345,20 @@ function ShareModal({ article, show, onClose }: { article: Article | null; show:
       </div>
       {article && (
         <button
-          onClick={handleGetRandomArticle}
+          onClick={pickRandom}
           className="modern-button button-primary random-article-button"
         >
           Dame otro 🎲
         </button>
       )}
 
-      {/* toast removed */}
       <ConfirmModal
         show={modalState.confirm}
         onCancel={modalActions.closeConfirm}
         onConfirm={() => {
-          if (modalState.articleToDelete !== null) handleDelete(modalState.articleToDelete);
+          if (modalState.articleToDelete !== null) {
+            handleDelete(modalState.articleToDelete);
+          }
           modalActions.closeConfirm();
         }}
       />
@@ -489,40 +376,91 @@ function ShareModal({ article, show, onClose }: { article: Article | null; show:
   );
 }
 
-
-// ActionButton compound variants
 const ActionButton = {
-  Read: function Read({ loading, isRead, onClick }: { loading: boolean; isRead: boolean; onClick: () => void }) {
+  Read: function Read({
+    loading,
+    isRead,
+    onClick,
+  }: {
+    loading: boolean;
+    isRead: boolean;
+    onClick: () => void;
+  }) {
     return (
       <button
-        className={`app-button action-button success icon-only`}
+        className="app-button action-button success icon-only"
         onClick={onClick}
-        title={loading ? "Marcando..." : isRead ? "Marcar como no leído" : "Marcar como leído"}
-        aria-label={loading ? "Marcando..." : isRead ? "Marcar como no leído" : "Marcar como leído"}
+        title={
+          loading
+            ? "Marcando..."
+            : isRead
+              ? "Marcar como no leído"
+              : "Marcar como leído"
+        }
+        aria-label={
+          loading
+            ? "Marcando..."
+            : isRead
+              ? "Marcar como no leído"
+              : "Marcar como leído"
+        }
       >
-        <span className="button-emoji">{loading ? "⏳" : isRead ? "✅" : "📖"}</span>
+        <span className="button-emoji">
+          {loading ? "⏳" : isRead ? "✅" : "📖"}
+        </span>
       </button>
     );
   },
-  Favorite: function Favorite({ loading, isFavorite, onClick }: { loading: boolean; isFavorite: boolean; onClick: () => void }) {
+  Favorite: function Favorite({
+    loading,
+    isFavorite,
+    onClick,
+  }: {
+    loading: boolean;
+    isFavorite: boolean;
+    onClick: () => void;
+  }) {
     return (
       <button
-        className={`app-button action-button favorite icon-only`}
+        className="app-button action-button favorite icon-only"
         onClick={onClick}
-        title={loading ? "Marcando..." : isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
-        aria-label={loading ? "Marcando..." : isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
+        title={
+          loading
+            ? "Marcando..."
+            : isFavorite
+              ? "Quitar de favoritos"
+              : "Añadir a favoritos"
+        }
+        aria-label={
+          loading
+            ? "Marcando..."
+            : isFavorite
+              ? "Quitar de favoritos"
+              : "Añadir a favoritos"
+        }
       >
         {loading ? (
           <span className="button-emoji">⏳</span>
         ) : isFavorite ? (
           <span className="button-emoji">⭐</span>
         ) : (
-          <img src="/star_unfilled.png" alt="" className="button-custom-icon" style={{ width: "1.5em", height: "1.5em" }} />
+          <img
+            src="/star_unfilled.png"
+            alt=""
+            className="button-custom-icon"
+            style={{ width: "1.5em", height: "1.5em" }}
+          />
         )}
       </button>
     );
   },
-  NativeShare: function NativeShare({ url, title }: { url: string; title: string }) {
+  NativeShare: function NativeShare({
+    url,
+    title,
+  }: {
+    url: string;
+    title: string;
+  }) {
     const share = useShare();
     return (
       <button
@@ -561,9 +499,15 @@ const ActionButton = {
   },
 };
 
-
-// Compound Modal Component
-function Modal({ children, onClose, show }: { children: React.ReactNode; onClose: () => void; show: boolean }) {
+function Modal({
+  children,
+  onClose,
+  show,
+}: {
+  children: React.ReactNode;
+  onClose: () => void;
+  show: boolean;
+}) {
   if (!show) return null;
   return (
     <Modal.Overlay onClose={onClose}>
@@ -571,21 +515,53 @@ function Modal({ children, onClose, show }: { children: React.ReactNode; onClose
     </Modal.Overlay>
   );
 }
-Modal.Overlay = function ModalOverlay({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === "Escape") onClose();
-  }, [onClose]);
+
+Modal.Overlay = function ModalOverlay({
+  children,
+  onClose,
+}: {
+  children: React.ReactNode;
+  onClose: () => void;
+}) {
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    },
+    [onClose]
+  );
   return (
-    <div className="modal-overlay" role="dialog" aria-modal="true" onKeyDown={handleKeyDown}>
+    <div
+      className="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      onKeyDown={handleKeyDown}
+    >
       {children}
     </div>
   );
 };
-Modal.Content = function ModalContent({ children }: { children: React.ReactNode }) {
-  return <div className="modal-content" style={{ position: "relative" }}>{children}</div>;
+
+Modal.Content = function ModalContent({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="modal-content" style={{ position: "relative" }}>
+      {children}
+    </div>
+  );
 };
 
-function ConfirmModal({ show, onConfirm, onCancel }: { show: boolean; onConfirm: () => void; onCancel: () => void }) {
+function ConfirmModal({
+  show,
+  onConfirm,
+  onCancel,
+}: {
+  show: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
   if (!show) return null;
   return (
     <Modal show={show} onClose={onCancel}>
@@ -606,14 +582,90 @@ function ConfirmModal({ show, onConfirm, onCancel }: { show: boolean; onConfirm:
   );
 }
 
-function FavoriteModal({ article, show, onClose }: { article: Article | null; show: boolean; onClose: () => void }) {
+function ShareModal({
+  article,
+  show,
+  onClose,
+}: {
+  article: Article | null;
+  show: boolean;
+  onClose: () => void;
+}) {
   if (!show || !article) return null;
-  const shareText = encodeURIComponent(`¡He guardado como favorito: ${article.title}!`);
+  const shareText = `¡He leído: ${article.title}!`;
+  const url = article.url;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+  return (
+    <Modal show={show} onClose={onClose}>
+      <button
+        className="modal-close"
+        onClick={onClose}
+        title="Cerrar"
+        aria-label="Cerrar"
+      >
+        <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>
+          ×
+        </span>
+      </button>
+      <h2 id="share-modal-title-random">¡Genial! 🎉</h2>
+      <p>
+        Has marcado este artículo como leído.
+        <br />
+        ¿Quieres compartirlo en tus redes?
+      </p>
+      <div className="share-buttons-row">
+        <a
+          href={twitterUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="share-button twitter"
+        >
+          <img src="/x.svg" alt="" className="share-icon" />
+          Twitter
+        </a>
+        <a
+          href={linkedinUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="share-button linkedin"
+        >
+          <img src="/linkedin.svg" alt="" className="share-icon" />
+          LinkedIn
+        </a>
+      </div>
+    </Modal>
+  );
+}
+
+function FavoriteModal({
+  article,
+  show,
+  onClose,
+}: {
+  article: Article | null;
+  show: boolean;
+  onClose: () => void;
+}) {
+  if (!show || !article) return null;
+  const shareText = encodeURIComponent(
+    `¡He guardado como favorito: ${article.title}!`
+  );
   const url = encodeURIComponent(article.url);
   const blueskyUrl = `https://bsky.app/intent/compose?text=${shareText}%20${url}`;
   const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
   return (
     <Modal show={show} onClose={onClose}>
+      <button
+        className="modal-close"
+        onClick={onClose}
+        title="Cerrar"
+        aria-label="Cerrar"
+      >
+        <span style={{ fontSize: "1.5em", fontWeight: 700, color: "#888" }}>
+          ×
+        </span>
+      </button>
       <h2 id="favorite-modal-title">¡Genial! ⭐</h2>
       <p>
         Has guardado este artículo como favorito.
@@ -621,11 +673,21 @@ function FavoriteModal({ article, show, onClose }: { article: Article | null; sh
         ¿Quieres compartirlo en tus redes?
       </p>
       <div className="share-buttons-row">
-        <a href={blueskyUrl} target="_blank" rel="noopener noreferrer" className="share-button bluesky">
+        <a
+          href={blueskyUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="share-button bluesky"
+        >
           <img src="/blusky.svg" alt="" className="share-icon" />
           Bluesky
         </a>
-        <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="share-button linkedin">
+        <a
+          href={linkedinUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="share-button linkedin"
+        >
           <img src="/linkedin.svg" alt="" className="share-icon" />
           LinkedIn
         </a>

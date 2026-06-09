@@ -1,4 +1,5 @@
 import type { Article } from "../domain/Article";
+import { pickRandomUnreadArticle } from "../domain/Article";
 import type { ArticleRepository } from "../domain/ArticleRepository";
 
 export class GetRandomArticleForUser {
@@ -26,15 +27,11 @@ export class GetRandomArticleForUser {
       return null;
     }
 
-    // Prioritize unread articles
-    const unreadArticles = articles.filter((article) => !article.isRead);
-
-    if (unreadArticles.length > 0) {
-      const randomIndex = Math.floor(Math.random() * unreadArticles.length);
-      return unreadArticles[randomIndex];
+    const unreadPick = pickRandomUnreadArticle(articles);
+    if (unreadPick) {
+      return unreadPick;
     }
 
-    // If everything is read, return a random one
     const randomIndex = Math.floor(Math.random() * articles.length);
     return articles[randomIndex];
   }
