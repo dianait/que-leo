@@ -11,7 +11,8 @@ Todos tenemos esa lista interminable de artículos técnicos que guardamos con l
 ### ✨ Características principales
 
 - 🔄 **Selección aleatoria**: Descubre artículos olvidados en tu lista
-- 📱 **Integración con Telegram**: Guarda artículos fácilmente desde tu móvil
+- 🤖 **Valoración con IA**: La inteligencia artificial analiza y puntúa cada artículo para ayudarte a decidir qué leer primero
+- 📱 **Integración con Telegram**: Guarda artículos y ajusta tus gustos fácilmente desde tu móvil
 - 👤 **Autenticación con GitHub**: Login seguro y rápido
 - 📊 **Gestión completa**: Añade, elimina y marca artículos como leídos
 
@@ -24,11 +25,20 @@ Todos tenemos esa lista interminable de artículos técnicos que guardamos con l
 3. **Envía enlaces**: Manda cualquier URL al bot y se guardará automáticamente
 4. **¡Listo!**: Tus artículos aparecerán en la app web
 
+### 🤖 Valoración con IA
+
+Cada artículo recibe una puntuación automática generada por IA que tiene en cuenta tus **gustos y preferencias personales**. Así, cuando el bot te sugiere qué leer, la recomendación está adaptada a lo que realmente te interesa.
+
+### ⚙️ Personaliza tus gustos desde Telegram
+
+No hace falta abrir la app web para ajustar tus preferencias. Desde el propio chat del bot puedes **actualizar tus gustos** y el criterio de valoración de la IA se adaptará inmediatamente.
+
 ### 💡 Casos de uso
 
 - 📖 **Lectura móvil**: Encuentras un artículo interesante navegando desde el móvil
 - 🚇 **Tiempo muerto**: Guarda artículos durante el trayecto en transporte público
 - 💬 **Compartir**: Envía enlaces desde chats de Telegram directamente a tu lista
+- 🎯 **Recomendación personalizada**: Dile al bot qué temas te interesan y la IA priorizará los artículos más relevantes para ti
 
 ## 🤝 Contribuir
 
