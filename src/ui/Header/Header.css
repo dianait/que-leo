@@ -20,7 +20,7 @@
 .app-header {
   background: white;
   color: #2d3748;
-  padding: 20px 24px;
+  padding: 10px 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
   width: 100%;
   border-bottom: 1px solid #e2e8f0;
@@ -35,7 +35,7 @@
 }
 
 .header-left {
-  padding-left: 64px;
+  padding-left: 16px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -46,14 +46,14 @@
 }
 
 .header-logo {
-  max-height: 120px;
+  max-height: 72px;
   width: auto;
   border-radius: 8px;
   max-width: 100%; /* Asegura que nunca sobrepase el ancho */
 }
 
 .header-right {
-  padding-right: 48px;
+  padding-right: 16px;
 }
 
 .header-left h1 {
@@ -63,13 +63,13 @@
 }
 
 .header-left p {
-  margin: -8px 0 0 0;
-  font-size: 18px;
+  margin: 0;
+  font-size: 14px;
   font-weight: 500;
   font-style: italic;
   color: #6a7f9e;
   letter-spacing: 0.5px;
-  padding-left: 16px;
+  padding-left: 8px;
 }
 
 /* User info */
