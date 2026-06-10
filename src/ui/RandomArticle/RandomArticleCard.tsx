@@ -95,27 +95,37 @@ function ArticleAiInsight({ article }: { article: Article }) {
     };
   }, [open]);
 
-  if (article.aiRating == null) return null;
-
-  const tier = getAiRatingTier(article.aiRating);
-  const hasReason = !!article.aiRatingReason;
+  const hasRating = article.aiRating != null;
+  const tier = hasRating ? getAiRatingTier(article.aiRating!) : null;
 
   return (
     <div className="article-ai-insight-wrapper" ref={wrapperRef}>
       <button
         type="button"
-        className={`article-ai-rating rating-${tier} ${hasReason ? "has-popover" : ""}`}
-        aria-label={`Nota IA: ${article.aiRating} de 10${hasReason ? ". Toca para ver por qué" : ""}`}
-        aria-expanded={hasReason ? open : undefined}
-        onClick={hasReason ? () => setOpen((v) => !v) : undefined}
+        className={`article-ai-rating ${tier ? `rating-${tier}` : "rating-none"} has-popover`}
+        aria-label={
+          hasRating
+            ? `Nota IA: ${article.aiRating} de 10. Toca para ver por qué`
+            : "Nota IA. Toca para saber cómo activarla"
+        }
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
       >
         <span className="article-ai-rating-icon" aria-hidden="true">✨</span>
-        <span className="article-ai-rating-score">{article.aiRating}/10</span>
+        {hasRating && (
+          <span className="article-ai-rating-score">{article.aiRating}/10</span>
+        )}
       </button>
 
-      {hasReason && open && (
+      {open && (
         <div className="article-ai-popover" role="tooltip">
-          <p className="article-ai-popover-reason">{article.aiRatingReason}</p>
+          {hasRating && article.aiRatingReason ? (
+            <p className="article-ai-popover-reason">{article.aiRatingReason}</p>
+          ) : (
+            <p className="article-ai-popover-reason">
+              En Telegram pon <strong>/gustos</strong> y podrás tener una valoración personalizada para cada artículo.
+            </p>
+          )}
         </div>
       )}
     </div>

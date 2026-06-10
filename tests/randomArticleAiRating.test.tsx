@@ -1,4 +1,4 @@
-import { screen, waitFor, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { RandomArticle } from "../src/ui/RandomArticle/RandomArticle";
 import { ArticleRepository } from "../src/domain/ArticleRepository";
@@ -64,7 +64,7 @@ describe("RandomArticle - Valoración IA", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("no muestra el badge de valoración IA si no existe", async () => {
+  test("sin rating muestra badge neutro y popover con mensaje de Telegram", async () => {
     const articleWithoutRating = {
       id: "2",
       title: "Artículo sin valoración",
@@ -85,12 +85,15 @@ describe("RandomArticle - Valoración IA", () => {
 
     renderWithProviders(<RandomArticle />, repoWithoutRating);
 
-    await waitFor(() => {
-      expect(
-        screen.getByRole("heading", { level: 4, name: /Artículo sin valoración/i })
-      ).toBeInTheDocument();
+    const badge = await screen.findByRole("button", {
+      name: /Nota IA. Toca para saber cómo activarla/i,
     });
+    expect(badge).toHaveClass("rating-none");
+    expect(badge).not.toHaveTextContent("/10");
 
-    expect(document.querySelector(".article-ai-rating")).not.toBeInTheDocument();
+    // El popover con el mensaje de Telegram aparece al clicar
+    fireEvent.click(badge);
+    expect(screen.getByText(/\/gustos/)).toBeInTheDocument();
+    expect(screen.getByText(/Telegram/)).toBeInTheDocument();
   });
 });

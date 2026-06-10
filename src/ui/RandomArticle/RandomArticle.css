@@ -166,6 +166,11 @@
   opacity: 0.85;
 }
 
+.article-ai-rating.rating-none {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
 .article-ai-rating.rating-low {
   background: #fee2e2;
   color: #b91c1c;
