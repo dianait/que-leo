@@ -1,4 +1,4 @@
-![¿Qué leo? Header](./public/header.png)
+![¿Qué leo? Header](https://github.com/dianait/que-leo/blob/main/screenshots/que-leo-logo-2.png)
 
 > **Descubre qué leer de tu lista de artículos guardados**
 
