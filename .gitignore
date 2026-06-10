@@ -76,3 +76,7 @@ Thumbs.db
 agents.md
 skills-lock.json
 tsconfig.tsbuildinfo
+
+# Carpetas de Cursor y agentes (no versionar)
+.agents/
+.cursor/
