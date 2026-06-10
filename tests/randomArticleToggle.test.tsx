@@ -20,7 +20,6 @@ test("toggle from No leído to Leído updates UI and calls repository", async ()
       },
     ]),
     getArticlesByUserPaginated: jest.fn().mockResolvedValue({ articles: [], total: 0 }),
-    addArticle: jest.fn(),
     deleteArticle: jest.fn(),
     markAsRead: jest.fn().mockResolvedValue(undefined),
   };
@@ -52,7 +51,6 @@ test("toggle from No leído -> Leído -> No leído mantiene el UI y llama repo",
       { id: 2, title: "Toggle", url: "https://example.com", isRead: false, dateAdded: new Date() },
     ]),
     getArticlesByUserPaginated: jest.fn().mockResolvedValue({ articles: [], total: 0 }),
-    addArticle: jest.fn(),
     deleteArticle: jest.fn(),
     markAsRead: jest.fn().mockResolvedValue(undefined),
   };

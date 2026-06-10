@@ -26,7 +26,6 @@ describe("RandomArticle - Funcionalidad de favoritos", () => {
       getArticlesByUserPaginated: jest
         .fn()
         .mockResolvedValue({ articles: [], total: 0 }),
-      addArticle: jest.fn(),
       deleteArticle: jest.fn(),
       markAsRead: jest.fn().mockResolvedValue(undefined),
       markAsFavorite: jest.fn().mockResolvedValue(undefined),

@@ -25,7 +25,6 @@ const mockRepository: ArticleRepository = {
   getArticlesByUserPaginated: jest
     .fn()
     .mockResolvedValue({ articles: [], total: 0 }),
-  addArticle: jest.fn(),
   deleteArticle: jest.fn(),
   markAsRead: jest.fn(),
   markAsFavorite: jest.fn(),

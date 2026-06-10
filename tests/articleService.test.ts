@@ -12,17 +12,6 @@ describe("ArticleService", () => {
     expect(r).toBe(mockResult);
   });
 
-  it("delegates add with advanced method when present", async () => {
-    const mockArticle = { id: 1 } as any;
-    const repo = {
-      addArticleToUser: jest.fn().mockResolvedValue(mockArticle),
-    } as any;
-    const svc = new ArticleService(repo);
-    const r = await svc.add({ title: "t", url: "u", userId: "u1" });
-    expect(repo.addArticleToUser).toHaveBeenCalled();
-    expect(r).toBe(mockArticle);
-  });
-
   it("delegates markRead and delete", async () => {
     const repo = {
       markAsRead: jest.fn().mockResolvedValue(undefined),

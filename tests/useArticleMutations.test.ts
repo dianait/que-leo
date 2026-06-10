@@ -6,7 +6,6 @@ describe("useArticleMutations", () => {
     getAllArticles: jest.fn(),
     getArticlesByUser: jest.fn(),
     getArticlesByUserPaginated: jest.fn(),
-    addArticle: jest.fn(),
     deleteArticle: jest.fn().mockResolvedValue(undefined),
     markAsRead: jest.fn().mockResolvedValue(undefined),
     markAsFavorite: jest.fn().mockResolvedValue(undefined),

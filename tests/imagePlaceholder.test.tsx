@@ -39,7 +39,6 @@ describe("Imágenes en RandomArticle", () => {
       getArticlesByUserPaginated: jest
         .fn()
         .mockResolvedValue({ articles: [], total: 0 }),
-      addArticle: jest.fn(),
       deleteArticle: jest.fn(),
       markAsRead: jest.fn(),
       markAsFavorite: jest.fn(),
@@ -72,7 +71,6 @@ describe("Imágenes en RandomArticle", () => {
       getArticlesByUserPaginated: jest
         .fn()
         .mockResolvedValue({ articles: [], total: 0 }),
-      addArticle: jest.fn(),
       deleteArticle: jest.fn(),
       markAsRead: jest.fn(),
       markAsFavorite: jest.fn(),
@@ -105,7 +103,6 @@ describe("Imágenes en RandomArticle", () => {
       getArticlesByUserPaginated: jest
         .fn()
         .mockResolvedValue({ articles: [], total: 0 }),
-      addArticle: jest.fn(),
       deleteArticle: jest.fn(),
       markAsRead: jest.fn(),
       markAsFavorite: jest.fn(),
@@ -151,7 +148,6 @@ describe("Imágenes en RandomArticle", () => {
       getArticlesByUserPaginated: jest
         .fn()
         .mockResolvedValue({ articles: [], total: 0 }),
-      addArticle: jest.fn(),
       deleteArticle: jest.fn(),
       markAsRead: jest.fn(),
       markAsFavorite: jest.fn(),
@@ -183,7 +179,6 @@ describe("Imágenes en RandomArticle", () => {
       getArticlesByUserPaginated: jest
         .fn()
         .mockResolvedValue({ articles: [], total: 0 }),
-      addArticle: jest.fn(),
       deleteArticle: jest.fn(),
       markAsRead: jest.fn(),
       markAsFavorite: jest.fn(),

@@ -1,7 +1,6 @@
 import "./ListOfArticles.css";
 import type { Article } from "../../domain/Article";
 import { ArticleTableSkeleton } from "../AppSkeleton/AppSkeleton";
-import { AddArticle } from "../AddArticle/AddArticleModal";
 import { ConfirmModal } from "../shared/ConfirmModal";
 import { ShareModal, readShareDescription } from "../shared/ShareModal";
 import { useArticleTable } from "./useArticleTable";
@@ -38,7 +37,6 @@ export function ArticleTable() {
     <div className="articles-table-container">
       <div className="article-table-header">
         <h2 className="article-table-title">Mis artículos</h2>
-        <AddArticle />
       </div>
 
       {/* Search and filters */}

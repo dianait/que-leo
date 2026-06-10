@@ -10,16 +10,6 @@ export interface ArticleRepository {
     limit: number,
     offset: number
   ): Promise<{ articles: Article[]; total: number }>;
-  addArticle(
-    title: string,
-    url: string,
-    userId: string,
-    language?: string | null,
-    authors?: string[] | null,
-    topics?: string[] | null,
-    less_15?: boolean | null,
-    featuredImage?: string | null
-  ): Promise<Article>;
   deleteArticle(articleId: number, userId: string): Promise<void>;
   markAsRead(articleId: number, isRead: boolean, userId: string): Promise<void>;
   markAsFavorite(
@@ -41,14 +31,4 @@ export interface ArticleRepository {
     limit: number,
     offset: number
   ): Promise<{ articles: Article[]; total: number }>;
-  addArticleToUser?(
-    title: string,
-    url: string,
-    userId: string,
-    language?: string | null,
-    authors?: string[] | null,
-    topics?: string[] | null,
-    less_15?: boolean | null,
-    featuredImage?: string | null
-  ): Promise<Article>;
 }
