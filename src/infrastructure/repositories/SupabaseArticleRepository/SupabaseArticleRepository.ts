@@ -73,6 +73,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
         is_favorite?: boolean;
         ai_rating?: number | null;
         ai_rating_reason?: string | null;
+        ai_summary?: string | null;
+        ai_decision?: string | null;
         articles: ArticleRow | ArticleRow[] | null | undefined;
       };
       const { data, error } = await this.supabase
@@ -87,6 +89,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
           is_favorite,
           ai_rating,
           ai_rating_reason,
+          ai_summary,
+          ai_decision,
           articles (
             id,
             title,
@@ -131,6 +135,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
             featuredImage: art.featured_image,
             aiRating: row.ai_rating ?? undefined,
             aiRatingReason: row.ai_rating_reason ?? undefined,
+            aiSummary: row.ai_summary ?? undefined,
+            aiDecision: row.ai_decision ?? undefined,
           };
         })
         .filter(Boolean) as Article[];
@@ -158,6 +164,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
         is_favorite?: boolean;
         ai_rating?: number | null;
         ai_rating_reason?: string | null;
+        ai_summary?: string | null;
+        ai_decision?: string | null;
         articles: ArticleRow | ArticleRow[] | null | undefined;
       };
       const { data, error, count } = await this.supabase
@@ -172,6 +180,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
           is_favorite,
           ai_rating,
           ai_rating_reason,
+          ai_summary,
+          ai_decision,
           articles (
             id,
             title,
@@ -218,6 +228,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
             featuredImage: art.featured_image,
             aiRating: row.ai_rating ?? undefined,
             aiRatingReason: row.ai_rating_reason ?? undefined,
+            aiSummary: row.ai_summary ?? undefined,
+            aiDecision: row.ai_decision ?? undefined,
           };
         })
         .filter(Boolean) as Article[];
@@ -247,6 +259,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
         is_favorite?: boolean;
         ai_rating?: number | null;
         ai_rating_reason?: string | null;
+        ai_summary?: string | null;
+        ai_decision?: string | null;
         articles: ArticleRow | ArticleRow[] | null | undefined;
       };
 
@@ -265,6 +279,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
           is_favorite,
           ai_rating,
           ai_rating_reason,
+          ai_summary,
+          ai_decision,
           articles${useInnerJoin ? "!inner" : ""} (
             id,
             title,
@@ -327,6 +343,8 @@ export class SupabaseArticleRepository implements ArticleRepository {
             featuredImage: art.featured_image,
             aiRating: row.ai_rating ?? undefined,
             aiRatingReason: row.ai_rating_reason ?? undefined,
+            aiSummary: row.ai_summary ?? undefined,
+            aiDecision: row.ai_decision ?? undefined,
           };
         })
         .filter(Boolean) as Article[];

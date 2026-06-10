@@ -13,6 +13,8 @@ export interface Article {
   readonly featuredImage?: string;
   readonly aiRating?: number;
   readonly aiRatingReason?: string;
+  readonly aiSummary?: string;
+  readonly aiDecision?: string;
 }
 
 export const markArticleAsRead = (article: Article): Article => {
