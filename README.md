@@ -48,4 +48,6 @@ Este es un proyecto de aprendizaje personal, pero si encuentras algún bug, tien
 
 Todas las contribuciones son valoradas y ayudan a mejorar la experiencia de todos los usuarios.
 
-**Desarrollado con ❤️ para resolver el problema universal de la lista infinita de artículos por leer**
+---
+
+**Desarrollado con ❤️ por Dianait**
