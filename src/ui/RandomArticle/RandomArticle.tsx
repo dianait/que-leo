@@ -8,6 +8,7 @@ import { ModalProvider, useModals } from "./randomArticleModals";
 import { RandomArticleCard } from "./RandomArticleCard";
 import { FavoriteModal } from "./FavoriteModal.tsx";
 import { AiSearch } from "../AiSearch/AiSearch";
+import { useReadPrompt } from "./useReadPrompt";
 
 export function RandomArticle() {
   return (
@@ -32,6 +33,8 @@ function RandomArticleInner() {
     toggleFavorite,
     deleteArticle,
   } = useRandomArticle();
+
+  const readPrompt = useReadPrompt(article);
 
   const handleDelete = async (articleId: number) => {
     modalActions.closeConfirm();
@@ -72,7 +75,32 @@ function RandomArticleInner() {
               onToggleFavorite={handleToggleFavorite}
               onOpenShare={modalActions.openShare}
               onOpenConfirm={modalActions.openConfirm}
+              onOpenArticle={readPrompt.notifyOpened}
             />
+            {readPrompt.visible && (
+              <div className="read-prompt" role="status">
+                <span>¿Lo has leído? 📖</span>
+                <div className="read-prompt-actions">
+                  <button
+                    type="button"
+                    className="read-prompt-yes"
+                    disabled={loadingRead}
+                    onClick={async () => {
+                      if (await toggleRead()) readPrompt.dismiss();
+                    }}
+                  >
+                    ✅ Sí, marcar leído
+                  </button>
+                  <button
+                    type="button"
+                    className="read-prompt-no"
+                    onClick={readPrompt.dismiss}
+                  >
+                    Todavía no
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

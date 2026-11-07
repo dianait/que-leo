@@ -820,3 +820,74 @@
   overflow-wrap: anywhere;
 }
 
+
+/* "¿Lo has leído?" al volver de leer el artículo */
+.read-prompt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  font-weight: 600;
+  animation: read-prompt-in 0.25s ease-out;
+}
+
+.read-prompt-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.read-prompt button {
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.read-prompt-yes {
+  background: #059669;
+  color: #fff;
+}
+.read-prompt-yes:hover:not(:disabled) {
+  background: #047857;
+}
+.read-prompt-yes:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.read-prompt-no {
+  background: transparent;
+  color: #065f46;
+  border-color: #a7f3d0 !important;
+}
+.read-prompt-no:hover {
+  background: #d1fae5;
+}
+
+@keyframes read-prompt-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .read-prompt {
+    animation: none;
+  }
+}

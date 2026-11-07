@@ -44,6 +44,7 @@ type RandomArticleCardProps = {
   onToggleFavorite: () => void;
   onOpenShare: () => void;
   onOpenConfirm: (articleId: number) => void;
+  onOpenArticle?: () => void;
 };
 
 function siteName(url: string): string {
@@ -200,10 +201,12 @@ export function RandomArticleCard({
   onToggleFavorite,
   onOpenShare,
   onOpenConfirm,
+  onOpenArticle,
 }: RandomArticleCardProps) {
   const handleArticleClick = (url: string, event: React.MouseEvent) => {
     event.preventDefault();
     window.open(url, "_blank", "noopener,noreferrer");
+    onOpenArticle?.();
   };
 
   const handleGoogleSearch = (title: string, event: React.MouseEvent) => {
