@@ -1,7 +1,7 @@
 import { isBefore, subYears } from "date-fns";
 import { useState, useEffect, useRef } from "react";
 import type { Article } from "../../domain/Article";
-import { getAiRatingTier } from "../../domain/Article";
+import { getAiRatingTier, type AiRatingTier } from "../../domain/Article";
 import type { User } from "@supabase/supabase-js";
 import { TelegramLinkButton } from "../TelegramButton/TelegramLinkButton";
 import { ActionButton } from "./RandomArticleActionButtons";
@@ -11,6 +11,16 @@ function getFlagEmoji(language?: string) {
   if (language === "Spanish") return "🇪🇸";
   return "";
 }
+
+/** Words instead of a bare "8/10", which readers didn't recognise as the AI's rating. */
+const AI_RATING_WORDS: Record<AiRatingTier, string> = {
+  high: "¡Muy recomendable!",
+  medium: "Interesante",
+  low: "Flojo",
+};
+
+/** At most 3 tags; CSS then hides the ones that don't fit on a single line. */
+const MAX_VISIBLE_TOPICS = 3;
 
 const TOPIC_TAG_COLORS = [
   "#E0E7FF",
@@ -112,15 +122,17 @@ function ArticleAiInsight({ article }: { article: Article }) {
         onClick={() => setOpen((v) => !v)}
       >
         <span className="article-ai-rating-icon" aria-hidden="true">✨</span>
-        {hasRating && (
-          <span className="article-ai-rating-score">{article.aiRating}/10</span>
-        )}
+        <span className="article-ai-rating-label" aria-hidden="true">
+          {tier ? `IA: ${AI_RATING_WORDS[tier]}` : "Nota IA"}
+        </span>
       </button>
 
       {open && (
         <div className="article-ai-popover" role="tooltip">
           {hasRating && article.aiRatingReason ? (
-            <p className="article-ai-popover-reason">{article.aiRatingReason}</p>
+            <p className="article-ai-popover-reason">
+              <strong>Según tus gustos</strong>, la IA le da un <strong>{article.aiRating} de 10</strong>: {article.aiRatingReason}
+            </p>
           ) : (
             <p className="article-ai-popover-reason">
               En Telegram pon <strong>/gustos</strong> y podrás tener una valoración personalizada para cada artículo.
@@ -243,7 +255,7 @@ export function RandomArticleCard({
       )}
       {article.topics && article.topics.length > 0 && (
         <div className="random-article-topics">
-          {article.topics.map((tag, idx) => (
+          {article.topics.slice(0, MAX_VISIBLE_TOPICS).map((tag, idx) => (
             <span
               key={tag}
               className="random-article-tag"

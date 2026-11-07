@@ -468,11 +468,18 @@
   color: #888;
 }
 
+/* Tags take exactly one line: tags that wrap to a second line are clipped
+   away whole, so 3, 2 or 1 show depending on the width. */
 .random-article-topics {
+  --tag-height: 34px;
   margin-top: 18px;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
+  max-width: 100%;
+  max-height: var(--tag-height);
+  overflow: hidden;
 }
 
 .action-button-star-icon {
@@ -539,9 +546,15 @@
   border-radius: 16px;
   padding: 8px 12px;
   font-size: 14px;
+  line-height: 18px;
+  height: var(--tag-height);
+  box-sizing: border-box;
   font-weight: 600;
   display: inline-block;
-  margin-top: 2px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-family: inherit;
   border: none;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -847,4 +860,9 @@
   .content-card.random-article-card.card-animated::before {
     content: none;
   }
+}
+
+.article-ai-rating-label,
+.article-ai-rating-score {
+  white-space: nowrap;
 }
