@@ -16,4 +16,10 @@ export class AuthRepositoryMock implements AuthRepository {
   async signOut(): Promise<void> {
     this.signOutMock();
   }
+
+  saveTelegramLinkCodeMock = jest.fn();
+
+  async saveTelegramLinkCode(code: string): Promise<void> {
+    this.saveTelegramLinkCodeMock(code);
+  }
 }

@@ -1,8 +1,36 @@
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
+import React from "react";
+import {
+  render as rtlRender,
+  screen,
+  fireEvent,
+  waitFor,
+} from "@testing-library/react";
 import { User } from "@supabase/supabase-js";
 
 import { AvatarModal } from "../src/ui/Header/AvatarModal";
+import { AuthContext, type AuthContextType } from "../src/domain/AuthContext";
+import { createMockAuthContext } from "./setup";
+
+const render = (
+  ui: React.ReactElement,
+  auth: Partial<AuthContextType> = {}
+) =>
+  rtlRender(ui, {
+    wrapper: ({ children }: { children: React.ReactNode }) => (
+      <AuthContext.Provider value={createMockAuthContext(auth)}>
+        {children}
+      </AuthContext.Provider>
+    ),
+  });
+
+const LINK_URL = "https://t.me/queleo_bot?start=codigo-de-prueba";
+
+const mockTab = () => {
+  const tab = { opener: {}, location: { href: "" }, close: jest.fn() };
+  jest.spyOn(window, "open").mockReturnValue(tab as unknown as Window);
+  return tab;
+};
 
 const mockUser = {
   id: "123-test-user",
@@ -15,15 +43,17 @@ const mockUser = {
   aud: "authenticated",
   created_at: "2023-01-01T00:00:00Z",
 } as User;
+void mockUser;
 
 const defaultProps = {
   isOpen: false,
   onClose: jest.fn(),
   onLogout: jest.fn(),
-  userId: mockUser.id,
 };
 
 describe("AvatarModal", () => {
+  afterEach(() => jest.restoreAllMocks());
+
   test("no se renderiza cuando isOpen es false", () => {
     render(<AvatarModal {...defaultProps} />);
 
@@ -72,18 +102,31 @@ describe("AvatarModal", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  test("el enlace de Telegram tiene la URL correcta", () => {
-    render(<AvatarModal {...defaultProps} isOpen={true} />);
+  test("Vincular con Telegram abre el bot con un código de un solo uso", async () => {
+    const tab = mockTab();
+    const createTelegramLink = jest.fn().mockResolvedValue(LINK_URL);
+    render(<AvatarModal {...defaultProps} isOpen={true} />, { createTelegramLink });
 
-    const telegramLink = screen.getByText("📲 Vincular con Telegram");
-    expect(telegramLink).toHaveAttribute(
-      "href",
-      expect.stringContaining("123-test-user")
-    );
-    expect(telegramLink).toHaveAttribute("target", "_blank");
-    expect(telegramLink).toHaveAttribute("rel", "noopener noreferrer");
+    fireEvent.click(screen.getByText("📲 Vincular con Telegram"));
+
+    await waitFor(() => expect(tab.location.href).toBe(LINK_URL));
+    expect(createTelegramLink).toHaveBeenCalledTimes(1);
+    expect(tab.opener).toBeNull();
   });
 
+  test("si no se puede crear el enlace, cierra la pestaña y avisa", async () => {
+    const tab = mockTab();
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    const createTelegramLink = jest.fn().mockRejectedValue(new Error("sin red"));
+    render(<AvatarModal {...defaultProps} isOpen={true} />, { createTelegramLink });
+
+    fireEvent.click(screen.getByText("📲 Vincular con Telegram"));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudo crear el enlace"
+    );
+    expect(tab.close).toHaveBeenCalled();
+  });
   test("no llama a onClose cuando se hace click dentro del modal", () => {
     const onClose = jest.fn();
     render(<AvatarModal {...defaultProps} isOpen={true} onClose={onClose} />);

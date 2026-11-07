@@ -63,6 +63,7 @@ export const createMockAuthContext = (
   signInWithGitHub: async () => {},
   signInWithGoogle: async () => {},
   signOut: async () => {},
+  createTelegramLink: async () => "https://t.me/queleo_bot?start=test-code",
   loading: false,
   ...overrides,
 });

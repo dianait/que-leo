@@ -97,7 +97,6 @@ export const Header = () => {
                   isOpen={isDropdownOpen}
                   onClose={closeDropdown}
                   onLogout={handleLogout}
-                  userId={user.id || ""}
                   triggerRef={avatarRef}
                 />
               </div>
@@ -109,7 +108,6 @@ export const Header = () => {
           isOpen={isAvatarModalOpen}
           onClose={closeAvatarModal}
           onLogout={handleLogout}
-          userId={user?.id || ""}
         />
       </div>
     </header>

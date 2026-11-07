@@ -166,7 +166,7 @@ export function RandomArticleCard({
         <div className="empty-state-cta">
           {user && (
             <div className="empty-state-telegram">
-              <TelegramLinkButton userId={user.id} />
+              <TelegramLinkButton />
             </div>
           )}
         </div>

@@ -1,18 +1,27 @@
 import "./TelegramLinkButton.css";
+import { useTelegramLink } from "./useTelegramLink";
 
-const TELEGRAM_BOT_USERNAME = "queleo_bot"; // replace with your bot if needed
+export const TELEGRAM_LINK_ERROR =
+  "No se pudo crear el enlace. Inténtalo de nuevo.";
 
-export function TelegramLinkButton({ userId }: { userId: string }) {
-  const telegramLink = `https://t.me/${TELEGRAM_BOT_USERNAME}?start=${userId}`;
+export function TelegramLinkButton() {
+  const { openTelegramLink, status } = useTelegramLink();
 
   return (
-    <a
-      href={telegramLink}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="modern-button button-primary telegram-link-button"
-    >
-      📲 Vincular con Telegram
-    </a>
+    <>
+      <button
+        type="button"
+        onClick={openTelegramLink}
+        disabled={status === "loading"}
+        className="modern-button button-primary telegram-link-button"
+      >
+        📲 Vincular con Telegram
+      </button>
+      {status === "error" && (
+        <p role="alert" className="telegram-link-error">
+          {TELEGRAM_LINK_ERROR}
+        </p>
+      )}
+    </>
   );
 }

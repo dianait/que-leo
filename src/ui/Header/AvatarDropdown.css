@@ -98,3 +98,18 @@
     display: none;
   }
 }
+
+.telegram-item {
+  width: 100%;
+  border: none;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-error {
+  margin: 4px 12px 8px;
+  color: #c0392b;
+  font-size: 0.85rem;
+}

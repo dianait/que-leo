@@ -7,6 +7,8 @@ export interface AuthContextType {
   signInWithGitHub: (redirectTo?: string) => Promise<void>;
   signInWithGoogle: (redirectTo?: string) => Promise<void>;
   signOut: () => Promise<void>;
+  /** Returns a one-time bot link that links Telegram to this account. */
+  createTelegramLink: () => Promise<string>;
   loading: boolean;
 }
 

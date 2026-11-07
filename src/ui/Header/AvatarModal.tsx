@@ -6,14 +6,12 @@ interface AvatarModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLogout: () => void;
-  userId: string;
 }
 
 export const AvatarModal: React.FC<AvatarModalProps> = ({
   isOpen,
   onClose,
   onLogout,
-  userId,
 }) => {
   if (!isOpen) return null;
 
@@ -58,7 +56,7 @@ export const AvatarModal: React.FC<AvatarModalProps> = ({
             </a>
           </div>
           <div className="avatar-modal-option">
-            <TelegramLinkButton userId={userId} />
+            <TelegramLinkButton />
           </div>
           <div className="avatar-modal-option">
             <button

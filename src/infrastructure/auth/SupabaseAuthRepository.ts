@@ -38,4 +38,14 @@ export class SupabaseAuthRepository implements AuthRepository {
       throw new Error(`Sign out failed: ${error.message}`);
     }
   }
+
+  async saveTelegramLinkCode(code: string): Promise<void> {
+    // user_id defaults to auth.uid(); RLS only lets users insert their own codes.
+    const { error } = await this.supabase
+      .from("telegram_link_codes")
+      .insert({ code });
+    if (error) {
+      throw new Error(`No se pudo crear el enlace de Telegram: ${error.message}`);
+    }
+  }
 }

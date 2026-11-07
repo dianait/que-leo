@@ -25,3 +25,21 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 180, 216, 0.25);
 }
+
+.telegram-link-button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.telegram-link-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.telegram-link-error {
+  margin: 8px auto 0;
+  max-width: 520px;
+  text-align: center;
+  color: #c0392b;
+  font-size: 0.95rem;
+}

@@ -6,6 +6,7 @@ import { SupabaseAuthRepository } from "../../infrastructure/auth/SupabaseAuthRe
 import { SignInWithGitHub } from "../../application/SignInWithGitHub";
 import { SignInWithGoogle } from "../../application/SignInWithGoogle";
 import { SignOut } from "../../application/SignOut";
+import { CreateTelegramLink } from "../../application/CreateTelegramLink";
 import { LoginForm } from "./LoginForm";
 import { AppSkeleton } from "../AppSkeleton/AppSkeleton";
 
@@ -27,6 +28,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   const signInGitHubUseCase = new SignInWithGitHub(authRepository);
   const signInGoogleUseCase = new SignInWithGoogle(authRepository);
   const signOutUseCase = new SignOut(authRepository);
+  const createTelegramLinkUseCase = new CreateTelegramLink(authRepository);
   // ------------------------------------
 
   useEffect(() => {
@@ -64,12 +66,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     await signOutUseCase.execute();
   };
 
+  const createTelegramLink = () => createTelegramLinkUseCase.execute();
+
   const value = {
     user,
     session,
     signInWithGitHub,
     signInWithGoogle,
     signOut,
+    createTelegramLink,
     loading,
   };
 
