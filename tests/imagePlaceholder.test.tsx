@@ -51,7 +51,7 @@ describe("Imágenes en RandomArticle", () => {
     });
   });
 
-  test("muestra placeholder cuando no hay featuredImage", async () => {
+  test("muestra el nombre de la web cuando no hay featuredImage", async () => {
     const articleWithoutImage: ArticleType = {
       id: "2",
       title: "Artículo sin imagen",
@@ -77,9 +77,9 @@ describe("Imágenes en RandomArticle", () => {
     };
     renderWithProviders(<RandomArticle />, mockRepository);
     await waitFor(() => {
-      const image = document.querySelector(".article-featured-image");
-      expect(image).toBeInTheDocument();
-      expect(image).toHaveAttribute("src", "/placeholder.webp");
+      const fallback = document.querySelector(".article-image-fallback");
+      expect(fallback).toBeInTheDocument();
+      expect(fallback).toHaveTextContent("ejemplo2.com");
     });
   });
 
@@ -122,9 +122,12 @@ describe("Imágenes en RandomArticle", () => {
       "Imagen destacada de: Artículo con imagen rota"
     );
     fireEvent.error(image);
-    // Después del error, debería cambiar a placeholder
+    // Después del error, se sustituye por el nombre de la web
     await waitFor(() => {
-      expect(image).toHaveAttribute("src", "/placeholder.webp");
+      expect(image).not.toBeInTheDocument();
+      expect(document.querySelector(".article-image-fallback")).toHaveTextContent(
+        "ejemplo3.com"
+      );
     });
   });
 

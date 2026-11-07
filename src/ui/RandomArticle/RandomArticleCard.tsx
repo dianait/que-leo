@@ -46,27 +46,52 @@ type RandomArticleCardProps = {
   onOpenConfirm: (articleId: number) => void;
 };
 
+function siteName(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www./, "");
+  } catch {
+    return "";
+  }
+}
+
+/** Same string → same colour, so an article keeps its look between visits. */
+function pickColor(seed: string): string {
+  let hash = 0;
+  for (const ch of seed) hash = (hash * 31 + ch.charCodeAt(0)) | 0;
+  return TOPIC_TAG_COLORS[Math.abs(hash) % TOPIC_TAG_COLORS.length];
+}
+
+/** Shown when the site has no featured image or it fails to load. */
+function ArticleImageFallback({ article }: { article: Article }) {
+  const site = siteName(article.url);
+  const topic = article.topics?.[0];
+  const color = pickColor(topic ?? site);
+  return (
+    <div
+      className="article-featured-image article-image-fallback"
+      style={{ background: `linear-gradient(135deg, ${color} 0%, #ffffff 100%)` }}
+      aria-hidden="true"
+    >
+      <span className="article-image-fallback-site">{site}</span>
+    </div>
+  );
+}
+
 function ArticleFeaturedImage({ article }: { article: Article }) {
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => setFailed(false), [article.featuredImage]);
+
+  if (!article.featuredImage || failed) {
+    return <ArticleImageFallback article={article} />;
+  }
+
   return (
     <img
-      src={article.featuredImage || "/placeholder.webp"}
-      alt={
-        article.featuredImage
-          ? `Imagen destacada de: ${article.title}`
-          : ""
-      }
-      className={`article-featured-image ${
-        !article.featuredImage ? "loading" : ""
-      }`}
-      onLoad={(e) => {
-        const target = e.target as HTMLImageElement;
-        target.classList.remove("loading");
-      }}
-      onError={(e) => {
-        const target = e.target as HTMLImageElement;
-        target.src = "/placeholder.webp";
-        target.classList.remove("loading");
-      }}
+      src={article.featuredImage}
+      alt={`Imagen destacada de: ${article.title}`}
+      className="article-featured-image"
+      onError={() => setFailed(true)}
     />
   );
 }
