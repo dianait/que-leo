@@ -196,36 +196,6 @@
   border-color: #047857;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: #fff;
-  border-radius: 14px;
-  padding: 32px 28px;
-  box-shadow: 0 4px 32px rgba(90, 111, 216, 0.18);
-  max-width: 380px;
-  width: 100%;
-  text-align: center;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 18px;
-  justify-content: center;
-  margin-top: 24px;
-}
-
 .toast-notification {
   position: fixed;
   top: 32px;
@@ -370,18 +340,6 @@
   .read-filter-group {
     flex-wrap: wrap;
   }
-}
-
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: none;
-  border: none;
-  font-size: 1.3em;
-  color: #888;
-  cursor: pointer;
-  z-index: 10;
 }
 
 @media (max-width: 900px) {

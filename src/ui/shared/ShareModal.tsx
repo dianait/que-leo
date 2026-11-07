@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import "./Modal.css";
 import "./ShareModal.css";
 import type { Article } from "../../domain/Article";
 

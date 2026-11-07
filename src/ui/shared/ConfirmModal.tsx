@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import "./Modal.css";
 import "./ConfirmModal.css";
 
 export type ConfirmModalProps = {
