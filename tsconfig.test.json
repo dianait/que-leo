@@ -5,5 +5,5 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src", "tests"]
+  "include": ["src", "tests", "api"]
 }

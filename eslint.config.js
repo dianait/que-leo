@@ -57,5 +57,11 @@ export default tseslint.config(
         },
       ],
     },
+  },
+  {
+    // Vercel function entry point (server side): outside the src layers.
+    files: ["api/**/*.ts"],
+    languageOptions: { globals: globals.node },
+    rules: { "hexagonal-architecture/enforce": "off" },
   }
 );

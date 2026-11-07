@@ -5,7 +5,7 @@
   "framework": "vite",
   "regions": ["cdg1"],
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "env": {
     "NODE_ENV": "production"

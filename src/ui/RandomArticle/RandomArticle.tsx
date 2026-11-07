@@ -7,6 +7,7 @@ import { ShareModal } from "../shared/ShareModal";
 import { ModalProvider, useModals } from "./randomArticleModals";
 import { RandomArticleCard } from "./RandomArticleCard";
 import { FavoriteModal } from "./FavoriteModal.tsx";
+import { AiSearch } from "../AiSearch/AiSearch";
 
 export function RandomArticle() {
   return (
@@ -79,6 +80,7 @@ function RandomArticleInner() {
           Dame otro 🎲
         </button>
       )}
+      {article && <AiSearch />}
 
       <ConfirmModal
         open={modalState.confirm}
