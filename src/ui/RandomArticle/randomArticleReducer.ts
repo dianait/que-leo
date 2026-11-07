@@ -18,7 +18,6 @@ export type RandomArticleAction =
   | { type: "FETCH_ERROR" }
   | { type: "RESET" }
   | { type: "PICK_RANDOM_UNREAD" }
-  | { type: "SHOW_ARTICLE"; payload: number }
   | { type: "SHOW_SEARCH_RESULTS"; payload: number[] }
   | { type: "UPDATE_ARTICLE"; payload: Article }
   | { type: "REMOVE_ARTICLE"; payload: number }
@@ -89,18 +88,6 @@ export function randomArticleReducer(
       if (ids.length === 0) return state;
       const [firstId, ...rest] = ids;
       return { ...state, current: findArticle(state.articles, firstId)!, searchQueue: rest };
-    }
-    case "SHOW_ARTICLE": {
-      const article = state.articles.find(
-        (item) => Number(item.id) === action.payload
-      );
-      return article
-        ? {
-            ...state,
-            current: article,
-            searchQueue: state.searchQueue.filter((id) => id !== action.payload),
-          }
-        : state;
     }
     case "UPDATE_ARTICLE": {
       const article = action.payload;

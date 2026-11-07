@@ -27,7 +27,6 @@ function RandomArticleInner() {
     loadingRead,
     loadingFavorite,
     pickRandom,
-    showArticle,
     showSearchResults,
     toggleRead,
     toggleFavorite,
@@ -52,11 +51,14 @@ function RandomArticleInner() {
 
   return (
     <div className="random-article-container">
+      {article && <AiSearch onShowResults={showSearchResults} />}
       <div className="article-container">
         {loading ? (
           <RandomArticleSkeleton />
         ) : (
           <div
+            // A new key per article replays the entrance animation.
+            key={article?.id ?? "empty"}
             className={`content-card random-article-card ${
               article ? "card-animated" : ""
             }`}
@@ -82,7 +84,6 @@ function RandomArticleInner() {
           Dame otro 🎲
         </button>
       )}
-      {article && <AiSearch onShowResults={showSearchResults} onShowArticle={showArticle} />}
 
       <ConfirmModal
         open={modalState.confirm}

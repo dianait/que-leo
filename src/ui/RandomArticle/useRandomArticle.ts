@@ -59,17 +59,6 @@ export function useRandomArticle() {
     [state.articles]
   );
 
-  /** Shows one of the user's loaded articles in the card; false if not loaded. */
-  const showArticle = useCallback(
-    (articleId: number): boolean => {
-      const found = state.articles.some(
-        (article) => Number(article.id) === articleId
-      );
-      if (found) dispatch({ type: "SHOW_ARTICLE", payload: articleId });
-      return found;
-    },
-    [state.articles]
-  );
 
   const toggleRead = useCallback(async (): Promise<boolean> => {
     if (!repository || !state.current || !user) return false;
@@ -151,7 +140,6 @@ export function useRandomArticle() {
     loadingRead: state.pendingAction === "read",
     loadingFavorite: state.pendingAction === "favorite",
     pickRandom,
-    showArticle,
     showSearchResults,
     toggleRead,
     toggleFavorite,

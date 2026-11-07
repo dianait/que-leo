@@ -8,12 +8,29 @@ import { createMockAuthContext } from "./setup";
 
 const session = { access_token: "token-de-sesion" } as Session;
 
-const renderSearch = (search: jest.Mock, withSession = true) =>
+const result = (id: number, articleId: number, title: string) => ({
+  id,
+  articleId,
+  title,
+  url: `https://example.com/${id}`,
+  rating: 8,
+  reason: "Razón",
+  summary: "Resumen",
+  isRead: false,
+});
+
+const renderSearch = ({
+  search = jest.fn(),
+  onShowResults = jest.fn().mockReturnValue(true),
+  withSession = true,
+}: { search?: jest.Mock; onShowResults?: jest.Mock; withSession?: boolean } = {}) => {
   render(
     <AuthContext.Provider value={createMockAuthContext({ session: withSession ? session : null })}>
-      <AiSearch search={search} />
+      <AiSearch search={search} onShowResults={onShowResults} />
     </AuthContext.Provider>
   );
+  return { search, onShowResults };
+};
 
 const ask = (text: string) => {
   fireEvent.change(screen.getByLabelText("Pregúntale a la IA por tus artículos"), {
@@ -24,122 +41,92 @@ const ask = (text: string) => {
 
 describe("AiSearch", () => {
   test("invita a pedir un tema", () => {
-    renderSearch(jest.fn());
+    renderSearch();
     expect(
       screen.getByText("¿No te convence? Pídeme un tema y te busco entre lo que tienes")
     ).toBeInTheDocument();
   });
 
-  test("busca con la sesión del usuario y muestra los resultados con nota y razón", async () => {
-    const search = jest.fn().mockResolvedValue({
-      ok: true,
-      intent: "recomendar",
-      results: [
-        { id: 1, articleId: 101, title: "TDD en Swift", url: "https://example.com/1", rating: 9, reason: "Ejemplos claros", summary: "Resumen", isRead: false },
-      ],
+  test("busca con la sesión del usuario y manda los resultados a la tarjeta, el mejor primero", async () => {
+    const { search, onShowResults } = renderSearch({
+      search: jest.fn().mockResolvedValue({
+        ok: true,
+        intent: "recomendar",
+        results: [result(1, 101, "El mejor"), result(2, 102, "El segundo")],
+      }),
     });
-    renderSearch(search);
 
     ask("algo de tests");
 
-    expect(await screen.findByRole("link", { name: "TDD en Swift" })).toHaveAttribute("href", "https://example.com/1");
-    expect(screen.getByText("9/10")).toBeInTheDocument();
-    expect(screen.getByText("Ejemplos claros")).toBeInTheDocument();
+    expect(await screen.findByRole("status")).toHaveTextContent(
+      "🎯 ¡Encontrado! Con «Dame otro» verás el siguiente de este tema y, cuando se acaben, volveremos al azar."
+    );
     expect(search).toHaveBeenCalledWith("algo de tests", "token-de-sesion");
+    expect(onShowResults).toHaveBeenCalledWith([101, 102]);
   });
 
-  test("al recordar enseña el resumen", async () => {
-    const search = jest.fn().mockResolvedValue({
-      ok: true,
-      intent: "recordar",
-      results: [{ id: 2, articleId: 102, title: "Hooks", url: "https://example.com/2", rating: null, reason: "Razón", summary: "El resumen", isRead: true }],
+  test("no enseña una lista de otras opciones", async () => {
+    renderSearch({
+      search: jest.fn().mockResolvedValue({
+        ok: true,
+        intent: "recomendar",
+        results: [result(1, 101, "El mejor"), result(2, 102, "El segundo")],
+      }),
     });
-    renderSearch(search);
+
+    ask("algo");
+
+    await screen.findByRole("status");
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(screen.queryByText("El segundo")).not.toBeInTheDocument();
+  });
+
+  test("con un solo resultado no habla de los siguientes", async () => {
+    renderSearch({
+      search: jest.fn().mockResolvedValue({ ok: true, intent: "recordar", results: [result(1, 101, "Hooks")] }),
+    });
 
     ask("el de los hooks");
 
-    expect(await screen.findByText("El resumen")).toBeInTheDocument();
-    expect(screen.getByText("leído")).toBeInTheDocument();
+    expect(await screen.findByRole("status")).toHaveTextContent(/^🎯 ¡Encontrado!$/);
   });
 
   test("muestra el mensaje del servidor (por ejemplo, sin créditos)", async () => {
-    const search = jest.fn().mockResolvedValue({ ok: false, message: "☕ ¿La invitas a un café?" });
-    renderSearch(search);
+    renderSearch({ search: jest.fn().mockResolvedValue({ ok: false, message: "☕ ¿La invitas a un café?" }) });
 
     ask("algo");
 
     expect(await screen.findByRole("alert")).toHaveTextContent("¿La invitas a un café?");
   });
 
-  test("sin resultados lo dice", async () => {
-    renderSearch(jest.fn().mockResolvedValue({ ok: true, intent: "recomendar", results: [] }));
+  test("sin resultados lo dice y no toca la tarjeta", async () => {
+    const { onShowResults } = renderSearch({
+      search: jest.fn().mockResolvedValue({ ok: true, intent: "recomendar", results: [] }),
+    });
 
     ask("golf");
 
-    expect(await screen.findByText("No tienes ningún artículo sin leer que encaje.")).toBeInTheDocument();
+    expect(await screen.findByRole("status")).toHaveTextContent("No tienes ningún artículo sin leer que encaje.");
+    expect(onShowResults).not.toHaveBeenCalled();
+  });
+
+  test("si la tarjeta no puede mostrarlos, lo dice como sin resultados", async () => {
+    renderSearch({
+      search: jest.fn().mockResolvedValue({ ok: true, intent: "recordar", results: [result(1, 101, "X")] }),
+      onShowResults: jest.fn().mockReturnValue(false),
+    });
+
+    ask("algo");
+
+    expect(await screen.findByRole("status")).toHaveTextContent("No encuentro ningún artículo guardado que encaje.");
   });
 
   test("sin sesión no llama al servidor", () => {
-    const search = jest.fn();
-    renderSearch(search, false);
+    const { search } = renderSearch({ withSession: false });
 
     ask("algo");
 
     expect(search).not.toHaveBeenCalled();
-  });
-});
-
-describe("AiSearch con la tarjeta", () => {
-  const results = [
-    { id: 1, articleId: 101, title: "El mejor", url: "https://example.com/1", rating: 9, reason: "Razón 1", summary: null, isRead: false },
-    { id: 2, articleId: 102, title: "Otra opción", url: "https://example.com/2", rating: 7, reason: "Razón 2", summary: null, isRead: false },
-  ];
-
-  const renderWithCard = (onShowResults: jest.Mock, onShowArticle = jest.fn().mockReturnValue(true)) =>
-    render(
-      <AuthContext.Provider value={createMockAuthContext({ session })}>
-        <AiSearch
-          search={jest.fn().mockResolvedValue({ ok: true, intent: "recomendar", results })}
-          onShowResults={onShowResults}
-          onShowArticle={onShowArticle}
-        />
-      </AuthContext.Provider>
-    );
-
-  test("manda los resultados a la tarjeta (el mejor primero) y deja los demás como otras opciones", async () => {
-    const onShowResults = jest.fn().mockReturnValue(true);
-    renderWithCard(onShowResults);
-
-    ask("algo");
-
-    expect(await screen.findByText(/Te he puesto arriba el que mejor encaja/)).toHaveTextContent(
-      "Con «Dame otro» verás los siguientes y, cuando se acaben, volveremos al azar."
-    );
-    expect(onShowResults).toHaveBeenCalledWith([101, 102]);
-    expect(screen.queryByRole("link", { name: "El mejor" })).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Otra opción" })).toBeInTheDocument();
-  });
-
-  test("Ver en la tarjeta cambia el artículo de la tarjeta", async () => {
-    const onShowArticle = jest.fn().mockReturnValue(true);
-    renderWithCard(jest.fn().mockReturnValue(true), onShowArticle);
-    ask("algo");
-    await screen.findByRole("link", { name: "Otra opción" });
-
-    fireEvent.click(screen.getByRole("button", { name: "Ver en la tarjeta" }));
-
-    expect(onShowArticle).toHaveBeenLastCalledWith(102);
-    expect(await screen.findByRole("link", { name: "El mejor" })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "Otra opción" })).not.toBeInTheDocument();
-  });
-
-  test("si la tarjeta no puede mostrarlo, lo deja en la lista", async () => {
-    renderWithCard(jest.fn().mockReturnValue(false));
-
-    ask("algo");
-
-    expect(await screen.findByRole("link", { name: "El mejor" })).toBeInTheDocument();
-    expect(screen.queryByText(/Te he puesto arriba/)).not.toBeInTheDocument();
   });
 });
 
@@ -152,11 +139,14 @@ describe("searchArticlesWithAi", () => {
 
     const outcome = await searchArticlesWithAi("hooks", "t0k3n", fetchFn);
 
-    expect(fetchFn).toHaveBeenCalledWith("/api/search", expect.objectContaining({
-      method: "POST",
-      headers: expect.objectContaining({ Authorization: "Bearer t0k3n" }),
-      body: JSON.stringify({ text: "hooks" }),
-    }));
+    expect(fetchFn).toHaveBeenCalledWith(
+      "/api/search",
+      expect.objectContaining({
+        method: "POST",
+        headers: expect.objectContaining({ Authorization: "Bearer t0k3n" }),
+        body: JSON.stringify({ text: "hooks" }),
+      })
+    );
     expect(outcome).toEqual({ ok: true, intent: "recordar", results: [] });
   });
 
