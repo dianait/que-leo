@@ -6,6 +6,8 @@ export type PendingAction = "read" | "favorite" | null;
 export type RandomArticleState = {
   articles: Article[];
   current: Article | null;
+  /** Ids from the last AI search still to show with "Dame otro". */
+  searchQueue: number[];
   loading: boolean;
   pendingAction: PendingAction;
 };
@@ -16,6 +18,8 @@ export type RandomArticleAction =
   | { type: "FETCH_ERROR" }
   | { type: "RESET" }
   | { type: "PICK_RANDOM_UNREAD" }
+  | { type: "SHOW_ARTICLE"; payload: number }
+  | { type: "SHOW_SEARCH_RESULTS"; payload: number[] }
   | { type: "UPDATE_ARTICLE"; payload: Article }
   | { type: "REMOVE_ARTICLE"; payload: number }
   | { type: "SET_PENDING"; payload: PendingAction };
@@ -23,6 +27,7 @@ export type RandomArticleAction =
 export const initialRandomArticleState: RandomArticleState = {
   articles: [],
   current: null,
+  searchQueue: [],
   loading: true,
   pendingAction: null,
 };
@@ -38,6 +43,12 @@ function resolveCurrentAfterFetch(
     return updated ?? pickRandomUnreadArticle(articles);
   }
   return pickRandomUnreadArticle(articles);
+}
+
+function findArticle(articles: Article[], id: number | undefined): Article | undefined {
+  return id === undefined
+    ? undefined
+    : articles.find((article) => Number(article.id) === id);
 }
 
 export function randomArticleReducer(
@@ -60,11 +71,37 @@ export function randomArticleReducer(
       return { ...state, loading: false };
     case "RESET":
       return initialRandomArticleState;
-    case "PICK_RANDOM_UNREAD":
+    case "PICK_RANDOM_UNREAD": {
+      // After a search, "Dame otro" walks its results; then back to random.
+      const [nextId, ...rest] = state.searchQueue;
+      const next = findArticle(state.articles, nextId);
+      if (next) {
+        return { ...state, current: next, searchQueue: rest };
+      }
       return {
         ...state,
         current: pickRandomUnreadArticle(state.articles),
+        searchQueue: [],
       };
+    }
+    case "SHOW_SEARCH_RESULTS": {
+      const ids = action.payload.filter((id) => findArticle(state.articles, id));
+      if (ids.length === 0) return state;
+      const [firstId, ...rest] = ids;
+      return { ...state, current: findArticle(state.articles, firstId)!, searchQueue: rest };
+    }
+    case "SHOW_ARTICLE": {
+      const article = state.articles.find(
+        (item) => Number(item.id) === action.payload
+      );
+      return article
+        ? {
+            ...state,
+            current: article,
+            searchQueue: state.searchQueue.filter((id) => id !== action.payload),
+          }
+        : state;
+    }
     case "UPDATE_ARTICLE": {
       const article = action.payload;
       const articleId = Number(article.id);
@@ -89,6 +126,7 @@ export function randomArticleReducer(
       return {
         ...state,
         articles,
+        searchQueue: state.searchQueue.filter((id) => id !== action.payload),
         current: currentWasRemoved
           ? pickRandomUnreadArticle(articles)
           : state.current,

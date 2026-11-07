@@ -15,6 +15,7 @@ import {
 
 const row = (id: number, title: string, extra: Partial<LibraryRow> = {}): LibraryRow => ({
   id,
+  article_id: id + 100,
   is_read: false,
   ai_rating: 8,
   ai_rating_reason: `Razón ${id}`,
@@ -95,6 +96,7 @@ describe("POST /api/search", () => {
       results: [
         {
           id: 2,
+          articleId: 102,
           title: "Hooks de Claude Code",
           url: "https://example.com/2",
           rating: 8,

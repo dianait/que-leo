@@ -2,6 +2,8 @@ export type AiSearchIntent = "recomendar" | "recordar" | "otro";
 
 export interface AiSearchResult {
   readonly id: number;
+  /** Same id as Article.id, to show the result in the article card. */
+  readonly articleId: number;
   readonly title: string | null;
   readonly url: string;
   readonly rating: number | null;

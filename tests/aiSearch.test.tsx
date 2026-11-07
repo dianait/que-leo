@@ -35,7 +35,7 @@ describe("AiSearch", () => {
       ok: true,
       intent: "recomendar",
       results: [
-        { id: 1, title: "TDD en Swift", url: "https://example.com/1", rating: 9, reason: "Ejemplos claros", summary: "Resumen", isRead: false },
+        { id: 1, articleId: 101, title: "TDD en Swift", url: "https://example.com/1", rating: 9, reason: "Ejemplos claros", summary: "Resumen", isRead: false },
       ],
     });
     renderSearch(search);
@@ -52,7 +52,7 @@ describe("AiSearch", () => {
     const search = jest.fn().mockResolvedValue({
       ok: true,
       intent: "recordar",
-      results: [{ id: 2, title: "Hooks", url: "https://example.com/2", rating: null, reason: "Razón", summary: "El resumen", isRead: true }],
+      results: [{ id: 2, articleId: 102, title: "Hooks", url: "https://example.com/2", rating: null, reason: "Razón", summary: "El resumen", isRead: true }],
     });
     renderSearch(search);
 
@@ -86,6 +86,60 @@ describe("AiSearch", () => {
     ask("algo");
 
     expect(search).not.toHaveBeenCalled();
+  });
+});
+
+describe("AiSearch con la tarjeta", () => {
+  const results = [
+    { id: 1, articleId: 101, title: "El mejor", url: "https://example.com/1", rating: 9, reason: "Razón 1", summary: null, isRead: false },
+    { id: 2, articleId: 102, title: "Otra opción", url: "https://example.com/2", rating: 7, reason: "Razón 2", summary: null, isRead: false },
+  ];
+
+  const renderWithCard = (onShowResults: jest.Mock, onShowArticle = jest.fn().mockReturnValue(true)) =>
+    render(
+      <AuthContext.Provider value={createMockAuthContext({ session })}>
+        <AiSearch
+          search={jest.fn().mockResolvedValue({ ok: true, intent: "recomendar", results })}
+          onShowResults={onShowResults}
+          onShowArticle={onShowArticle}
+        />
+      </AuthContext.Provider>
+    );
+
+  test("manda los resultados a la tarjeta (el mejor primero) y deja los demás como otras opciones", async () => {
+    const onShowResults = jest.fn().mockReturnValue(true);
+    renderWithCard(onShowResults);
+
+    ask("algo");
+
+    expect(await screen.findByText(/Te he puesto arriba el que mejor encaja/)).toHaveTextContent(
+      "Con «Dame otro» verás los siguientes y, cuando se acaben, volveremos al azar."
+    );
+    expect(onShowResults).toHaveBeenCalledWith([101, 102]);
+    expect(screen.queryByRole("link", { name: "El mejor" })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Otra opción" })).toBeInTheDocument();
+  });
+
+  test("Ver en la tarjeta cambia el artículo de la tarjeta", async () => {
+    const onShowArticle = jest.fn().mockReturnValue(true);
+    renderWithCard(jest.fn().mockReturnValue(true), onShowArticle);
+    ask("algo");
+    await screen.findByRole("link", { name: "Otra opción" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Ver en la tarjeta" }));
+
+    expect(onShowArticle).toHaveBeenLastCalledWith(102);
+    expect(await screen.findByRole("link", { name: "El mejor" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Otra opción" })).not.toBeInTheDocument();
+  });
+
+  test("si la tarjeta no puede mostrarlo, lo deja en la lista", async () => {
+    renderWithCard(jest.fn().mockReturnValue(false));
+
+    ask("algo");
+
+    expect(await screen.findByRole("link", { name: "El mejor" })).toBeInTheDocument();
+    expect(screen.queryByText(/Te he puesto arriba/)).not.toBeInTheDocument();
   });
 });
 

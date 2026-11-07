@@ -1,13 +1,13 @@
 import { useState, type FormEvent } from "react";
 import "./AiSearch.css";
 import { useAuth } from "../../domain/AuthContext";
-import type { AiSearchOutcome } from "../../domain/AiSearch";
+import type { AiSearchOutcome, AiSearchResult } from "../../domain/AiSearch";
 import { searchArticlesWithAi } from "../../infrastructure/services/AiSearchService";
 
 type SearchState =
   | { status: "idle" }
   | { status: "loading" }
-  | { status: "done"; outcome: AiSearchOutcome };
+  | { status: "done"; outcome: AiSearchOutcome; shownInCardId: number | null };
 
 const NO_RESULTS: Record<string, string> = {
   recomendar: "No tienes ningún artículo sin leer que encaje.",
@@ -15,10 +15,26 @@ const NO_RESULTS: Record<string, string> = {
   otro: "Prueba con algo como «recomiéndame algo sobre tests» o «¿cómo era el que leí sobre SwiftUI?».",
 };
 
-export function AiSearch({ search = searchArticlesWithAi }: { search?: typeof searchArticlesWithAi }) {
+type AiSearchProps = {
+  search?: typeof searchArticlesWithAi;
+  /** Puts the results in the main card (first shown, rest for "Dame otro"); false if it can't. */
+  onShowResults?: (articleIds: number[]) => boolean;
+  /** Puts one result in the main article card; returns false if it can't. */
+  onShowArticle?: (articleId: number) => boolean;
+};
+
+export function AiSearch({ search = searchArticlesWithAi, onShowResults, onShowArticle }: AiSearchProps) {
   const { session } = useAuth();
   const [query, setQuery] = useState("");
   const [state, setState] = useState<SearchState>({ status: "idle" });
+
+  const scrollToCard = () => window.scrollTo?.({ top: 0, behavior: "smooth" });
+
+  const showInCard = (result: AiSearchResult): boolean => {
+    if (!onShowArticle?.(result.articleId)) return false;
+    scrollToCard();
+    return true;
+  };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -26,10 +42,24 @@ export function AiSearch({ search = searchArticlesWithAi }: { search?: typeof se
     if (!text || !session?.access_token || state.status === "loading") return;
 
     setState({ status: "loading" });
-    setState({ status: "done", outcome: await search(text, session.access_token) });
+    const outcome = await search(text, session.access_token);
+    const results = outcome.ok ? outcome.results : [];
+    const shownInCard =
+      results.length > 0 && Boolean(onShowResults?.(results.map((result) => result.articleId)));
+    if (shownInCard) scrollToCard();
+    const shownInCardId = shownInCard ? results[0].id : null;
+    setState({ status: "done", outcome, shownInCardId });
+  };
+
+  const handleShowOther = (result: AiSearchResult) => {
+    if (state.status === "done" && showInCard(result)) {
+      setState({ ...state, shownInCardId: result.id });
+    }
   };
 
   const outcome = state.status === "done" ? state.outcome : null;
+  const shownInCardId = state.status === "done" ? state.shownInCardId : null;
+  const listed = outcome?.ok ? outcome.results.filter((result) => result.id !== shownInCardId) : [];
 
   return (
     <section className="ai-search" aria-labelledby="ai-search-title">
@@ -61,21 +91,36 @@ export function AiSearch({ search = searchArticlesWithAi }: { search?: typeof se
         <p className="ai-search-message">{NO_RESULTS[outcome.intent] ?? NO_RESULTS.otro}</p>
       )}
 
-      {outcome?.ok && outcome.results.length > 0 && (
-        <ol className="ai-search-results">
-          {outcome.results.map((result) => (
-            <li key={result.id} className="ai-search-result">
-              <a href={result.url} target="_blank" rel="noopener noreferrer" className="ai-search-result-title">
-                {result.title ?? "(sin título)"}
-              </a>
-              {result.rating != null && <span className="ai-search-result-rating">{result.rating}/10</span>}
-              {result.isRead && <span className="ai-search-result-read">leído</span>}
-              <p className="ai-search-result-text">
-                {outcome.intent === "recordar" ? (result.summary ?? result.reason) : (result.reason ?? result.summary)}
-              </p>
-            </li>
-          ))}
-        </ol>
+      {shownInCardId !== null && (
+        <p className="ai-search-message">
+          ⬆️ Te he puesto arriba el que mejor encaja.
+          {listed.length > 0 && " Con «Dame otro» verás los siguientes y, cuando se acaben, volveremos al azar."}
+        </p>
+      )}
+
+      {outcome?.ok && listed.length > 0 && (
+        <>
+          {shownInCardId !== null && <p className="ai-search-subtitle">Otras opciones:</p>}
+          <ol className="ai-search-results">
+            {listed.map((result) => (
+              <li key={result.id} className="ai-search-result">
+                <a href={result.url} target="_blank" rel="noopener noreferrer" className="ai-search-result-title">
+                  {result.title ?? "(sin título)"}
+                </a>
+                {result.rating != null && <span className="ai-search-result-rating">{result.rating}/10</span>}
+                {result.isRead && <span className="ai-search-result-read">leído</span>}
+                <p className="ai-search-result-text">
+                  {outcome.intent === "recordar" ? (result.summary ?? result.reason) : (result.reason ?? result.summary)}
+                </p>
+                {onShowArticle && (
+                  <button type="button" className="ai-search-show" onClick={() => handleShowOther(result)}>
+                    Ver en la tarjeta
+                  </button>
+                )}
+              </li>
+            ))}
+          </ol>
+        </>
       )}
     </section>
   );

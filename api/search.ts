@@ -32,6 +32,7 @@ export const OUT_OF_CREDIT_MESSAGE =
 
 export type LibraryRow = {
   id: number;
+  article_id: number;
   is_read: boolean | null;
   ai_rating: number | null;
   ai_rating_reason: string | null;
@@ -106,6 +107,7 @@ export function pickResults(rows: LibraryRow[], answer: ClaudeAnswer) {
     .slice(0, MAX_RESULTS)
     .map((row) => ({
       id: row.id,
+      articleId: row.article_id,
       title: row.articles!.title,
       url: row.articles!.url,
       rating: row.ai_rating,
@@ -210,7 +212,7 @@ function createDefaultDeps(): SearchDeps {
     async loadLibrary(db) {
       const { data, error } = await db
         .from("user_articles")
-        .select("id, is_read, ai_rating, ai_rating_reason, ai_summary, articles(title, url, topics)")
+        .select("id, article_id, is_read, ai_rating, ai_rating_reason, ai_summary, articles(title, url, topics)")
         .order("added_at", { ascending: false })
         .limit(MAX_ARTICLES);
       if (error) throw new Error(`library: ${error.message}`);

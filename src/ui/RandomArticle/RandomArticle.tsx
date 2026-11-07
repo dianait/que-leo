@@ -27,6 +27,8 @@ function RandomArticleInner() {
     loadingRead,
     loadingFavorite,
     pickRandom,
+    showArticle,
+    showSearchResults,
     toggleRead,
     toggleFavorite,
     deleteArticle,
@@ -80,7 +82,7 @@ function RandomArticleInner() {
           Dame otro 🎲
         </button>
       )}
-      {article && <AiSearch />}
+      {article && <AiSearch onShowResults={showSearchResults} onShowArticle={showArticle} />}
 
       <ConfirmModal
         open={modalState.confirm}

@@ -84,3 +84,20 @@
   font-weight: 600;
   text-align: center;
 }
+
+.ai-search-subtitle {
+  margin: 0.75rem 0 0;
+  font-weight: 600;
+}
+
+.ai-search-show {
+  margin-top: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid #00b4d8;
+  border-radius: 8px;
+  background: none;
+  color: #0077b6;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}

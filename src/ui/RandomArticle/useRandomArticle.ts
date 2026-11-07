@@ -44,6 +44,33 @@ export function useRandomArticle() {
     dispatch({ type: "PICK_RANDOM_UNREAD" });
   }, []);
 
+  /**
+   * Shows the AI search results: the first one in the card, the rest queued
+   * for "Dame otro". False if none of them is loaded.
+   */
+  const showSearchResults = useCallback(
+    (articleIds: number[]): boolean => {
+      const found = articleIds.some((id) =>
+        state.articles.some((article) => Number(article.id) === id)
+      );
+      if (found) dispatch({ type: "SHOW_SEARCH_RESULTS", payload: articleIds });
+      return found;
+    },
+    [state.articles]
+  );
+
+  /** Shows one of the user's loaded articles in the card; false if not loaded. */
+  const showArticle = useCallback(
+    (articleId: number): boolean => {
+      const found = state.articles.some(
+        (article) => Number(article.id) === articleId
+      );
+      if (found) dispatch({ type: "SHOW_ARTICLE", payload: articleId });
+      return found;
+    },
+    [state.articles]
+  );
+
   const toggleRead = useCallback(async (): Promise<boolean> => {
     if (!repository || !state.current || !user) return false;
 
@@ -124,6 +151,8 @@ export function useRandomArticle() {
     loadingRead: state.pendingAction === "read",
     loadingFavorite: state.pendingAction === "favorite",
     pickRandom,
+    showArticle,
+    showSearchResults,
     toggleRead,
     toggleFavorite,
     deleteArticle: removeArticleFromLibrary,
