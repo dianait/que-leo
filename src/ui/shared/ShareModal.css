@@ -1,0 +1,87 @@
+.modal-content.share-modal {
+  max-width: 440px;
+  width: calc(100% - 32px);
+  box-sizing: border-box;
+  padding: 32px 24px;
+}
+
+.share-buttons-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 18px 0 0;
+}
+
+.share-button {
+  flex: 1 1 auto;
+  min-height: 40px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: #4b5563;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95em;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+  transition: background 0.18s;
+}
+
+.share-button .share-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  filter: brightness(0) invert(1);
+}
+
+.share-button.twitter {
+  background: #000;
+}
+.share-button.twitter:hover {
+  background: #333;
+}
+
+.share-button.bluesky {
+  background: #0072ff;
+}
+.share-button.bluesky:hover {
+  background: #005bb5;
+}
+
+.share-button.linkedin {
+  background: #0077b5;
+}
+.share-button.linkedin:hover {
+  background: #005983;
+}
+
+.share-button.copy-link:hover {
+  background: #374151;
+}
+
+@media (max-width: 480px) {
+  .modal-content.share-modal {
+    padding: 28px 16px 20px;
+  }
+  .share-buttons-row {
+    gap: 8px;
+  }
+  .share-button {
+    min-height: 38px;
+    padding: 7px 10px;
+    gap: 6px;
+    font-size: 0.85em;
+  }
+  .share-button .share-icon {
+    width: 16px;
+    height: 16px;
+  }
+}

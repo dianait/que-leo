@@ -25,7 +25,7 @@ test.describe("Flujo completo de la app: login, artículos, compartir y borrar",
     // Esperar popup de compartir
     await expect(page.getByText("¡Genial! 🎉")).toBeVisible();
     await expect(
-      page.getByText("¿Quieres compartirlo en tus redes?", { exact: false })
+      page.getByText("Compartir es vivir", { exact: false })
     ).toBeVisible();
     // Compartir en LinkedIn (simular click)
     await page.locator(".share-button.linkedin").click();

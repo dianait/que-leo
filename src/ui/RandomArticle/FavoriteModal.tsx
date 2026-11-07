@@ -20,7 +20,7 @@ export function FavoriteModal({
         <>
           Has guardado este artículo como favorito.
           <br />
-          ¿Quieres compartirlo en tus redes?
+          Compartir es vivir ✨
         </>
       }
       shareText={(item) => `¡He guardado como favorito: ${item.title}!`}

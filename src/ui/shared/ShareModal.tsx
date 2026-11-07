@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import "./ShareModal.css";
 import type { Article } from "../../domain/Article";
 
 export type ShareNetwork = "twitter" | "bluesky" | "linkedin";
@@ -14,13 +15,13 @@ export type ShareModalProps = {
   titleId?: string;
 };
 
-const defaultDescription = <>¿Quieres compartirlo en tus redes?</>;
+const defaultDescription = <>Compartir es vivir ✨</>;
 
 export const readShareDescription = (
   <>
     Has marcado este artículo como leído.
     <br />
-    ¿Quieres compartirlo en tus redes?
+    Compartir es vivir ✨
   </>
 );
 
@@ -97,7 +98,7 @@ export function ShareModal({
       aria-labelledby={titleId}
       onKeyDown={handleKeyDown}
     >
-      <div className="modal-content" style={{ position: "relative" }}>
+      <div className="modal-content share-modal" style={{ position: "relative" }}>
         <button
           className="modal-close"
           onClick={onClose}

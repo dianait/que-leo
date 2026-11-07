@@ -33,7 +33,7 @@ describe("ShareModal", () => {
     );
 
     expect(
-      screen.getByText(/¿Quieres compartirlo en tus redes?/i)
+      screen.getByText(/Compartir es vivir/i)
     ).toBeInTheDocument();
     expect(
       screen.queryByText(/Has marcado este artículo como leído/i)
