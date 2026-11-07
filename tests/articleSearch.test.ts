@@ -57,8 +57,9 @@ describe("Article Search Functionality", () => {
     });
 
     it("should filter articles by partial title match", () => {
+      // two titles, plus the React article through its "javascript" topic
       const filteredArticles = filterArticlesBySearch(mockArticles, "script");
-      expect(filteredArticles).toHaveLength(2);
+      expect(filteredArticles).toHaveLength(3);
       expect(filteredArticles.map((a) => a.title)).toContain(
         "TypeScript Best Practices"
       );
@@ -109,6 +110,45 @@ describe("Article Search Functionality", () => {
     });
   });
 
+  describe("Searching beyond the title", () => {
+    it("finds articles by author", () => {
+      const results = filterArticlesBySearch(mockArticles, "carlos garcia");
+      expect(results.map((a) => a.id)).toEqual([3]);
+    });
+
+    it("finds articles by topic", () => {
+      const results = filterArticlesBySearch(mockArticles, "layout");
+      expect(results.map((a) => a.id)).toEqual([3]);
+    });
+
+    it("finds articles by AI summary and rating reason", () => {
+      const withAi: Article[] = [
+        {
+          ...mockArticles[0],
+          id: 10,
+          title: "Un título cualquiera",
+          topics: [],
+          aiSummary: "Explica la inyección de dependencias con ejemplos.",
+        },
+        {
+          ...mockArticles[1],
+          id: 11,
+          title: "Otro título",
+          topics: [],
+          aiRatingReason: "Guía práctica de testing en Swift.",
+        },
+      ];
+
+      expect(filterArticlesBySearch(withAi, "inyeccion").map((a) => a.id)).toEqual([10]);
+      expect(filterArticlesBySearch(withAi, "testing swift").map((a) => a.id)).toEqual([11]);
+    });
+
+    it("matches every word in any order and ignores accents", () => {
+      expect(filterArticlesBySearch(mockArticles, "guide css").map((a) => a.id)).toEqual([3]);
+      expect(filterArticlesBySearch(mockArticles, "css python")).toHaveLength(0);
+    });
+  });
+
   describe("Search State Management", () => {
     it("should update search term when input changes", () => {
       let searchTerm = "";
@@ -140,16 +180,17 @@ describe("Article Search Functionality", () => {
 
   describe("Search Results Display", () => {
     it("should show correct count of filtered articles", () => {
+      // "javascript" is in one title and, as a topic, in another article
       const filteredArticles = filterArticlesBySearch(
         mockArticles,
         "javascript"
       );
-      expect(filteredArticles.length).toBe(1);
+      expect(filteredArticles.length).toBe(2);
     });
 
     it("should show plural form for multiple results", () => {
       const filteredArticles = filterArticlesBySearch(mockArticles, "script");
-      expect(filteredArticles.length).toBe(2);
+      expect(filteredArticles.length).toBe(3);
     });
 
     it("should show singular form for single result", () => {
@@ -173,9 +214,9 @@ describe("Article Search Functionality", () => {
       expect(filteredArticles).toHaveLength(0);
     });
 
-    it("should handle search terms with only spaces", () => {
+    it("treats a search with only spaces as an empty search", () => {
       const filteredArticles = filterArticlesBySearch(mockArticles, "   ");
-      expect(filteredArticles).toHaveLength(0);
+      expect(filteredArticles).toHaveLength(mockArticles.length);
     });
   });
 });

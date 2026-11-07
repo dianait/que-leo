@@ -44,7 +44,7 @@ export function ArticleTable() {
         <div className="search-input">
           <input
             type="text"
-            placeholder="Buscar por título..."
+            placeholder="Buscar por título, tema, autor o resumen..."
             value={filtersState.searchTerm}
             onChange={(e) =>
               dispatchFilters({

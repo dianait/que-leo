@@ -13,15 +13,38 @@ export function needsAllArticlesForFilters(filtersState: FiltersState): boolean 
   return filtersState.searchTerm !== "" || hasActiveTableFilters(filtersState);
 }
 
+/** Lowercase without accents, so "programacion" finds "Programación". */
+function normalizeForSearch(text: string): string {
+  return text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+}
+
+function searchableText(article: Article): string {
+  return normalizeForSearch(
+    [
+      article.title,
+      ...(article.authors ?? []),
+      ...(article.topics ?? []),
+      article.aiSummary ?? "",
+      article.aiRatingReason ?? "",
+    ].join("\n")
+  );
+}
+
+/**
+ * Matches every word of the search, in any order, against the title,
+ * authors, topics and the AI summary and rating reason.
+ */
 export function filterArticlesBySearch(
   articles: Article[],
   searchTerm: string
 ): Article[] {
-  if (!searchTerm) return articles;
-  const normalized = searchTerm.toLowerCase();
-  return articles.filter((article) =>
-    article.title.toLowerCase().includes(normalized)
-  );
+  const words = normalizeForSearch(searchTerm).split(/\s+/).filter(Boolean);
+  if (words.length === 0) return articles;
+
+  return articles.filter((article) => {
+    const text = searchableText(article);
+    return words.every((word) => text.includes(word));
+  });
 }
 
 export function filterArticlesByStatus(
