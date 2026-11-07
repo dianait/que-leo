@@ -1,8 +1,15 @@
 // Polyfills para el entorno de testing
 import { TextEncoder, TextDecoder } from "util";
 import "@testing-library/jest-dom";
+import { configure } from "@testing-library/react";
 import { User } from "@supabase/supabase-js";
 import { AuthContextType } from "../src/domain/AuthContext";
+
+// waitFor/findBy give up after 1 s by default. With every suite running in
+// parallel the table sometimes takes longer to render and tests failed at
+// random (articleTablePagination). They still resolve as soon as the UI is
+// ready; only a real failure waits the full 5 s.
+configure({ asyncUtilTimeout: 5000 });
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder as any;

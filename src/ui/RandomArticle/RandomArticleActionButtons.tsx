@@ -1,5 +1,3 @@
-import { useShare } from "./useShare";
-
 export const ActionButton = {
   Read: function Read({
     loading,
@@ -74,25 +72,6 @@ export const ActionButton = {
             className="button-custom-icon action-button-star-icon"
           />
         )}
-      </button>
-    );
-  },
-  NativeShare: function NativeShare({
-    url,
-    title,
-  }: {
-    url: string;
-    title: string;
-  }) {
-    const share = useShare();
-    return (
-      <button
-        className="app-button action-button share icon-only"
-        onClick={() => share({ url, title })}
-        title="Compartir"
-        aria-label="Compartir"
-      >
-        <span className="button-emoji">📤</span>
       </button>
     );
   },

@@ -866,3 +866,13 @@
 .article-ai-rating-score {
   white-space: nowrap;
 }
+
+/* Narrow screens: the AI rating words and the 4 buttons don't fit in one
+   row, so the rating goes on its own centered row above the buttons. */
+@media (max-width: 480px) {
+  .article-actions-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+}

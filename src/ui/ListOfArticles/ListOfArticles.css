@@ -567,3 +567,12 @@
   cursor: pointer;
   font-size: 14px;
 }
+
+.share-button.copy-link {
+  background: #4b5563;
+  font-family: inherit;
+  cursor: pointer;
+}
+.share-button.copy-link:hover {
+  background: #374151;
+}

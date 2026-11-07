@@ -31,6 +31,7 @@ export function AiSearch({ search = searchArticlesWithAi, onShowResults }: AiSea
     if (!text || !session?.access_token || state.status === "loading") return;
 
     setState({ status: "loading" });
+    setQuery("");
     const outcome = await search(text, session.access_token);
 
     if (!outcome.ok) {

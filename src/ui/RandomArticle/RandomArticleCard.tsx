@@ -203,7 +203,6 @@ export function RandomArticleCard({
             isFavorite={article.isFavorite ?? false}
             onClick={onToggleFavorite}
           />
-          <ActionButton.NativeShare url={article.url} title={article.title} />
           <ActionButton.Share onClick={onOpenShare} />
           <ActionButton.Delete
             onClick={() => onOpenConfirm(Number(article.id))}

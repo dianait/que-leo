@@ -158,3 +158,21 @@ describe("searchArticlesWithAi", () => {
     expect(broken.ok).toBe(false);
   });
 });
+
+describe("AiSearch: cuadro de texto", () => {
+  test("se vacía al pulsar Buscar", async () => {
+    render(
+      <AuthContext.Provider value={createMockAuthContext({ session })}>
+        <AiSearch
+          search={jest.fn().mockResolvedValue({ ok: true, intent: "recomendar", results: [] })}
+          onShowResults={jest.fn()}
+        />
+      </AuthContext.Provider>
+    );
+
+    ask("algo de tests");
+
+    expect(screen.getByLabelText("Pregúntale a la IA por tus artículos")).toHaveValue("");
+    await screen.findByRole("status");
+  });
+});

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Article } from "../../domain/Article";
 
 export type ShareNetwork = "twitter" | "bluesky" | "linkedin";
@@ -61,6 +61,14 @@ export function ShareModal({
   networks = ["twitter", "linkedin"],
   titleId = "share-modal-title",
 }: ShareModalProps) {
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">("idle");
+
+  useEffect(() => {
+    if (copyStatus === "idle") return;
+    const timer = setTimeout(() => setCopyStatus("idle"), 2000);
+    return () => clearTimeout(timer);
+  }, [copyStatus]);
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -71,6 +79,15 @@ export function ShareModal({
   if (!open || !article) return null;
 
   const message = shareText(article);
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(article.url);
+      setCopyStatus("copied");
+    } catch {
+      setCopyStatus("failed");
+    }
+  };
 
   return (
     <div
@@ -109,6 +126,13 @@ export function ShareModal({
               </a>
             );
           })}
+          <button type="button" className="share-button copy-link" onClick={copyLink}>
+            {copyStatus === "copied"
+              ? "✅ ¡Copiado!"
+              : copyStatus === "failed"
+                ? "No se pudo copiar"
+                : "🔗 Copiar enlace"}
+          </button>
         </div>
       </div>
     </div>
