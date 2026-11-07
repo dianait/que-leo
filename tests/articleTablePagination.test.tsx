@@ -19,7 +19,10 @@ describe("ArticleTable - Paginación", () => {
       authors: [`Author ${i + 1}`],
       isRead: i % 2 === 0,
       isFavorite: i % 3 === 0,
-      dateAdded: new Date(),
+      // Fixed date: the table breaks rating ties by date, so new Date() made
+      // the order (and which article lands on which page) depend on whether
+      // the clock ticked a millisecond while building the list.
+      dateAdded: new Date("2026-01-01T00:00:00Z"),
     }));
   };
 

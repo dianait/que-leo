@@ -97,11 +97,16 @@ function ArticleAiInsight({ article }: { article: Article }) {
         setOpen(false);
       }
     }
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
     document.addEventListener("mousedown", handleOutside);
     document.addEventListener("touchstart", handleOutside);
+    document.addEventListener("keydown", handleEscape);
     return () => {
       document.removeEventListener("mousedown", handleOutside);
       document.removeEventListener("touchstart", handleOutside);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [open]);
 
@@ -128,7 +133,24 @@ function ArticleAiInsight({ article }: { article: Article }) {
       </button>
 
       {open && (
-        <div className="article-ai-popover" role="tooltip">
+        // On narrow screens the popover becomes a centered popup over a
+        // backdrop (see RandomArticle.css); tapping the backdrop closes it.
+        <div
+          className="article-ai-popover-backdrop"
+          aria-hidden="true"
+          onClick={() => setOpen(false)}
+        />
+      )}
+      {open && (
+        <div className="article-ai-popover" role="dialog" aria-label="Por qué esta nota">
+          <button
+            type="button"
+            className="article-ai-popover-close"
+            aria-label="Cerrar"
+            onClick={() => setOpen(false)}
+          >
+            ×
+          </button>
           {hasRating && article.aiRatingReason ? (
             <p className="article-ai-popover-reason">
               <strong>Según tus gustos</strong>, la IA le da un <strong>{article.aiRating} de 10</strong>: {article.aiRatingReason}

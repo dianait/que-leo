@@ -70,13 +70,13 @@ describe("RandomArticle - Valoración IA", () => {
 
     // Al clicar aparece el popover con la razón
     fireEvent.click(badge);
-    expect(screen.getByRole("tooltip")).toHaveTextContent(
+    expect(screen.getByRole("dialog", { name: "Por qué esta nota" })).toHaveTextContent(
       "Según tus gustos, la IA le da un 8 de 10: Encaja con tus temas favoritos"
     );
 
     // Al clicar de nuevo se cierra
     fireEvent.click(badge);
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   test("sin rating muestra badge neutro y popover con mensaje de Telegram", async () => {
@@ -129,5 +129,28 @@ describe("RandomArticle - Nota IA en palabras", () => {
 
     const badge = await screen.findByRole("button", { name: new RegExp(`Nota IA: ${aiRating} de 10`) });
     expect(badge).toHaveTextContent(label);
+  });
+});
+
+describe("RandomArticle - Ventana de la nota", () => {
+  const renderRated = () =>
+    renderWithProviders(<RandomArticle />, mockRepository);
+
+  test("se cierra con el botón Cerrar", async () => {
+    renderRated();
+    fireEvent.click(await screen.findByRole("button", { name: /Nota IA: 8 de 10/i }));
+
+    fireEvent.click(screen.getByRole("button", { name: "Cerrar" }));
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  test("se cierra con Escape", async () => {
+    renderRated();
+    fireEvent.click(await screen.findByRole("button", { name: /Nota IA: 8 de 10/i }));
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 });

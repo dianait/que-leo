@@ -43,7 +43,7 @@ describe("AiSearch", () => {
   test("invita a pedir un tema", () => {
     renderSearch();
     expect(
-      screen.getByText("¿No te convence? Pídeme un tema y te busco entre lo que tienes")
+      screen.getByText("Pídeme algo y te lo busco entre lo que tienes")
     ).toBeInTheDocument();
   });
 

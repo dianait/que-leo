@@ -876,3 +876,72 @@
     gap: 8px;
   }
 }
+
+/* AI rating explanation: close button (all sizes) and, on phones, a centered
+   popup over a backdrop instead of a popover that gets cut off. */
+.article-ai-popover {
+  padding-right: 34px;
+}
+
+.article-ai-popover-close {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  color: #6b7280;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.article-ai-popover-close:hover {
+  background: #f3f4f6;
+}
+
+.article-ai-popover-backdrop {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .article-ai-popover-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    z-index: 999;
+    animation: ai-popup-fade 0.18s ease both;
+  }
+
+  .article-ai-popover {
+    position: fixed;
+    top: 50%;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    transform: translateY(-50%);
+    padding: 20px 40px 20px 18px;
+    font-size: 0.95rem;
+    border-radius: 14px;
+    z-index: 1000;
+    animation: ai-popup-fade 0.18s ease both;
+  }
+
+  .article-ai-popover::after {
+    display: none;
+  }
+}
+
+@keyframes ai-popup-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

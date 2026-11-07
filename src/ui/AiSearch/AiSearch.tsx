@@ -58,7 +58,7 @@ export function AiSearch({ search = searchArticlesWithAi, onShowResults }: AiSea
   return (
     <section className="ai-search" aria-labelledby="ai-search-title">
       <h3 id="ai-search-title" className="ai-search-title">
-        ¿No te convence? Pídeme un tema y te busco entre lo que tienes
+        Pídeme algo y te lo busco entre lo que tienes
       </h3>
       <form className="ai-search-form" onSubmit={handleSubmit}>
         <input
